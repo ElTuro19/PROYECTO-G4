@@ -4,11 +4,11 @@ public class Cultivo {
     private String variedad;
     private float rendimiento;
 
-    public Cultivo(int id, String especie, String variedad, float rendimiento) {
+    public Cultivo(int id, String esp, String var, float rend) {
         this.id = id;
-        this.especie = especie;
-        this.variedad = variedad;
-        this.rendimiento = rendimiento;
+        esp = especie;
+        var = variedad;
+        rend = rendimiento;
     }
 
     public int getId() {
