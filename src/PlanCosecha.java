@@ -58,7 +58,7 @@ private EstadoPlan estado;
         return this.cuartel;
     }
     public boolean addCuadrilla (int idCuad, String nomCuadrilla, Supervisor supervisor) {
-        ArrayList<Cuadrilla> = new ArrayList<>()
+
     }
     public boolean addCosechadorToCuadrilla (int idCuad, Date flni,Date fFin, double meta, Cosechador cos) {
 
