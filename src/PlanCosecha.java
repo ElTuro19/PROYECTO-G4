@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Date;
 public class PlanCosecha {
 private int id;
@@ -57,7 +58,7 @@ private EstadoPlan estado;
         return this.cuartel;
     }
     public boolean addCuadrilla (int idCuad, String nomCuadrilla, Supervisor supervisor) {
-
+        ArrayList<Cuadrilla> = new ArrayList<>()
     }
     public boolean addCosechadorToCuadrilla (int idCuad, Date flni,Date fFin, double meta, Cosechador cos) {
 
