@@ -3,5 +3,36 @@ public class Cuartel {
     private float superficie;
     private EstadoFenologico estado;
 
+    public Cuartel(int id, float sup, Cultivo cultivo, Huerto huerto){
+        this.id = id;
+        sup = superficie;
+        cultivo = Cultivo;
+        huerto = Huerto;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public float getSuperficie() {
+        return superficie;
+    }
+
+    public EstadoFenologico getEstado() {
+        return estado;
+    }
+
+    public void setSuperficie(float superficie) {
+        this.superficie = superficie;
+    }
+
+    public void setEstado(EstadoFenologico estado) {
+        this.estado = estado;
+    }
+
+    public Huerto getHuerto(){
+        return huerto;
+    }
+
 
 }
