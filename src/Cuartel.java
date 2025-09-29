@@ -3,4 +3,5 @@ public class Cuartel {
     private float superficie;
     private EstadoFenologico estado;
 
+
 }
