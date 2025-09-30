@@ -3,6 +3,9 @@ public class Cuartel {
     private float superficie;
     private EstadoFenologico estado;
 
+    private Cultivo cultivo;
+    private Huerto huerto;
+
     public Cuartel(int id, float sup, Cultivo cultivo, Huerto huerto){
         this.id = id;
         sup = superficie;
@@ -31,7 +34,7 @@ public class Cuartel {
     }
 
     public Huerto getHuerto(){
-        return huerto
+        return huerto;
     }
 
     public PlanCosecha[] getPlanesCosecha(){
