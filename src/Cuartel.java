@@ -31,7 +31,11 @@ public class Cuartel {
     }
 
     public Huerto getHuerto(){
-        return huerto;
+        return huerto
+    }
+
+    public PlanCosecha[] getPlanesCosecha(){
+        return planes.toArray(new PlanCosecha[0]);
     }
 
 
