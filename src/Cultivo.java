@@ -1,8 +1,12 @@
+import java.util.ArrayList;
 public class Cultivo {
     private int id;
     private String especie;
     private String variedad;
     private float rendimiento;
+
+    private ArrayList<Cuartel>cuartel;
+
 
     public Cultivo(int id, String esp, String var, float rend) {
         this.id = id;
@@ -29,5 +33,9 @@ public class Cultivo {
 
     public void setRendimiento(float rendimiento) {
         this.rendimiento = rendimiento;
+    }
+
+    public boolean addCuartel(Cuartel cuartel){
+
     }
 }
