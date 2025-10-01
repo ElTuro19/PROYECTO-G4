@@ -9,8 +9,8 @@ public class Cuartel {
     public Cuartel(int id, float sup, Cultivo cultivo, Huerto huerto){
         this.id = id;
         sup = superficie;
-        cultivo = Cultivo;
-        huerto = Huerto;
+        this.cultivo = cultivo;
+        this.huerto = huerto;
     }
 
     public int getId() {

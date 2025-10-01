@@ -5,7 +5,7 @@ public class Cultivo {
     private String variedad;
     private float rendimiento;
 
-    private ArrayList<Cuartel>cuartel;
+    private ArrayList<Cuartel>cuarteles = new ArrayList<>();
 
 
     public Cultivo(int id, String esp, String var, float rend) {
@@ -36,6 +36,6 @@ public class Cultivo {
     }
 
     public boolean addCuartel(Cuartel cuartel){
-
+        return cuarteles.add(cuartel);
     }
 }
