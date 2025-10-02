@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class Cuartel {
     private int id;
     private float superficie;
@@ -5,6 +7,7 @@ public class Cuartel {
 
     private Cultivo cultivo;
     private Huerto huerto;
+    private ArrayList<PlanCosecha> planes;
 
     public Cuartel(int id, float sup, Cultivo cultivo, Huerto huerto){
         this.id = id;
@@ -21,6 +24,8 @@ public class Cuartel {
         return superficie;
     }
 
+    public float getRendimientoEsperado(){}
+
     public EstadoFenologico getEstado() {
         return estado;
     }
@@ -33,8 +38,14 @@ public class Cuartel {
         this.estado = estado;
     }
 
+    public Cultivo getCultivo() {return cultivo;}
+
     public Huerto getHuerto(){
         return huerto;
+    }
+
+    public void addPlanCosecha(PlanCosecha planCosecha){
+        planes.add(planCosecha);
     }
 
     public PlanCosecha[] getPlanesCosecha(){
