@@ -3,14 +3,16 @@ import java.util.Date;
 
 public class Cuadrilla {
 
+    //Atributos
     private int id;
     private String nombre;
     private int maximoCosechadores;
 
+    //Asignaciones
     private Supervisor supervisor;
     private PlanCosecha planCosecha;
     private ArrayList<Cosechador>cosechadores;
-
+    //Constructor
     public Cuadrilla(int id, String nom, Supervisor sup, PlanCosecha plan){
 
         this.id = id;
@@ -19,7 +21,7 @@ public class Cuadrilla {
         this.planCosecha = plan;
         this.cosechadores = new ArrayList<>();
     }
-
+    //get y set
     public int getId() {
         return id;
     }
