@@ -27,7 +27,7 @@ public class Cuadrilla {
     public String getNombre() {
         return nombre;
     }
-    public String setNombre(String nombre) {
+    public void setNombre(String nombre) {
         this.nombre = nombre;
     }
     public Supervisor getSupervisor() {
