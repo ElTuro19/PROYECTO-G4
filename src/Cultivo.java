@@ -5,7 +5,7 @@ public class Cultivo {
     private String variedad;
     private float rendimiento;
 
-    private ArrayList<Cuartel>cuarteles = new ArrayList<>();
+    private ArrayList<Cuartel>cuarteles;
 
 
     public Cultivo(int id, String esp, String var, float rend) {
@@ -36,6 +36,15 @@ public class Cultivo {
     }
 
     public boolean addCuartel(Cuartel cuartel){
-        return cuarteles.add(cuartel);
+        for(Cuartel c:cuarteles){
+            if(c.getId()==cuartel.getId()){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public Cuartel[] getCuarteles(){
+        return cuarteles.toArray(new Cuartel[0]);
     }
 }
