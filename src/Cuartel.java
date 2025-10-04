@@ -7,7 +7,7 @@ public class Cuartel {
 
     private Cultivo cultivo;
     private Huerto huerto;
-    private ArrayList<PlanCosecha> planes;
+    private ArrayList<PlanCosecha> planes = new ArrayList<>();
 
     public Cuartel(int id, float sup, Cultivo cultivo, Huerto huerto){
         this.id = id;
@@ -52,5 +52,12 @@ public class Cuartel {
         return planes.toArray(new PlanCosecha[0]);
     }
 
+
+    public Cuartel(int id, float sup, Cultivo cultivo, Huerto huerto){
+        this.id = id;
+        sup = superficie;
+        cultivo = cultivo;
+        huerto = huerto;
+    }
 
 }
