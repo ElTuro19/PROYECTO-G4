@@ -65,7 +65,7 @@ private final ArrayList<Cuadrilla> cuadrillas;
                 return false;
             }
         }
-        this.cuadrillas.add(new Cuadrilla(idCuad, nomCuadrilla, supervisor));
+        this.cuadrillas.add(new Cuadrilla(idCuad, nomCuadrilla, supervisor, this));
         return true;
     }
     public boolean addCosechadorToCuadrilla (int idCuad, Date flni,Date fFin, double meta, Cosechador cos) {
