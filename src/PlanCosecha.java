@@ -5,7 +5,7 @@ private int id;
 private String nombre;
 private Date inicio, fecha, finEstimado, finReal;
 private double metaKilos, precioBaseKilo;
-private ArrayList<Cuadrilla> cuadrillas;
+private final ArrayList<Cuadrilla> cuadrillas;
     private EstadoPlan estado;
     public PlanCosecha(int id, String nombre, Date inicio, Date finEstimado, double metaKilos, double precioBaseKilo, Cuartel cuartel) {
         this.id = id;
@@ -64,20 +64,22 @@ private ArrayList<Cuadrilla> cuadrillas;
             if (cuadrilla.getId() == idCuad) {
                 return false;
             }
-            this.cuadrillas.add(new Cuadrilla(idCuad, nomCuadrilla, supervisor));
-            return true;
         }
-        this.cuadrillas.add(new Cuadrilla(idCuad, nomCuadrilla, supervisor, this));
+        this.cuadrillas.add(new Cuadrilla(idCuad, nomCuadrilla, supervisor));
+        return true;
     }
     public boolean addCosechadorToCuadrilla (int idCuad, Date flni,Date fFin, double meta, Cosechador cos) {
         for (Cuadrilla cuadrilla : this.cuadrillas) {
-            if (cuadrilla.getId() == idCuad) {
-                Cuadrilla cuadSel = cuadrillas
+                if (cuadrilla == null) {return false;}
+                if (cuadrilla.getId() == idCuad) {
+                    Cuadrilla ObjSel = cuadrillas.get(idCuad);
+                    ObjSel.addCosechador(flni, fFin, meta, cos);
                 return true;
             }
-            return false;
         }
+        return false;
     }
+
     public Cuadrilla[] getCuadrillas () {
 
     }
