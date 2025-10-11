@@ -17,13 +17,13 @@ public class Propietario extends Persona {
     public String getDireccionComercial() { return direccionComercial; }
     public void setDireccionComercial(String direccionComercial) { this.direccionComercial = direccionComercial; }
 
-    public boolean addHuerto(Huerto h) {
+    public boolean addHuerto(Huerto huerto) {
         for (Huerto existente : huertos) {
-            if (existente.getNombre().equalsIgnoreCase(h.getNombre())) {
-                return false; // ya existe un huerto con ese nombre
+            if (existente.getNombre().equalsIgnoreCase(huerto.getNombre())) {
+                return false; 
             }
         }
-        huertos.add(h);
+        huertos.add(huerto);
         return true;
     }
     

@@ -1,4 +1,4 @@
-package com.Huerto;
+7package com.Huerto;
 
 import java.util.ArrayList;
 
@@ -10,17 +10,16 @@ public class Huerto {
     private ArrayList<Cuartel> cuarteles;
     
     // Constructor
-    public Huerto(String nombre, float superficie, String ubicacion, Propietario propietario) {
+    public Huerto(String nombre, float superficie, String ubicacion, Propietario prop) {
         this.nombre = nombre;
         this.superficie = superficie;
         this.ubicacion = ubicacion;
-        this.propietario = propietario;
+        propietario = prop;
         this.cuarteles = new ArrayList<>();
     }
     
     //
     public String getNombre() { return nombre; }
-    public void setNombre(String nombre) { this.nombre = nombre; }
     
     public float getSuperficie() { return superficie; }
     public void setSuperficie(float superficie) { this.superficie = superficie; }
@@ -31,14 +30,14 @@ public class Huerto {
     public Propietario getPropietario() { return propietario; }
     public void setPropietario(Propietario propietario) { this.propietario = propietario; }
     
-    public ArrayList<Cuartel> getCuarteles() { return cuarteles; }
-    
-    //
-    public boolean addCuartel(Cuartel c) {
+    public boolean addCuartel(Cuartel cuartel) {
         for (Cuartel existente : cuarteles) {
-            if (existente.getId() == c.getId()) return false;
+            if (existente.getId() == cuartel.getId()) return false;
         }
-        cuarteles.add(c);
+        cuarteles.add(cuartel);
         return true;
     }
+
+    public Cuartel getCuartel(int id) { return cuarteles.get(id); }
+    public ArrayList<Cuartel> getCuarteles() { return cuarteles; }
 }
