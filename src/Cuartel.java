@@ -3,15 +3,15 @@ import java.util.ArrayList;
 public class Cuartel {
     private int id;
     private float superficie;
-    private EstadoFenologico estado;
+    private EstadoFenologico estado = EstadoFenologico.REPOSO_INVERNAL;
 
     private Cultivo cultivo;
     private Huerto huerto;
     private ArrayList<PlanCosecha> planes = new ArrayList<>();
 
-    public Cuartel(int id, float sup, Cultivo cultivo, Huerto huerto){
+    public Cuartel(int id, float sup, Cultivo cultivo, Huerto huerto) {
         this.id = id;
-        sup = superficie;
+        this.superficie = sup;
         this.cultivo = cultivo;
         this.huerto = huerto;
     }
@@ -24,7 +24,10 @@ public class Cuartel {
         return superficie;
     }
 
-    public float getRendimientoEsperado(){}
+    public float getRendimientoEsperado(){
+        float rendimientoEsp = cultivo.getRendimiento() * superficie;
+        return rendimientoEsp;
+    }
 
     public EstadoFenologico getEstado() {
         return estado;
@@ -38,26 +41,20 @@ public class Cuartel {
         this.estado = estado;
     }
 
-    public Cultivo getCultivo() {return cultivo;}
+    public Cultivo getCultivo() {
+        return cultivo;
+    }
 
-    public Huerto getHuerto(){
+    public Huerto getHuerto() {
         return huerto;
     }
 
-    public void addPlanCosecha(PlanCosecha planCosecha){
+    public void addPlanCosecha(PlanCosecha planCosecha) {
         planes.add(planCosecha);
     }
 
-    public PlanCosecha[] getPlanesCosecha(){
+    public PlanCosecha[] getPlanesCosecha() {
         return planes.toArray(new PlanCosecha[0]);
-    }
-
-
-    public Cuartel(int id, float sup, Cultivo cultivo, Huerto huerto){
-        this.id = id;
-        sup = superficie;
-        cultivo = cultivo;
-        huerto = huerto;
     }
 
 }
