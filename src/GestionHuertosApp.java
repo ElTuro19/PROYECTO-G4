@@ -1,4 +1,9 @@
+import java.util.Scanner;
+import java.util.ArrayList;
 public class GestionHuertosApp {
+    Scanner sc = new Scanner(System.in);
+    ControlProduccion cp = new ControlProduccion();
+    ArrayList<ControlProduccion> cplist = new ArrayList<>();
     public static void main(String[] args) {
 
 
@@ -19,9 +24,20 @@ public class GestionHuertosApp {
         System.out.println("9. Listar Planes de Cosecha");
         System.out.println("10. Salir");}
     public void creaPersona() {
+        boolean success = false;
         System.out.println("Creando una persona . . .");
         System.out.print("Rol persona (1=Propietario, 2=Supervisor, 3=Cosechador): ");
+        do {
+            int opt = sc.nextInt();
+        switch (opt) {
+            case 1:
+            cp.createPropietario()
+            case 2:
+            case 3:
+            default:
+        }} while (success=false)
         System.out.print("Rut : ");
+        Rut rut
         System.out.print("Nombre: ");
         System.out.print("Email: ");
         System.out.print("Direccion:");
