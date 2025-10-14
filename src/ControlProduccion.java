@@ -172,7 +172,7 @@ public class ControlProduccion {
                 }
             }
 
-            String lineaCultivo = String.format("%d, %s, %s, %.2f, %d",
+            String lineaCultivo = String.format("%d %s %s %.2f %d",
                     c.getId(),
                     c.getEspecie(),
                     c.getVariedad() != null ? c.getVariedad() : "N/A",
@@ -192,7 +192,7 @@ public class ControlProduccion {
         for (Huerto h : this.huertos) {
         int nroCuarteles = h.getCuarteles().size();
 
-        String lineaHuertos = String.format("%s, %f, %s, %s, %s, %d",
+        String lineaHuertos = String.format("%s %f %s %s %s %d",
                 h.getNombre(),
                 h.getSuperficie(),
                 h.getUbicacion(),
@@ -231,8 +231,8 @@ public class ControlProduccion {
         }
         List<String> resultados = new ArrayList<>();
         for(Supervisor s : this.supervisores) {
-            String nombreCuadrilla = s.getCuadrilla().getNombre() != null ?  s.getCuadrilla().getNombre() : "N/A";
-            String lineaSupervisores = String.format("%s, %s, %s, %s, %s, %s",
+            String nombreCuadrilla = s.getCuadrilla() != null ?  s.getCuadrilla().getNombre() : "N/A";
+            String lineaSupervisores = String.format("%-15s %-15s %-20s %-20s %-20s %17s",
                     s.getRut(),
                     s.getNombre(),
                     s.getDireccion(),
@@ -251,11 +251,12 @@ public class ControlProduccion {
         List<String> resultados = new ArrayList<>();
         for(Cosechador c : this.cosechadores) {
             int nroCuadrillas = c.getCuadrillas().length;
-            String lineaCosechadores = String.format("%s, %s, %s, %s, %d, %d",
+            String lineaCosechadores = String.format("%s %s %s %s %s %d",
                     c.getRut(),
                     c.getNombre(),
                     c.getDireccion(),
                     c.getEmail(),
+                    c.getFechaNacimiento(),
                     nroCuadrillas);
             resultados.add(lineaCosechadores);
         }
