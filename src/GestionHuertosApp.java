@@ -9,7 +9,10 @@ public class GestionHuertosApp {
     public static void main(String[] args){
 
     }
-    public void menu(){
+    public static void menu(){
+        ControlProduccion control = new ControlProduccion();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        Scanner sc = new Scanner(System.in);
         String rut, nombre, email, dirp, dirc, profesion, fechaNa, nombrePlan, nombreHuerto, especie, variedad;
         int opcion, id, idCuartel, idCultivo;
         do{
@@ -230,28 +233,28 @@ public class GestionHuertosApp {
                     break;
                 case 6:
                     System.out.println("---LISTADO DE CULTIVOS---");
-                    System.out.printf("%s5, %s10, %s10, %s15, %s17", "ID", "Especie", "Variedad", "Rendimento", "Nro Cuarteles");
+                    System.out.printf("%5s, %10s, %10s, %15s, %17s", "ID", "Especie", "Variedad", "Rendimento", "Nro Cuarteles");
                     control.listCultivos();
                     break;
                 case 7:
                     System.out.println("--LISTADO DE HUERTOS--");
-                    System.out.printf("%s10, %s15, %s12, %s17, %s20, %s17", "Nombre", "Superficie", "Ubicación", "Rut propietario", "Nombre Propietario", "Nro Cuarteles");
+                    System.out.printf("%10s, %15s, %12s, %17s, %20s, %17s", "Nombre", "Superficie", "Ubicación", "Rut propietario", "Nombre Propietario", "Nro Cuarteles");
                     control.listHuertos();
                     break;
                 case 8:
                     System.out.println("---LISTADO DE PROPIETARIOS---");
-                    System.out.printf("%s10, %s15, %s22, %s17, %s20, %s17", "Rut", "Nombre", "Dirección", "email", "Dirección Comercial", "Nro Huertos");
+                    System.out.printf("%10s, %15s, %22s, %17s, %20s, %17s", "Rut", "Nombre", "Dirección", "email", "Dirección Comercial", "Nro Huertos");
                     control.listPropietarios();
                     System.out.println("---LISTADO DE SUPERVISORES---");
-                    System.out.printf("%s10, %s15, %s22, %s25, %s15, %s17", "Rut", "Nombre", "Dirección", "email", "Profesion", "Nro Huertos");
+                    System.out.printf("%10s, %15s, %22s, %25s, %15s, %17s", "Rut", "Nombre", "Dirección", "email", "Profesion", "Nro Huertos");
                     control.listSupervisores();
                     System.out.println("---LISTADO DE COSECHADORES---");
-                    System.out.printf("%s10, %s15, %s22, %s25, %s15, %s17", "Rut", "Nombre", "Dirección", "email", "Fecha Nacimiento", "Nro Cuadrillas");
+                    System.out.printf("%10s, %15s, %22s, %25s, %15s, %17s", "Rut", "Nombre", "Dirección", "email", "Fecha Nacimiento", "Nro Cuadrillas");
                     control.listCosechadores();
                     break;
                 case 9:
                     System.out.println("---LISTADO DE PLANES DE COSECHA---");
-                    System.out.printf("%s10, %s15, %s22, %s25, %s15, %s17 %s17, %s15, %s20", "Id", "Nombre", "Fecha Inicio", "Fecha Termino", "Meta (Kg)", "Precio Base(Kg)", "Estado", "Id Cuartel", "Nombre Huerto");
+                    System.out.printf("%10s, %15s, %22s, %25s, %17s, %17s, %17s, %15s, %20s", "Id", "Nombre", "Fecha Inicio", "Fecha Termino", "Meta (Kg)", "Precio Base(Kg)", "Estado", "Id Cuartel", "Nombre Huerto");
                     control.listPlanesCosecha();
                     break;
                 case 10:
