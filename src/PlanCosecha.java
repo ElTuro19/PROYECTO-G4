@@ -1,14 +1,12 @@
 import java.util.ArrayList;
-import java.util.Date;
 import java.time.LocalDate;
 public class PlanCosecha {
 private int id;
 private String nombre;
 private Cuartel cuartel;
 private LocalDate inicio;
-    private Date fecha;
     private LocalDate finEstimado;
-    private Date finReal;
+    private LocalDate finReal;
 private double metaKilos, precioBaseKilo;
 private final ArrayList<Cuadrilla> cuadrillas;
     private EstadoPlan estado;
@@ -37,10 +35,10 @@ private final ArrayList<Cuadrilla> cuadrillas;
     public LocalDate getFinEstimado() {
         return this.finEstimado;
     }
-    public Date getFinReal() {
+    public LocalDate getFinReal() {
         return this.finReal;
     }
-    public void setFinReal(Date finReal) {
+    public void setFinReal(LocalDate finReal) {
         this.finReal = finReal;
     }
     public double getMetaKilos() {
@@ -64,9 +62,13 @@ private final ArrayList<Cuadrilla> cuadrillas;
     public Cuartel getCuartel() {
         return this.cuartel;
     }
+    private Cuadrilla findCuadrillaById(int idCuad){
+        for (Cuadrilla cuadrilla : cuadrillas) {if (cuadrilla.getId()==idCuad) {return cuadrilla;}}
+        return null;
+    }
     public boolean addCuadrilla (int idCuad, String nomCuadrilla, Supervisor supervisor) {
         for (Cuadrilla cuadrilla : this.cuadrillas) {
-            if (cuadrilla.getId() == idCuad) {
+            if (findCuadrillaById(idCuad)!=null) {
                 return false;
             }
         }
@@ -76,8 +78,8 @@ private final ArrayList<Cuadrilla> cuadrillas;
     public boolean addCosechadorToCuadrilla (int idCuad, LocalDate flni, LocalDate fFin, double meta, Cosechador cos) {
         for (Cuadrilla cuadrilla : this.cuadrillas) {
                 if (cuadrilla == null) {return false;}
-                if (cuadrilla.getId() == idCuad) {
-                    Cuadrilla ObjSel = cuadrillas.get(idCuad);
+                if (findCuadrillaById(idCuad)!=null) {
+                    Cuadrilla ObjSel = findCuadrillaById(idCuad);
                     ObjSel.addCosechador(flni, fFin, meta, cos);
                 return true;
             }
