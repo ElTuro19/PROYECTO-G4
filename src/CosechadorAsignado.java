@@ -3,8 +3,8 @@ import java.util.Date;
 public class CosechadorAsignado {
 
     //Atributos
-    private Date desde;
-    private Date hasta;
+    private LocalDate desde;
+    private LocalDate hasta;
     private double metaKilos;
 
     //Asignaciones
@@ -12,7 +12,7 @@ public class CosechadorAsignado {
     private Cosechador cosechador;
 
     //Constructor
-    public CosechadorAsignado(Date fIni, Date fFin, double meta, Cuadrilla cuad, Cosechador cos){
+    public CosechadorAsignado(LocalDate fIni, LocalDate fFin, double meta, Cuadrilla cuad, Cosechador cos){
         this.desde = fIni;
         this.hasta = fFin;
         this.metaKilos = meta;

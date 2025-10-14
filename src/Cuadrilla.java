@@ -41,22 +41,24 @@ public class Cuadrilla {
         return planCosecha;
     }
 
-    public boolean addCosechador(Date fIni, Date fFin, double meta, Cosechador cos){
+    private ArrayList<CosechadorAsignado> asignados = new ArrayList<>();
+    private int maximoCosechadores = 10;
 
-       if (cosechadores.size() < maximoCosechadores){
-           cosechadores.add(cos);
-           return true;
-       }
-       return false;
+    public boolean addCosechador(LocalDate fIni, LocalDate fFin, double meta, Cosechador cos){
+        if (cos == null) return false;
+        if (asignados.size() >= maximoCosechadores) return false;
+        for (CosechadorAsignado a : asignados) {
+            if (a.getCosechador().getRut().equals(cos.getRut())) return false;
+        }
+        CosechadorAsignado nuevo = new CosechadorAsignado(fIni, fFin, meta, this, cos);
+        asignados.add(nuevo);
+        cos.addCuadrilla(nuevo);
+        return true;
     }
 
-    public Cosechador[] getCosechadores(){
-        return cosechadores.toArray(new Cosechador[0]);
-    }
-    public int getMaximoCosechadores(){
-        return maximoCosechadores;
-    }
-    public void setMaximoCosechadores(int max){
-        this.maximoCosechadores = max;
+    public Cosechador[] getCosechadores() {
+        ArrayList<Cosechador> lista = new ArrayList<>();
+        for (CosechadorAsignado a : asignados) lista.add(a.getCosechador());
+        return lista.toArray(new Cosechador[0]);
     }
 }

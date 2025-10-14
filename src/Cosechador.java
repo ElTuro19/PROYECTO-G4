@@ -22,6 +22,11 @@ public class Cosechador {
     }
     //Muestra las cuadrillas a las que está asociado
     public Cuadrilla[] getCuadrillas(){
-        return asignaciones.stream().map(CosechadorAsignado::getCuadrilla).toArray(Cuadrilla[]::new);
+        ArrayList<Cuadrilla> resultado = new ArrayList<>();
+        for (CosechadorAsignado ca : asignaciones) {
+            resultado.add(ca.getCuadrilla());
+        }
+        return resultado.toArray(new Cuadrilla[0]);
     }
+
 }
