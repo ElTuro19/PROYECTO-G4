@@ -67,23 +67,18 @@ private final ArrayList<Cuadrilla> cuadrillas;
         return null;
     }
     public boolean addCuadrilla (int idCuad, String nomCuadrilla, Supervisor supervisor) {
-        for (Cuadrilla cuadrilla : this.cuadrillas) {
-            if (findCuadrillaById(idCuad)!=null) {
-                return false;
-            }
-        }
+        if (findCuadrillaById(idCuad)!=null) {return false;}
         this.cuadrillas.add(new Cuadrilla(idCuad, nomCuadrilla, supervisor, this));
         return true;
     }
     public boolean addCosechadorToCuadrilla (int idCuad, LocalDate flni, LocalDate fFin, double meta, Cosechador cos) {
         for (Cuadrilla cuadrilla : this.cuadrillas) {
                 if (cuadrilla == null) {return false;}
-                if (findCuadrillaById(idCuad)!=null) {
-                    Cuadrilla ObjSel = findCuadrillaById(idCuad);
-                    ObjSel.addCosechador(flni, fFin, meta, cos);
-                return true;
             }
-        }
+        if (findCuadrillaById(idCuad)!=null) {
+            Cuadrilla ObjSel = findCuadrillaById(idCuad);
+            ObjSel.addCosechador(flni, fFin, meta, cos);
+            return true;}
         return false;
     }
 
