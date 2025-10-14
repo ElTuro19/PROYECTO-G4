@@ -77,11 +77,21 @@ public class ControlProduccion {
 
     public boolean addCuartelToHuerto(String nombreHuerto, int idCuartel, float superficie, int idCultivo) {
         Huerto huerto = null; Cultivo cultivo = null;
-        for (Huerto h : huertos) if (h.getNombre().equals(nombreHuerto)) huerto = h;
-        for (Cultivo c : cultivos) if (c.getId() == idCultivo) cultivo = c;
-        if (huerto == null || cultivo == null) return false;
-        return huerto.addCuartel(idCuartel, superficie, cultivo);
-
+        for (Huerto h : huertos){
+            if(h.getNombre().equals(nombreHuerto)){
+                huerto = h;
+                for(Cultivo c : cultivos){
+                    if(c.getId() == idCultivo){
+                        cultivo = c;
+                        if(c.getCuarteles() == null){
+                            huerto.addCuartel(idCuartel, superficie, cultivo);
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     public boolean createPlanCosecha(int idPlan, String nom, LocalDate inicio, LocalDate finEstim, double meta, float precioBase, String nomHuerto, int idCuartel) {
@@ -92,14 +102,14 @@ public class ControlProduccion {
                 huerto = h;
                 cuartel = huerto.getCuartel(idCuartel);
                 for (PlanCosecha pc : planesDeCosecha) {
-                    if (pc.getId() == idPlan) {
-                        return false;
+                    if (pc.getId() != idPlan) {
+                        PlanCosecha nuevo = new PlanCosecha(idPlan, nom, inicio, finEstim, meta, precioBase, cuartel);
+                        planesDeCosecha.add(nuevo);
+                        cuartel.addPlanCosecha(nuevo);
+                        return true;
                     }
                 }
-                PlanCosecha nuevo = new PlanCosecha(idPlan, nom, inicio, finEstim, meta, precioBase, cuartel);
-                planesDeCosecha.add(nuevo);
-                cuartel.addPlanCosecha(nuevo);
-                return true;
+
             }
         }
         return false;

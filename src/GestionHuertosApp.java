@@ -305,7 +305,7 @@ public class GestionHuertosApp {
                 System.out.println(propietarios[i]);
             }
             System.out.println("---LISTADO DE SUPERVISORES---");
-            System.out.printf("%-15s %-15s %-20s %-25s %-15s %-5s%n", "Rut", "Nombre", "Dirección", "email", "Profesion", "Nro Huertos");
+            System.out.printf("%-15s %-15s %-20s %-25s %-15s %-5s%n", "Rut", "Nombre", "Dirección", "email", "Profesion", "Nombre cuadrilla");
             String [] supervisores = control.listSupervisores();
             for(int i=0; i<supervisores.length; i++){
                 System.out.println(supervisores[i]);
@@ -320,7 +320,7 @@ public class GestionHuertosApp {
 
         private void listaPlanesCosecha(){
             System.out.println("---LISTADO DE PLANES DE COSECHA---");
-            System.out.printf("%-10s %-15s %-22s %-25s %-17s %-17s %17s %15s %20s", "Id", "Nombre", "Fecha Inicio", "Fecha Termino", "Meta (Kg)", "Precio Base(Kg)", "Estado", "Id Cuartel", "Nombre Huerto");
+            System.out.printf("%-10s %-15s %-22s %-25s %-17s %-17s %17s %15s %20s%n", "Id", "Nombre", "Fecha Inicio", "Fecha Termino", "Meta (Kg)", "Precio Base(Kg)", "Estado", "Id Cuartel", "Nombre Huerto");
             String [] planes = control.listPlanesCosecha();
             for(int i=0; i<planes.length; i++){
                 System.out.println(planes[i]);
