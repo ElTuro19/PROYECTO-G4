@@ -26,6 +26,7 @@ public class GestionHuertosApp {
             System.out.println("9. Listar Planes de Cosecha");
             System.out.println("10. Salir");
             opcion = sc.nextInt();
+            sc.nextLine();
             switch(opcion){
                 case 1:
                     creaPersona();
@@ -65,7 +66,7 @@ public class GestionHuertosApp {
             String rut, nombre, email, dirp, dirc, profesion, fechaNa;
             int op;
             System.out.println("Creando Persona...");
-            System.out.println("Rol persona (1=Popietario, 2=Supervisor, 3=Cosechador)");
+            System.out.println("Rol persona (1=Propietario, 2=Supervisor, 3=Cosechador)");
             op = sc.nextInt();
             sc.nextLine();
             switch(op) {
@@ -160,11 +161,11 @@ public class GestionHuertosApp {
             nombre = sc.nextLine();
             System.out.println("Ingrese la superficie del Huerto");
             sup = sc.nextFloat();
+            sc.nextLine();
             System.out.println("Ingrese la ubicación del Huerto");
             ubi = sc.nextLine();
             System.out.println("Ingrese rut del Propietario");
             rut = sc.nextLine();
-            sc.nextLine();
             boolean isOk1 = control.createHuerto(nombre, sup, ubi, rut);
             if (isOk1) {
                 System.out.println("Huerto creado exitosamente");
@@ -201,6 +202,7 @@ public class GestionHuertosApp {
             float precioBase;
             System.out.println("Ingrese el id del Plan");
             id = sc.nextInt();
+            sc.nextLine();
             System.out.println("Ingrese el nombre del Plan");
             nombre = sc.nextLine();
             System.out.println("Ingrese la fecha de inicio del Plan (dd/mmm/aaaa)");
@@ -211,13 +213,14 @@ public class GestionHuertosApp {
             LocalDate finalizacion = LocalDate.parse(ffin, formatter);
             System.out.println("Ingrese la meta de kg del Plan");
             meta = sc.nextFloat();
+            sc.nextLine();
             System.out.println("Ingrese precio base por kilo");
             precioBase = sc.nextFloat();
+            sc.nextLine();
             System.out.println("Ingrese nombre del Huerto en el que usará el plan");
             nombreHuerto = sc.nextLine();
             System.out.println("Ingrese el id del Cuartel");
             idCu = sc.nextInt();
-            sc.nextLine();
             boolean isOk3 = control.createPlanCosecha(id, nombre, inicio, finalizacion, meta, precioBase, nombreHuerto, idCu);
             if (isOk3) {
                 System.out.println("Plan creado exitosamente");
