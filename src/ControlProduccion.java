@@ -76,23 +76,12 @@ public class ControlProduccion {
     }
 
     public boolean addCuartelToHuerto(String nombreHuerto, int idCuartel, float superficie, int idCultivo) {
-        Huerto huerto = null;
-        Cultivo cultivo = null;
-        for (Huerto h : huertos) {
-            if (h.getNombre().equals(nombreHuerto)) {
-                huerto = h;
-            } else {
-                return false;
-            }
-        }
-        for (Cultivo c : cultivos) {
-            if (c.getId() == idCultivo) {
-                cultivo = c;
-            } else {
-                return false;
-            }
-        }
+        Huerto huerto = null; Cultivo cultivo = null;
+        for (Huerto h : huertos) if (h.getNombre().equals(nombreHuerto)) huerto = h;
+        for (Cultivo c : cultivos) if (c.getId() == idCultivo) cultivo = c;
+        if (huerto == null || cultivo == null) return false;
         return huerto.addCuartel(idCuartel, superficie, cultivo);
+
     }
 
     public boolean createPlanCosecha(int idPlan, String nom, LocalDate inicio, LocalDate finEstim, double meta, float precioBase, String nomHuerto, int idCuartel) {
@@ -102,31 +91,25 @@ public class ControlProduccion {
             if (h.getNombre().equals(nomHuerto)) {
                 huerto = h;
                 cuartel = huerto.getCuartel(idCuartel);
+                for (PlanCosecha pc : planesDeCosecha) {
+                    if (pc.getId() == idPlan) {
+                        return false;
+                    }
+                }
+                PlanCosecha nuevo = new PlanCosecha(idPlan, nom, inicio, finEstim, meta, precioBase, cuartel);
+                planesDeCosecha.add(nuevo);
+                cuartel.addPlanCosecha(nuevo);
+                return true;
             }
-            return false;
         }
-
-        for (PlanCosecha pc : planesDeCosecha) {
-            if (pc.getId() == idPlan) {
-                return false;
-            }
-        }
-        PlanCosecha nuevo = new PlanCosecha(idPlan, nom, inicio, finEstim, meta, precioBase, cuartel);
-        planesDeCosecha.add(nuevo);
-        cuartel.addPlanCosecha(nuevo);
-        return true;
+        return false;
     }
 
     public boolean addCuadrillatoPlan(int idPlan, int idCuad, String nomCuad, String rutSup) {
         PlanCosecha planCosecha = null;
-        Cuadrilla cuadrilla = null;
         Supervisor supervisor = null;
-        for (PlanCosecha pc : planesDeCosecha) {
-            if (pc.getId() == idPlan) {
-                planCosecha = pc;
-            }
-            return false;
-        }
+        for (PlanCosecha pc : planesDeCosecha) if (pc.getId() == idPlan) { planCosecha = pc; break; }
+        if (planCosecha == null) return false;
         for (Supervisor s : supervisores) {
             if (s.getRut().equals(rutSup)) {
                 supervisor = s;
@@ -144,18 +127,15 @@ public class ControlProduccion {
         for (PlanCosecha pc : planesDeCosecha) {
             if (pc.getId() == idPlan) {
                 planCosecha = pc;
-            } else {
-                return false;
+                for (Cosechador c : cosechadores) {
+                    if (c.getRut().equals(rutCosechador)) {
+                        cosechador = c;
+                        return planCosecha.addCosechadorToCuadrilla(idCuadrilla, fInicio, fFin, meta, cosechador);
+                    }
+                }
             }
         }
-        for (Cosechador c : cosechadores) {
-            if (c.getRut().equals(rutCosechador)) {
-                cosechador = c;
-            } else {
-                return false;
-            }
-        }
-        return planCosecha.addCosechadorToCuadrilla(idCuadrilla, fInicio, fFin, meta, cosechador);
+        return false;
     }
 
     public String[] listCultivos() {
@@ -195,7 +175,7 @@ public class ControlProduccion {
         for (Huerto h : this.huertos) {
         int nroCuarteles = h.getCuarteles().size();
 
-        String lineaHuertos = String.format("%s %f %s %s %s %d",
+        String lineaHuertos = String.format("%-15s %-15s %-20s %-20s %15s %15d",
                 h.getNombre(),
                 h.getSuperficie(),
                 h.getUbicacion(),
@@ -214,14 +194,13 @@ public class ControlProduccion {
         }
        List<String> resultados = new ArrayList<>();
         for(Propietario p : this.propietarios) {
-            int nroHuertos = p.getHuertos().size();
             String lineaPropietarios = String.format("%-15s %-15s %-20s %-20s %15s %15d",
                     p.getRut(),
                     p.getNombre(),
                     p.getDireccion(),
                     p.getEmail(),
                     p.getDireccionComercial(),
-                    nroHuertos
+                    p.getHuertos().size()
             );
             resultados.add(lineaPropietarios);
         }

@@ -290,7 +290,7 @@ public class GestionHuertosApp {
 
         private void listaHuertos(){
             System.out.println("--LISTADO DE HUERTOS--");
-            System.out.printf("%10s %15s %12s %17s %20s %17s", "Nombre", "Superficie", "Ubicación", "Rut propietario", "Nombre Propietario", "Nro Cuarteles");
+            System.out.printf("%10s %15s %12s %17s %20s %17s%n", "Nombre", "Superficie", "Ubicación", "Rut propietario", "Nombre Propietario", "Nro Cuarteles");
             String [] huertos = control.listHuertos();
             for(int i=0; i<huertos.length; i++){
                 System.out.println(huertos[i]);
