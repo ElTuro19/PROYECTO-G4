@@ -21,6 +21,7 @@ public class Cuadrilla {
         this.planCosecha = plan;
         this.cosechadores = new ArrayList<>();
     }
+
     //get y set
     public int getId() {
         return id;
@@ -48,6 +49,7 @@ public class Cuadrilla {
        }
        return false;
     }
+
     public Cosechador[] getCosechadores(){
         return cosechadores.toArray(new Cosechador[0]);
     }
