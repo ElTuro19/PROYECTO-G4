@@ -1,5 +1,5 @@
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class ControlProduccion {
@@ -34,7 +34,7 @@ public class ControlProduccion {
         return true;
     }
 
-    public boolean createCosechador(String rut, String nombre, String email, String direccion, Date fechaNacimiento) {
+    public boolean createCosechador(String rut, String nombre, String email, String direccion, LocalDate fechaNacimiento) {
         for (Cosechador c : cosechadores) {
             if (c.getRut().equals(rut)) {
                 return false;
@@ -93,7 +93,7 @@ public class ControlProduccion {
         return huerto.addCuartel(idCuartel, superficie, cultivo);
     }
 
-    public boolean createPlanCosecha(int idPlan, String nom, Date inicio, Date finEstim, double meta, float precioBase, String nomHuerto, int idCuartel) {
+    public boolean createPlanCosecha(int idPlan, String nom, LocalDate inicio, LocalDate finEstim, double meta, float precioBase, String nomHuerto, int idCuartel) {
         Cuartel cuartel = null;
         Huerto huerto = null;
         for (Huerto h : huertos) {
@@ -136,7 +136,7 @@ public class ControlProduccion {
         return planCosecha.addCuadrilla(idCuad, nomCuad, supervisor);
     }
 
-    public boolean addCosechadorToCuadrilla(int idPlan, int idCuadrilla, Date fInicio, Date fFin, double meta, String rutCosechador) {
+    public boolean addCosechadorToCuadrilla(int idPlan, int idCuadrilla, LocalDate fInicio, LocalDate fFin, double meta, String rutCosechador) {
         PlanCosecha planCosecha = null;
         Cosechador cosechador = null;
         for (PlanCosecha pc : planesDeCosecha) {
@@ -221,6 +221,25 @@ public class ControlProduccion {
                     nroHuertos
             );
             resultados.add(lineaPropietarios);
+        }
+        return resultados.toArray(new String[0]);
+    }
+
+    public String[] listSupervisores(){
+        if (this.supervisores.isEmpty()) {
+            return new String[0];
+        }
+        List<String> resultados = new ArrayList<>();
+        for(Supervisor s : this.supervisores) {
+            String nombreCuadrilla = s.getCuadrilla().getNombre() != null ?  s.getCuadrilla().getNombre() : "N/A";
+            String lineaSupervisores = String.format("%s, %s, %s, %s, %s, %s",
+                    s.getRut(),
+                    s.getNombre(),
+                    s.getDireccion(),
+                    s.getEmail(),
+                    s.getProfesion(),
+                    nombreCuadrilla);
+            resultados.add(lineaSupervisores);
         }
         return resultados.toArray(new String[0]);
     }
