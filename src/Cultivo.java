@@ -8,11 +8,11 @@ public class Cultivo {
     private ArrayList<Cuartel>cuarteles = new ArrayList<>();
 
 
-    public Cultivo(int id, String esp, String var, float rend) {
+    public Cultivo(int id, String esp, String var, double rend) {
         this.id = id;
-        esp = especie;
-        var = variedad;
-        rend = rendimiento;
+        this.especie = esp;
+        this.variedad = var;
+        this.rendimiento = (float) rend;
     }
 
     public int getId() {
@@ -41,8 +41,8 @@ public class Cultivo {
                 return false;
             }
         }
-        cuarteles.add(cuartel);
-        return true;
+        return cuarteles.add(cuartel);
+
     }
 
     public Cuartel[] getCuarteles(){

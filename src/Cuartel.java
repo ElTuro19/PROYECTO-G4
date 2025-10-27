@@ -9,7 +9,7 @@ public class Cuartel {
     private Huerto huerto;
     private ArrayList<PlanCosecha> planes = new ArrayList<>();
 
-    public Cuartel(int id, float sup, Cultivo cultivo, Huerto huerto) {
+    public Cuartel(int id, float sup, Cultivo cultivo, Huerto huerto){
         this.id = id;
         this.superficie = sup;
         this.cultivo = cultivo;
@@ -25,8 +25,7 @@ public class Cuartel {
     }
 
     public float getRendimientoEsperado(){
-        float rendimientoEsp = cultivo.getRendimiento() * superficie;
-        return rendimientoEsp;
+        return cultivo.getRendimiento();
     }
 
     public EstadoFenologico getEstado() {
@@ -41,19 +40,17 @@ public class Cuartel {
         this.estado = estado;
     }
 
-    public Cultivo getCultivo() {
-        return cultivo;
-    }
+    public Cultivo getCultivo() {return cultivo;}
 
-    public Huerto getHuerto() {
+    public Huerto getHuerto(){
         return huerto;
     }
 
-    public void addPlanCosecha(PlanCosecha planCosecha) {
+    public void addPlanCosecha(PlanCosecha planCosecha){
         planes.add(planCosecha);
     }
 
-    public PlanCosecha[] getPlanesCosecha() {
+    public PlanCosecha[] getPlanesCosecha(){
         return planes.toArray(new PlanCosecha[0]);
     }
 
