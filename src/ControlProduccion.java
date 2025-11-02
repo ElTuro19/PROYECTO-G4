@@ -65,33 +65,44 @@ public class ControlProduccion {
                 return false;
             }
         }
-        for (Propietario p : propietarios) {
-            if (p.getRut().equals(rutPropietario)) {
+
+        for(Propietario p : propietarios){
+            if(p.getRut().equals(rutPropietario)){
                 propietario = p;
             }
         }
+
+        if(propietario == null){
+            return false;
+        }
+
         Huerto nuevo = new Huerto(nombre, superficie, ubicacion, propietario);
         huertos.add(nuevo);
         return true;
     }
 
     public boolean addCuartelToHuerto(String nombreHuerto, int idCuartel, float superficie, int idCultivo) {
-        Huerto huerto = null; Cultivo cultivo = null;
+        Huerto huerto;
+        Cultivo cultivo;
         for (Huerto h : huertos){
             if(h.getNombre().equals(nombreHuerto)){
                 huerto = h;
                 for(Cultivo c : cultivos){
                     if(c.getId() == idCultivo){
                         cultivo = c;
-                        if(c.getCuarteles() == null){
-                            huerto.addCuartel(idCuartel, superficie, cultivo);
-                            return true;
+                        Cuartel[] cuarteles = cultivo.getCuarteles();
+                        for(int i=0; i< cuarteles.length; i++){
+                            if(cuarteles[i].getId() == idCuartel){
+                                return false;
+                            }
                         }
+                        huerto.addCuartel(idCuartel, superficie, cultivo);
+                        return true;
                     }
                 }
             }
         }
-        return false;
+        return true;
     }
 
     public boolean createPlanCosecha(int idPlan, String nom, LocalDate inicio, LocalDate finEstim, double meta, float precioBase, String nomHuerto, int idCuartel) {

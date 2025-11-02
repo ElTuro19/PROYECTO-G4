@@ -29,15 +29,15 @@ public class Huerto {
     public void setPropietario(Propietario propietario) { this.propietario = propietario; }
     
     public boolean addCuartel(int id, float sup, Cultivo cult) {
-        for (Cuartel c : cuarteles) {
+        for (Cuartel c : this.cuarteles) {
             if (c.getId() == id) {
                 return false;
             }
-            cuarteles.add(c);
+            this.cuarteles.add(c);
         }
         return true;
     }
 
-    public Cuartel getCuartel(int id) { return cuarteles.get(id); }
-    public ArrayList<Cuartel> getCuarteles() { return cuarteles; }
+    public Cuartel getCuartel(int id) { return this.cuarteles.get(id); }
+    public ArrayList<Cuartel> getCuarteles() { return this.cuarteles; }
 }
