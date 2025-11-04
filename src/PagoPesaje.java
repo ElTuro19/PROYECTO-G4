@@ -4,43 +4,31 @@ import java.util.List;
 public class PagoPesaje {
     private int id;
     private Date fecha;
-    private List<Pesaje> pesajes;
+    private List<Pesaje> pesaje;
 
-    public PagoPesaje(int id, Date fecha, List<Pesaje> pesajes) {
+    public PagoPesaje(int id, Date fecha, List<Pesaje> pesaje) {
         this.id = id;
         this.fecha = fecha;
-        this.pesajes = pesajes;
-
-        for (Pesaje p : pesajes){
-            p.setPago(this)
-        }
+        this.pesaje = pesaje;
     }
 
     public int getId() {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public Date getFecha() {
         return fecha;
     }
 
-    public void setFecha(Date fecha) {
-        this.fecha = fecha;
-    }
-
     public double getMonto() {
-        double total = 0;
-        for (Pesaje p : pesajes) {
-            total += p.getMonto();
+        double monto = 0;
+        for (Pesaje p : pesaje) {
+            monto += p.getMonto();
         }
-        return total;
+        return monto;
     }
 
     public Pesaje[] getPesajes() {
-        return pesajes.toArray(new Pesaje[0]);
+        return pesaje.toArray(new Pesaje[0]);
     }
 }
