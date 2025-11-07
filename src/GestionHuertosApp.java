@@ -281,7 +281,7 @@ public class GestionHuertosApp {
 
         private void listaCultivos(){
             System.out.println("---LISTADO DE CULTIVOS---");
-            System.out.printf("%-5s %-10s %-10s %-15s %-17s%n", "ID", "Especie", "Variedad", "Rendimento", "Nro Cuarteles");
+            System.out.printf("%-25s %-20s %-15s %-10s %-5s%n", "ID", "Especie", "Variedad", "Rendimento", "Nro Cuarteles");
             String[] cultivos = control.listCultivos();
             for(int i=0; i<cultivos.length; i++){
                 System.out.println(cultivos[i]);
@@ -290,7 +290,7 @@ public class GestionHuertosApp {
 
         private void listaHuertos(){
             System.out.println("--LISTADO DE HUERTOS--");
-            System.out.printf("%10s %15s %12s %17s %20s %17s%n", "Nombre", "Superficie", "Ubicación", "Rut propietario", "Nombre Propietario", "Nro Cuarteles");
+            System.out.printf("%-25s %-20s %-15s %-10s %-5s %s%n", "Nombre", "Superficie", "Ubicación", "Rut propietario", "Nombre Propietario", "Nro Cuarteles");
             String [] huertos = control.listHuertos();
             for(int i=0; i<huertos.length; i++){
                 System.out.println(huertos[i]);
@@ -299,7 +299,7 @@ public class GestionHuertosApp {
 
         private void listaPersonas(){
             System.out.println("---LISTADO DE PROPIETARIOS---");
-            System.out.printf("%-15s %-15s %-20s %-25s %-15s %-5s%n","Rut", "Nombre", "Dirección", "email", "Dirección Comercial",  "Nro Huertos");
+            System.out.printf("%-25s %-20s %-15s %-10s %-20s %-15s%n","Rut", "Nombre", "Dirección", "email", "Dirección Comercial",  "Nro Huertos");
             String[] propietarios = control.listPropietarios();
             for(int i=0; i<propietarios.length; i++){
                 System.out.println(propietarios[i]);

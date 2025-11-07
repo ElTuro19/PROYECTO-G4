@@ -33,7 +33,8 @@ public class Huerto {
             if (c.getId() == id) {
                 return false;
             }
-            this.cuarteles.add(c);
+            Cuartel nuevo = new Cuartel(id, sup, cult, this);
+            this.cuarteles.add(nuevo);
         }
         return true;
     }

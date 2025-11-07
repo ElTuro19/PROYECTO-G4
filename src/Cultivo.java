@@ -42,7 +42,6 @@ public class Cultivo {
             }
         }
         return cuarteles.add(cuartel);
-
     }
 
     public Cuartel[] getCuarteles(){

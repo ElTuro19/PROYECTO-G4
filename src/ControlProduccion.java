@@ -215,7 +215,7 @@ public class ControlProduccion {
         }
        List<String> resultados = new ArrayList<>();
         for(Propietario p : this.propietarios) {
-            String lineaPropietarios = String.format("%-15s %-15s %-20s %-20s %15s %15d",
+            String lineaPropietarios = String.format("%-25s %-20s %-15s %-10s %-15s %-15d",
                     p.getRut(),
                     p.getNombre(),
                     p.getDireccion(),
