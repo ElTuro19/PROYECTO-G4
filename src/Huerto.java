@@ -35,6 +35,7 @@ public class Huerto {
             }
             Cuartel nuevo = new Cuartel(id, sup, cult, this);
             this.cuarteles.add(nuevo);
+            cult.addCuartel(nuevo);
         }
         return true;
     }

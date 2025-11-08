@@ -78,6 +78,7 @@ public class ControlProduccion {
 
         Huerto nuevo = new Huerto(nombre, superficie, ubicacion, propietario);
         huertos.add(nuevo);
+        propietario.addHuerto(nuevo);
         return true;
     }
 
