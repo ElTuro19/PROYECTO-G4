@@ -60,6 +60,7 @@ public class ControlProduccion {
 
     public boolean createHuerto(String nombre, float superficie, String ubicacion, String rutPropietario) {
         Propietario propietario = null;
+        boolean verif = false;
         for (Huerto h : huertos) {
             if (h.getNombre().equals(nombre)) {
                 return false;
@@ -67,12 +68,17 @@ public class ControlProduccion {
         }
         for (Propietario p : propietarios) {
             if (p.getRut().equals(rutPropietario)) {
-                propietario = p;
+                propietario = p; verif=true; break;
             }
         }
-        Huerto nuevo = new Huerto(nombre, superficie, ubicacion, propietario);
-        huertos.add(nuevo);
-        return true;
+        if (verif==true) {
+            Huerto nuevo = new Huerto(nombre, superficie, ubicacion, propietario);
+            huertos.add(nuevo);
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     public boolean addCuartelToHuerto(String nombreHuerto, int idCuartel, float superficie, int idCultivo) {
