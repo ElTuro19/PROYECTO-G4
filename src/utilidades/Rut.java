@@ -20,3 +20,36 @@ public final class Rut implements Comparable<Rut> {
         long num = Long.parseLong(s.substring(0, s.length()-1));
         return new Rut(num, dv);
     }
+    public static Rut of(long numero, char dv){ return new Rut(numero, dv); }
+
+    public long getNumero() { return numero; }
+    public char getDv() { return dv; }
+
+    public static boolean validar(long numero, char dv) {
+        int m = 0, s = 1;
+        long t = numero;
+        while (t != 0) {
+            s = (s + (int) (t % 10) * (9 - (m++ % 6))) % 11;
+            t /= 10;
+        }
+        char esperado = (char) (s != 0 ? s + 47 : 'K');
+        return Character.toUpperCase(dv) == esperado;
+    }
+
+    @Override public int compareTo(Rut o) {
+        int c = Long.compare(this.numero, o.numero);
+        if (c != 0) return c;
+        return Character.compare(this.dv, o.dv);
+    }
+
+    @Override public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Rut)) return false;
+        Rut rut = (Rut) o;
+        return numero == rut.numero && dv == rut.dv;
+    }
+
+    @Override public int hashCode() { return Objects.hash(numero, dv); }
+
+    @Override public String toString() { return String.format("%d-%s", numero, dv); }
+}

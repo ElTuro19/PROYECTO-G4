@@ -1,3 +1,7 @@
+package controlador;
+
+import modelo.Cosechador;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
