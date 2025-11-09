@@ -107,7 +107,7 @@ public class GestionHuertosApp {
                     break;
                 case 3:
                     System.out.println("Ingrese el rut de cosechador");
-                    rut = sc.next();
+                    rut = sc.nextLine();
                     System.out.println("Ingrese el nombre del cosechador");
                     nombre = sc.nextLine();
                     System.out.println("Ingrese la dirección del cosechador");
@@ -239,9 +239,9 @@ public class GestionHuertosApp {
                 rut = sc.next();
                 boolean isOk4 = control.addCuadrillatoPlan(id, idCuadrilla, nombreCuadrilla, rut);
                 if (isOk4) {
-                    System.out.println("Cuadrilla agregada exitosamente");
+                    System.out.println("Cuadrilla agregada exitosamente");//yeshhh
                 }else{
-                    System.out.println("La cuadrilla no se ha podido crear");
+                    System.out.println("La cuadrilla no se ha podido crear"); //unu
                 }
             }
         }

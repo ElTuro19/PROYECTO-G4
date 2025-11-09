@@ -126,46 +126,70 @@ public class ControlProduccion {
     }
 
     public boolean addCuadrillatoPlan(int idPlan, int idCuad, String nomCuad, String rutSup) {
+        PlanCosecha planCosecha = null;
         for(PlanCosecha pc : planesDeCosecha){
             if(pc.getId() == idPlan){
-                Cuadrilla[] cuadrillas = pc.getCuadrillas();
-                for(int i=0; i< cuadrillas.length; i++){
-                    if(cuadrillas[i].getId() == idCuad){
-                        for(Supervisor sup : supervisores){
-                            if(sup.getRut().equals(rutSup)){
-                                sup.setCuadrilla(cuadrillas[i]);
-                                return pc.addCuadrilla(idCuad, nomCuad, sup);
-                            }
-                        }
-                    }
-                }
+                planCosecha = pc;
+                break;
             }
         }
-        return false;
+
+        if(planCosecha == null){
+            return false;
+        }
+
+        Supervisor supervisor = null;
+        for(Supervisor s : supervisores){
+            if(s.getRut().equals(rutSup)){
+                supervisor = s;
+                break;
+            }
+        }
+
+        if(supervisor == null){
+            return false;
+        }
+        return planCosecha.addCuadrilla(idCuad, nomCuad, supervisor);
     }
 
     public boolean addCosechadorToCuadrilla(int idPlan, int idCuadrilla, LocalDate fInicio, LocalDate fFin, double meta, String rutCosechador) {
         PlanCosecha planCosecha = null;
-        Cosechador cosechador = null;
         for (PlanCosecha pc : planesDeCosecha) {
             if (pc.getId() == idPlan) {
                 planCosecha = pc;
-                for (Cosechador c : cosechadores) {
-                    if (c.getRut().equals(rutCosechador)) {
-                        cosechador = c;
-                        Cuadrilla[] cuadrillas = pc.getCuadrillas();
-                        for(int i=0; i<cuadrillas.length ; i++){
-                            if(cuadrillas[i].getId() == (idCuadrilla)){
-                                CosechadorAsignado cos = new CosechadorAsignado(fInicio, fFin, meta, cuadrillas[i], cosechador);
-                                cosechador.addCuadrilla(cos);
-                                return planCosecha.addCosechadorToCuadrilla(idCuadrilla, fInicio, fFin, meta, cosechador);
-                            }
-                        }
-                    }
-                }
+                break;
             }
         }
-        return false;
+        if (planCosecha == null) {
+            return false;
+        }
+
+        Cosechador cosechador = null;
+        for (Cosechador c : cosechadores) {
+            if (c.getRut().equals(rutCosechador)) {
+                cosechador = c;
+                break;
+            }
+        }
+        if (cosechador == null) {
+            return false;
+        }
+
+        Cuadrilla cuadrillaEncontrada = null;
+        for (Cuadrilla cu : planCosecha.getCuadrillas()) {
+            if (cu.getId() == idCuadrilla) {
+                cuadrillaEncontrada = cu;
+                break;
+            }
+        }
+        if (cuadrillaEncontrada == null) {
+            return false;
+        }
+
+        CosechadorAsignado asignacion = new CosechadorAsignado(fInicio, fFin, meta, cuadrillaEncontrada, cosechador);
+        cosechador.addCuadrilla(asignacion);
+
+        return planCosecha.addCosechadorToCuadrilla(idCuadrilla, fInicio, fFin, meta, cosechador);
     }
 
     public String[] listCultivos() {
