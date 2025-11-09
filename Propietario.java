@@ -1,5 +1,3 @@
-package com.Huerto;
-
 import java.util.ArrayList;
 
 public class Propietario extends Persona {

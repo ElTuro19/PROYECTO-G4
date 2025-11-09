@@ -1,14 +1,9 @@
-package com.Huerto;
-
-import java.util.ArrayList;
-
-public class Persona {
+public abstract class Persona { 
     protected Rut rut;
     protected String nombre;
     protected String email;
     protected String direccion;
-
-    // Constructor
+    
     public Persona(Rut rut, String nombre, String email, String direccion) {
         this.rut = rut;
         this.nombre = nombre;
@@ -16,7 +11,6 @@ public class Persona {
         this.direccion = direccion;
     }
     
-    //
     public Rut getRut() { return rut; }
     
     public String getNombre() { return nombre; }

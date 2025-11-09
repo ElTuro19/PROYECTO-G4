@@ -1,17 +1,28 @@
-package com.Huerto;
+// import x.Rut;
+// import x.Cuadrilla;
 
-import java.util.ArrayList;
-
-public class Supervisor {
+public class Supervisor extends Persona {
     
     private String profesion;
-    //
-    public String getProfesion() { return profesion; }
+    private Cuadrilla cuadrilla;
     
-    public void setProfesion(String profesion){ this.profesion=profesion; }
+    public Supervisor(Rut rut, String nombre, String email, String direccion, String profesion) {
+        super(rut, nombre, email, direccion);
+        this.profesion = profesion;
+        
+        this.cuadrilla = null; 
+    }
     
-    public void setCuadrilla(Cuadrilla cuad) { Cuadrilla=cuad; }
-    
-    public Cuadrilla getCuadrilla() { return Cuadrilla; }
-    
+    public String getProfesion() { 
+        return profesion; 
+    }
+    public void setProfesion(String profesion){ 
+        this.profesion = profesion; 
+    }
+    public void setCuadrilla(Cuadrilla cuadrilla) { // El UML dice que el parámetro se llama 'cuadrilla'
+        this.cuadrilla = cuadrilla; 
+    }
+    public Cuadrilla getCuadrilla() { 
+        return this.cuadrilla; 
+    }
 }
