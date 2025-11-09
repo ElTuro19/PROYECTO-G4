@@ -33,11 +33,17 @@ public class Huerto {
             if (c.getId() == id) {
                 return false;
             }
-            cuarteles.add(c);
+            Cuartel nuevo = new Cuartel(id, superficie, cult, this);
+            cuarteles.add(nuevo);
+            return true;
         }
         return true;
     }
 
     public Cuartel getCuartel(int id) { return cuarteles.get(id); }
     public ArrayList<Cuartel> getCuarteles() { return cuarteles; }
+    public Cuartel getCuartelById(int id) {
+        for (Cuartel c : cuarteles) if (c.getId() == id) return c;
+        return null;
+    }
 }
