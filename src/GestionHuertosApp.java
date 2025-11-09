@@ -110,6 +110,7 @@ public class GestionHuertosApp {
                     rut = sc.next();
                     System.out.println("Ingrese el nombre del cosechador");
                     nombre = sc.nextLine();
+                    nombre = sc.nextLine();
                     System.out.println("Ingrese la dirección del cosechador");
                     dirp = sc.nextLine();
                     System.out.println("Ingrese el email del cosechador");
