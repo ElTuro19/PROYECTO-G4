@@ -18,6 +18,7 @@ public class Cuadrilla {
         this.supervisor = sup;
         this.planCosecha = plan;
         this.cosechadores = new ArrayList<>();
+        this.maximoCosechadores = 9999;
     }
 
     public int getId() {
