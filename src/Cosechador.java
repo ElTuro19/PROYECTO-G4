@@ -30,6 +30,10 @@ public class Cosechador extends Persona{
     }
     //Muestra las cuadrillas a las que está asociado
     public Cuadrilla[] getCuadrillas(){
-        return asignaciones.toArray(new Cuadrilla[0]);
+        Cuadrilla[] cuadrillas = new Cuadrilla[asignaciones.size()];
+        for (int i = 0; i < asignaciones.size(); i++) {
+            cuadrillas[i] = asignaciones.get(i).getCuadrilla();
+        }
+        return cuadrillas;
     }
 }

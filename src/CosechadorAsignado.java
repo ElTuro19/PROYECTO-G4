@@ -3,14 +3,14 @@ import java.util.Date;
 
 public class CosechadorAsignado {
 
-    private Date desde;
-    private Date hasta;
+    private LocalDate desde;
+    private LocalDate hasta;
     private double metaKilos;
 
     private Cuadrilla cuadrilla;
     private Cosechador cosechador;
 
-    public CosechadorAsignado(Date fIni, Date fFin, double meta, Cuadrilla cuad, Cosechador cos){
+    public CosechadorAsignado(LocalDate fIni, LocalDate fFin, double meta, Cuadrilla cuad, Cosechador cos){
         this.desde = fIni;
         this.hasta = fFin;
         this.metaKilos = meta;
@@ -19,19 +19,17 @@ public class CosechadorAsignado {
     }
 
     public LocalDate getDesde() {
-        return desde != null ? new java.sql.Date(desde.getTime()).toLocalDate() : null;
+        return desde;
     }
 
-    public void setDesde(LocalDate desde) {
-        this.desde = java.sql.Date.valueOf(desde);
-    }
+    public void setDesde(LocalDate desde) { this.desde = desde;}
 
     public LocalDate getHasta() {
-        return hasta != null ? new java.sql.Date(hasta.getTime()).toLocalDate() : null;
+        return hasta;
     }
 
     public void setHasta(LocalDate hasta) {
-        this.hasta = java.sql.Date.valueOf(hasta);
+        this.hasta = hasta;
     }
 
     public double getMetaKilos() {
