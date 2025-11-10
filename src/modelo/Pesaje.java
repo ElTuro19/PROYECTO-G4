@@ -1,4 +1,10 @@
 package modelo;
+/// utilidades
+import utilidades.Calidad;
+import utilidades.EstadoFenologico;
+import utilidades.EstadoPlan;
+import utilidades.GestionHuertosException;
+import utilidades.Rut;
 
 import java.time.LocalDateTime;
 

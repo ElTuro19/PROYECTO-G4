@@ -1,4 +1,11 @@
-import java.util.ArrayList;
+package modelo;
+/// utilidades
+import utilidades.Calidad;
+import utilidades.EstadoFenologico;
+import utilidades.EstadoPlan;
+import utilidades.GestionHuertosException;
+import utilidades.Rut;
+
 public class Supervisor extends Persona {
     private Cuadrilla cuadrilla;
     private String profesion;

@@ -1,6 +1,27 @@
+package controlador;
+
 import java.time.LocalDate;
 import java.util.*;
 import java.time.format.DateTimeFormatter;
+/// modelo
+import modelo.Cosechador;
+import modelo.CosechadorAsignado;
+import modelo.Cuadrilla;
+import modelo.Cuartel;
+import modelo.Cultivo;
+import modelo.Huerto;
+import modelo.PagoPesaje;
+import modelo.Persona;
+import modelo.Pesaje;
+import modelo.PlanCosecha;
+import modelo.Propietario;
+import modelo.Supervisor;
+/// utilidades
+import utilidades.Calidad;
+import utilidades.EstadoFenologico;
+import utilidades.EstadoPlan;
+import utilidades.GestionHuertosException;
+import utilidades.Rut;
 
 public class ControlProduccion {
     private ArrayList<Cultivo> cultivos = new ArrayList<>();

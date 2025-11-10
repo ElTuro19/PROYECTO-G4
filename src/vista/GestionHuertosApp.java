@@ -1,3 +1,13 @@
+package vista;
+
+import controlador.ControlProduccion;
+/// utilidades
+import utilidades.Calidad;
+import utilidades.EstadoFenologico;
+import utilidades.EstadoPlan;
+import utilidades.GestionHuertosException;
+import utilidades.Rut;
+
 import java.util.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
