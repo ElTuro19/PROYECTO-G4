@@ -19,7 +19,6 @@ import modelo.Supervisor;
 /// utilidades
 import utilidades.Calidad;
 import utilidades.EstadoFenologico;
-import utilidades.EstadoPlan;
 import utilidades.GestionHuertosException;
 import utilidades.Rut;
 
@@ -38,12 +37,12 @@ public class ControladorProduccion {
 
     private static ControladorProduccion instance = null;
 
-    private ControlProduccion() {}
+    private ControladorProduccion() {}
 
     public static ControladorProduccion getInstance() {
         if (instance == null)
             instance = new ControladorProduccion();
-        return instance
+        return instance;
     }
 
     public boolean createPropietario(String rut, String nombre, String email, String dirParticular, String dirComercial) {
@@ -360,24 +359,25 @@ public class ControladorProduccion {
         }
         return resultados.toArray(new String[0]);
     }
+
     //// codigo avanze 2
 
-    public void addPesaje (int id, Rut rutCosechador, int idPlan, int idCuadrilla, float cantidadKg, Calidad calidad) throws GestionHuertosException {
-        try {
-           for ()
-        }
-    }
+    ///public void addPesaje (int id, Rut rutCosechador, int idPlan, int idCuadrilla, float cantidadKg, Calidad calidad) throws GestionHuertosException {
+        ///    try {
+            ///       for ()
+            ///    }
+    ///}
 
-    public void changeEstadoCuartel (String nombreHuerto, int idCuartel, EstadoFenologico estado) throws GestionHuertosException {
-        Optional<Huerto> H = findHuertoByNombre(nombreHuerto);
-        Huerto huerto = H.get();
-        new Cuartel[0] = huerto.getCuarteles()
-
-        try {
-
-
-        }
-    }
+    ///public void changeEstadoCuartel (String nombreHuerto, int idCuartel, EstadoFenologico estado) throws GestionHuertosException {
+    ///   Optional<Huerto> H = findHuertoByNombre(nombreHuerto);
+    ///    Huerto huerto = H.get();
+    ///    new Cuartel[0] = huerto.getCuarteles()
+    ///
+    ///    try {
+    ///
+    ///
+    ///    }
+    ///}
 
     public Optional<Persona> findPropietarioByRut (Rut rut) {
         for (Propietario p : propietarios) {
@@ -396,7 +396,7 @@ public class ControladorProduccion {
         return Optional.empty();
     }
     public Optional<Cosechador> findCosechadorByRut (Rut rut) {
-        for (Propietario p : propietarios) {
+        for (Cosechador p : cosechadores) {
             if (p.getRut().equals(rut)) {
                 return Optional.of(p);
             }
