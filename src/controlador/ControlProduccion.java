@@ -23,7 +23,7 @@ import utilidades.EstadoPlan;
 import utilidades.GestionHuertosException;
 import utilidades.Rut;
 
-public class ControlProduccion {
+public class ControladorProduccion {
     private ArrayList<Cultivo> cultivos = new ArrayList<>();
     private ArrayList<Supervisor> supervisores = new ArrayList<>();
     private ArrayList<EstadoFenologico> estados = new ArrayList<>();
@@ -32,8 +32,19 @@ public class ControlProduccion {
     private ArrayList<Persona> personas = new ArrayList<>();
     private ArrayList<Cosechador> cosechadores = new ArrayList<>();
     private ArrayList<Huerto> huertos = new ArrayList<>();
+    private ArrayList<Pesaje> pesajes = new ArrayList<>();
+    private ArrayList<PagoPesaje> Ppesajes = new ArrayList<>();
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
+    private static ControladorProduccion instance = null;
+
+    private ControlProduccion() {}
+
+    public static ControladorProduccion getInstance() {
+        if (instance == null)
+            instance = new ControladorProduccion();
+        return instance
+    }
 
     public boolean createPropietario(String rut, String nombre, String email, String dirParticular, String dirComercial) {
         for (Propietario p : propietarios) {
@@ -349,5 +360,89 @@ public class ControlProduccion {
         }
         return resultados.toArray(new String[0]);
     }
+    //// codigo avanze 2
+
+    public void addPesaje (int id, Rut rutCosechador, int idPlan, int idCuadrilla, float cantidadKg, Calidad calidad) throws GestionHuertosException {
+        try {
+           for ()
+        }
+    }
+
+    public void changeEstadoCuartel (String nombreHuerto, int idCuartel, EstadoFenologico estado) throws GestionHuertosException {
+        Optional<Huerto> H = findHuertoByNombre(nombreHuerto);
+        Huerto huerto = H.get();
+        new Cuartel[0] = huerto.getCuarteles()
+
+        try {
+
+
+        }
+    }
+
+    public Optional<Persona> findPropietarioByRut (Rut rut) {
+        for (Propietario p : propietarios) {
+            if (p.getRut().equals(rut)) {
+                return Optional.of(p);
+            }
+        }
+        return Optional.empty();
+    }
+    public Optional<Supervisor> findSupervisorByRut (Rut rut) {
+        for (Supervisor p : supervisores) {
+            if (p.getRut().equals(rut)) {
+                return Optional.of(p);
+            }
+        }
+        return Optional.empty();
+    }
+    public Optional<Cosechador> findCosechadorByRut (Rut rut) {
+        for (Propietario p : propietarios) {
+            if (p.getRut().equals(rut)) {
+                return Optional.of(p);
+            }
+        }
+        return Optional.empty();
+    }
+    public Optional<Cultivo> findCultivoById (int id) {
+        for (Cultivo p : cultivos) {
+            if (p.getId()==id) {
+                return Optional.of(p);
+            }
+        }
+        return Optional.empty();
+    }
+    public Optional<Huerto> findHuertoByNombre (String nombre) {
+        for (Huerto p : huertos) {
+            if (p.getNombre().equals(nombre)) {
+                return Optional.of(p);
+            }
+        }
+        return Optional.empty();
+    }
+    public Optional<PlanCosecha> findPlanCosechaById (long id) {
+        for (PlanCosecha p : planesDeCosecha) {
+            if (p.getId()==id) {
+                return Optional.of(p);
+            }
+        }
+        return Optional.empty();
+    }
+    public Optional<PlanCosecha> findPesajeById (int id) {
+        for (Pesaje p : pesajes) {
+            if (p.getId()==id) {
+                return Optional.of(p);
+            }
+        }
+        return Optional.empty();
+    }
+    public Optional<PagoPesaje> findPagoPesajeById (int id) {
+        for (PagoPesaje p : Ppesajes) {
+            if (p.getId()==id) {
+                return Optional.of(p);
+            }
+        }
+        return Optional.empty();
+    }
+
 }
 
