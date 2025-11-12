@@ -17,11 +17,7 @@ import modelo.PlanCosecha;
 import modelo.Propietario;
 import modelo.Supervisor;
 /// utilidades
-import utilidades.Calidad;
-import utilidades.EstadoFenologico;
-import utilidades.EstadoPlan;
-import utilidades.GestionHuertosException;
-import utilidades.Rut;
+import utilidades.*;
 
 public class ControladorProduccion {
     private ArrayList<Cultivo> cultivos = new ArrayList<>();
@@ -38,12 +34,12 @@ public class ControladorProduccion {
 
     private static ControladorProduccion instance = null;
 
-    private ControlProduccion() {}
+    private void ControlProduccion() {}
 
     public static ControladorProduccion getInstance() {
         if (instance == null)
             instance = new ControladorProduccion();
-        return instance
+        return instance;
     }
 
     public boolean createPropietario(String rut, String nombre, String email, String dirParticular, String dirComercial) {
@@ -363,21 +359,49 @@ public class ControladorProduccion {
     //// codigo avanze 2
 
     public void addPesaje (int id, Rut rutCosechador, int idPlan, int idCuadrilla, float cantidadKg, Calidad calidad) throws GestionHuertosException {
-        try {
-           for ()
+        for (Pesaje p : pesajes) {
+            if (p.getId() == id) {
+                throw new GestionHuertosException("Ya existe un pesaje con id indicado");
+            }
         }
+        Optional<Cosechador> C = findCosechadorByRut(rutCosechador);
+        if (C.isEmpty()) {throw new GestionHuertosException("No existe un cosechador con el rut indicado");}
+        Optional<PlanCosecha> PC = findPlanCosechaById(idPlan);
+        if (PC.isEmpty()) {throw new GestionHuertosException("No existe un plan con el id indicado");}
+        PlanCosecha pC = PC.get();
+        if (pC.getEstado()!=EstadoPlan.EJECUTANDO) {throw new GestionHuertosException("El plan no se encuentra en estado “en ejecución”");}
+        Cosechador cos = C.get();
+        Cuadrilla[] cuad = cos.getCuadrillas();
+        Cuadrilla cuadsel = null;
+        boolean verif = false;
+        for (Cuadrilla c : cuad) {if (c.getId() == idCuadrilla) {cuadsel=c; verif = true;}}
+        if (cuadsel.getPlanCosecha()!=pC || verif==false) {throw new GestionHuertosException("El cosechador no tiene una asignación a una cuadrilla con el id indicado en el plan con el id señalado”");}
+        /// añadir aqui penultima excepcion faltante
+
+
+        ///
+        Cuartel cuart = pC.getCuartel();
+        if (cuart.getEstado()!=EstadoFenologico.COSECHA) {throw new GestionHuertosException("El cuartel no se encuentra en estado fenológico cosecha");}
     }
 
     public void changeEstadoCuartel (String nombreHuerto, int idCuartel, EstadoFenologico estado) throws GestionHuertosException {
+        /// preguntar al profesor mañana si esta bien
         Optional<Huerto> H = findHuertoByNombre(nombreHuerto);
-        Huerto huerto = H.get();
-        new Cuartel[0] = huerto.getCuarteles()
-
-        try {
-
-
+        if (H.isEmpty()) {
+            throw new GestionHuertosException("No existe huerto con el nombre indicado");
         }
+
+        Huerto HH = H.get();
+
+        if (HH.getCuartel(idCuartel) == null) {
+            throw new GestionHuertosException("No existe en el huerto un cuartel con el id indicado" + nombreHuerto);
+        }
+
+        Cuartel C = HH.getCuartel(idCuartel);
+        C.setEstado(estado);
     }
+
+
 
     public Optional<Persona> findPropietarioByRut (Rut rut) {
         for (Propietario p : propietarios) {
@@ -396,7 +420,7 @@ public class ControladorProduccion {
         return Optional.empty();
     }
     public Optional<Cosechador> findCosechadorByRut (Rut rut) {
-        for (Propietario p : propietarios) {
+        for (Cosechador p : cosechadores) {
             if (p.getRut().equals(rut)) {
                 return Optional.of(p);
             }
@@ -411,7 +435,7 @@ public class ControladorProduccion {
         }
         return Optional.empty();
     }
-    public Optional<Huerto> findHuertoByNombre (String nombre) {
+    public Optional<Huerto> findHuertoByNombre(String nombre) {
         for (Huerto p : huertos) {
             if (p.getNombre().equals(nombre)) {
                 return Optional.of(p);
@@ -427,7 +451,7 @@ public class ControladorProduccion {
         }
         return Optional.empty();
     }
-    public Optional<PlanCosecha> findPesajeById (int id) {
+    public Optional<Pesaje> findPesajeById (int id) {
         for (Pesaje p : pesajes) {
             if (p.getId()==id) {
                 return Optional.of(p);
