@@ -1,34 +1,10 @@
 package modelo;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import utilidades.Rut;
+import java.time.LocalDate;
 
-public class Cosechador {
-    //Atributo
-    private Date fechaNacimiento;
-    //Guarda las asignaciones de cosechador en las distintas cuadrillas
-    private final List<CosechadorAsignado>asignaciones = new ArrayList<>();
-
-    public Date getFechaNacimiento(){
-        return fechaNacimiento;
+public class Cosechador extends Persona {
+    public Cosechador(Rut rut, String nombre, String email, String direccion, String telefono, LocalDate fechaNacimiento, String profesion) {
+        super(rut, nombre, email, direccion, telefono, fechaNacimiento, profesion);
     }
-
-    public void setFechaNacimiento(Date fNac) {
-        this.fechaNacimiento = fNac;
-    }
-    //Agregar un cosechador a la cuadrilla
-    public void addCuadrilla(CosechadorAsignado cosAs){
-        if (cosAs == null) return;
-        asignaciones.add(cosAs);
-    }
-    //Muestra las cuadrillas a las que está asociado
-    public Cuadrilla[] getCuadrillas(){
-        ArrayList<Cuadrilla> resultado = new ArrayList<>();
-        for (CosechadorAsignado ca : asignaciones) {
-            resultado.add(ca.getCuadrilla());
-        }
-        return resultado.toArray(new Cuadrilla[0]);
-    }
-
 }

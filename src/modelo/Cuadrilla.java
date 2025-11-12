@@ -1,65 +1,34 @@
 package modelo;
 
-import java.util.ArrayList;
+import utilidades.Calidad;
+import utilidades.EstadoPlan;
+import java.time.*;
+import java.util.*;
 
 public class Cuadrilla {
-
-    //Atributos
-    private int id;
-    private String nombre;
-    private int maximoCosechadores;
-
-    //Asignaciones
+    private final int id;
+    private final String nombre;
+    private final LocalDate fecha;
+    private final String descripcion;
+    private EstadoPlan estado = EstadoPlan.PLANIFICADO;
     private Supervisor supervisor;
-    private PlanCosecha planCosecha;
-    private ArrayList<Cosechador>cosechadores;
-    //Constructor
-    public Cuadrilla(int id, String nom, Supervisor sup, PlanCosecha plan){
+    private PlanCosecha plan;
+    private final List<CosechadorAsignado> cosechadores = new ArrayList<>();
 
-        this.id = id;
-        this.nombre = nom;
-        this.supervisor = sup;
-        this.planCosecha = plan;
-        this.cosechadores = new ArrayList<>();
+    public Cuadrilla(int id, String nombre, LocalDate fecha, String descripcion, Supervisor supervisor, PlanCosecha plan){
+        this.id = id; this.nombre = nombre; this.fecha = fecha; this.descripcion = descripcion;
+        this.supervisor = supervisor; this.plan = plan;
     }
 
-    //get y set
-    public int getId() {
-        return id;
-    }
+    public int getId(){ return id; }
+    public String getNombre(){ return nombre; }
+    public LocalDate getFecha(){ return fecha; }
+    public String getDescripcion(){ return descripcion; }
+    public EstadoPlan getEstado(){ return estado; }
+    public Supervisor getSupervisor(){ return supervisor; }
+    public PlanCosecha getPlan(){ return plan; }
+    public List<CosechadorAsignado> getCosechadores(){ return cosechadores; }
 
-    public String getNombre() {
-        return nombre;
-    }
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-    public Supervisor getSupervisor() {
-        return supervisor;
-    }
-
-    public PlanCosecha getPlanCosecha() {
-        return planCosecha;
-    }
-
-    private ArrayList<CosechadorAsignado> asignados = new ArrayList<>();
-    private int maximoCosechadores = 10;
-
-    public boolean addCosechador(LocalDate fIni, LocalDate fFin, double meta, Cosechador cos){
-        if (cos == null) return false;
-        if (asignados.size() >= maximoCosechadores) return false;
-        for (CosechadorAsignado a : asignados) {
-            if (a.getCosechador().getRut().equals(cos.getRut())) return false;
-        }
-        CosechadorAsignado nuevo = new CosechadorAsignado(fIni, fFin, meta, this, cos);
-        asignados.add(nuevo);
-        cos.addCuadrilla(nuevo);
-        return true;
-    }
-
-    public Cosechador[] getCosechadores() {
-        ArrayList<Cosechador> lista = new ArrayList<>();
-        for (CosechadorAsignado a : asignados) lista.add(a.getCosechador());
-        return lista.toArray(new Cosechador[0]);
-    }
+    public void setEstado(EstadoPlan estado){ this.estado = estado; }
+    public void addCosechador(CosechadorAsignado ca){ this.cosechadores.add(ca); }
 }

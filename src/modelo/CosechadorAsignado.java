@@ -1,56 +1,27 @@
 package modelo;
 
-import java.time.LocalDate;
+import utilidades.Calidad;
+import java.time.*;
 
 public class CosechadorAsignado {
-
-    //Atributos
-    private LocalDate desde;
+    private final LocalDate desde;
     private LocalDate hasta;
     private double metaKilos;
-
-    //Asignaciones
-    private Cuadrilla cuadrilla;
     private Cosechador cosechador;
+    private Cuartel cuartel;
+    private Cuadrilla cuadrilla;
 
-    //Constructor
-    public CosechadorAsignado(LocalDate fIni, LocalDate fFin, double meta, Cuadrilla cuad, Cosechador cos){
-        this.desde = fIni;
-        this.hasta = fFin;
-        this.metaKilos = meta;
-        this.cuadrilla = cuad;
-        this.cosechador = cos;
-    }
-    //Get y Set
-    public LocalDate getDesde() {
-        return desde != null ? new java.sql.Date(desde.getTime()).toLocalDate() : null;
+    public CosechadorAsignado(LocalDate desde, LocalDate hasta, double metaKilos, Cuartel cuartel, Cuadrilla cuadrilla, Cosechador cosechador){
+        this.desde = desde; this.hasta = hasta; this.metaKilos = metaKilos;
+        this.cuartel = cuartel; this.cuadrilla = cuadrilla; this.cosechador = cosechador;
     }
 
-    public void setDesde(LocalDate desde) {
-        this.desde = java.sql.Date.valueOf(desde);
-    }
+    public LocalDate getDesde(){ return desde; }
+    public LocalDate getHasta(){ return hasta; }
+    public double getMetaKilos(){ return metaKilos; }
+    public Cosechador getCosechador(){ return cosechador; }
+    public Cuartel getCuartel(){ return cuartel; }
+    public Cuadrilla getCuadrilla(){ return cuadrilla; }
 
-    public LocalDate getHasta() {
-        return hasta != null ? new java.sql.Date(hasta.getTime()).toLocalDate() : null;
-    }
-
-    public void setHasta(LocalDate hasta) {
-        this.hasta = java.sql.Date.valueOf(hasta);
-    }
-
-    public double getMetaKilos() {
-        return metaKilos;
-    }
-
-    public void setMetaKilos(double metaKilos) {
-        this.metaKilos = metaKilos;
-    }
-
-    public Cuadrilla getCuadrilla() {
-        return cuadrilla;
-    }
-
-    public Cosechador getCosechador() {
-        return cosechador;
-    }
+    public void setHasta(LocalDate h){ this.hasta = h; }
 }
