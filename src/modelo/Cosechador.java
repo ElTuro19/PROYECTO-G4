@@ -49,8 +49,20 @@ public class Cosechador extends Persona {
         return cuadrillas;
     }
 
-    public Optional<CosechadorAsignado> getAsignaciones(int idCuad, int idPlan) { }
+    public Optional<CosechadorAsignado> getAsignacion(int idPlan, int idCuadrilla) {
+        for (CosechadorAsignado cosAsignado : asignaciones) {
+            if (cosAsignado.getCuadrilla().equals(idCuadrilla)) {
+                if (cosAsignado.getCuadrilla().getPlanCosecha().equals(idPlan)) {
+                    return  Optional.of(cosAsignado);
+                }
+            }
+        }
+        return Optional.empty();
+    }
 
-    public CosechadorAsignado[] getAsignaciones() {}
 
+
+public void addAsignacion(CosechadorAsignado asignacion) {
+        asignaciones.add(asignacion);
+    }
 }

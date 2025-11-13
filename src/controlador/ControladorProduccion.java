@@ -1,5 +1,6 @@
 package controlador;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.*;
 import java.time.format.DateTimeFormatter;
@@ -554,7 +555,6 @@ public class ControladorProduccion {
             }
         }
 
-
         if (!verif || cuadsel.getPlanCosecha() != pC) {
             throw new GestionHuertosException(
                     "El cosechador no tiene una asignación a una cuadrilla con el id indicado en el plan con el id señalado”"
@@ -563,10 +563,10 @@ public class ControladorProduccion {
         /// añadir aqui penultima excepcion faltante
         java.time.LocalDate hoy = java.time.LocalDate.now();
 
-        CosechadorAsignado asig = C.get().ge
+       CosechadorAsignado asig = C.get().getAsignacion(idCuadrilla, idPlan).get();
 
-        java.time.LocalDate inicio  = asig.getFechaInicio();  // <-- CAMBIA SI TU GETTER ES DISTINTO
-        java.time.LocalDate termino = asig.getFechaTermino(); // <-- IGUAL
+        java.time.LocalDate inicio  = asig.getDesde();
+        java.time.LocalDate termino = asig.getHasta();
 
         if (hoy.isBefore(inicio) || hoy.isAfter(termino)) {
             throw new GestionHuertosException(
@@ -676,5 +676,6 @@ public class ControladorProduccion {
     }
 
 }
+
 
 
