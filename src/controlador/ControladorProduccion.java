@@ -1,5 +1,8 @@
 package controlador;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.*;
@@ -675,7 +678,152 @@ public class ControladorProduccion {
         return Optional.empty();
     }
 
+    public void readDataFromTextFile(String filename) throws GestionHuertosException {
+        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
+            String line;
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+            while ((line = br.readLine()) != null) {
+                line = line.trim();
+                if (line.isEmpty() || line.startsWith("#")) {
+                    continue;
+                }
+
+                String[] parts = line.split(";");
+                String operacion = parts[0].trim();
+                int n = Integer.parseInt(parts[1].trim());
+
+                for (int i = 0; i < n; i++) {
+                    String dataLine = br.readLine().trim();
+                    String[] data = dataLine.split(";");
+
+                    switch (operacion) {
+                        case "createPropietario":
+                            createPropietario(
+                                    new Rut(data[0].trim()),
+                                    data[1].trim(),
+                                    data[2].trim(),
+                                    data[3].trim(),
+                                    data[4].trim()
+                            );
+                            break;
+
+                        case "createSupervisor":
+                            createSupervisor(
+                                    new Rut(data[0].trim()),
+                                    data[1].trim(),
+                                    data[2].trim(),
+                                    data[3].trim(),
+                                    data[4].trim()
+                            );
+                            break;
+
+                        case "createCosechador":
+                            createCosechador(
+                                    new Rut(data[0].trim()),
+                                    data[1].trim(),
+                                    data[2].trim(),
+                                    data[3].trim(),
+                                    LocalDate.parse(data[4].trim(), dateFormatter)
+                            );
+                            break;
+
+                        case "createCultivo":
+                            createCultivo(
+                                    Integer.parseInt(data[0].trim()),
+                                    data[1].trim(),
+                                    data[2].trim(),
+                                    Float.parseFloat(data[3].trim())
+                            );
+                            break;
+
+                        case "createHuerto":
+                            createHuerto(
+                                    data[0].trim(),
+                                    Float.parseFloat(data[1].trim()),
+                                    data[2].trim(),
+                                    new Rut(data[3].trim())
+                            );
+                            break;
+
+                        case "addCuartelToHuerto":
+                            addCuartelToHuerto(
+                                    data[0].trim(),
+                                    Integer.parseInt(data[1].trim()),
+                                    Float.parseFloat(data[2].trim()),
+                                    Integer.parseInt(data[3].trim())
+                            );
+                            break;
+
+                        case "createPlanCosecha":
+                            createPlanCosecha(
+                                    Integer.parseInt(data[0].trim()),
+                                    data[1].trim(),
+                                    LocalDate.parse(data[2].trim(), dateFormatter),
+                                    LocalDate.parse(data[3].trim(), dateFormatter),
+                                    Double.parseDouble(data[4].trim()),
+                                    (float) Double.parseDouble(data[5].trim()),
+                                    data[6].trim(),
+                                    Integer.parseInt(data[7].trim())
+                            );
+                            break;
+
+                        case "addCuadrillaToPlan":
+                            addCuadrillatoPlan(
+                                    Integer.parseInt(data[0].trim()),
+                                    Integer.parseInt(data[1].trim()),
+                                    data[2].trim(),
+                                    new Rut(data[3].trim())
+                            );
+                            break;
+
+                        case "addCosechadorToCuadrilla":
+                            addCosechadorToCuadrilla(
+                                    Integer.parseInt(data[0].trim()),
+                                    Integer.parseInt(data[1].trim()),
+                                    LocalDate.parse(data[2].trim(), dateFormatter),
+                                    LocalDate.parse(data[3].trim(), dateFormatter),
+                                    Double.parseDouble(data[4].trim()),
+                                    new Rut(data[5].trim())
+                            );
+                            break;
+
+                        case "changeEstadoPlan":
+                            changeEstadoPlan(
+                                    Integer.parseInt(data[0].trim()),
+                                    EstadoPlan.valueOf(data[1].trim())
+                            );
+                            break;
+
+                        case "changeEstadoCuartel":
+                            changeEstadoCuartel(
+                                    data[1].trim(),
+                                    Integer.parseInt(data[0].trim()),
+                                    EstadoFenologico.valueOf(data[2].trim())
+                            );
+                            break;
+
+                        case "addPesaje":
+                            addPesaje(
+                                    Integer.parseInt(data[0].trim()),
+                                    new Rut(data[1].trim()),
+                                    Integer.parseInt(data[2].trim()),
+                                    Integer.parseInt(data[3].trim()),
+                                    Float.parseFloat(data[4].trim()),
+                                    Calidad.valueOf(data[5].trim())
+                            );
+                            break;
+                    }
+                }
+            }
+        } catch (IOException e) {
+            throw new GestionHuertosException("Error al abrir o leer el archivo: " + e.getMessage());
+        }
+    }
+
 }
+
+
 
 
 
