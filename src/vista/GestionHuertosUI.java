@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Scanner;
-import controlador.ControladorProduccion;
+
 import enumeraciones.Calidad;
 import enumeraciones.EstadoFenologico;
 import enumeraciones.EstadoPlan;
