@@ -1,17 +1,17 @@
 package vista;
 
-import controlador.ControlProduccion;
+import controlador.ControladorProduccion;
 /// utilidades
 import modelo.*;
 import utilidades.*;
-import controlador.*;
+
 import java.util.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public class GestionHuertosUI {
     private Scanner sc = new Scanner(System.in);
-    private ControlProduccion control = new ControlProduccion();
+    private ControladorProduccion control = new ControladorProduccion();
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     public void menu() {
@@ -138,7 +138,7 @@ public class GestionHuertosUI {
         String nombreHuerto = sc.nextLine();
         System.out.println("Buscando Huerto...");
         try{
-            Huerto h = control.findHuertoByNombre(nombreHuerto);
+            Optional<Huerto> h = control.findHuertoByNombre(nombreHuerto);
             System.out.println("¡Huerto encontrado!");
             System.out.print("Ingrese la cantidad de cuarteles: ");
             int cantCuarteles = sc.nextInt();
@@ -170,14 +170,14 @@ public class GestionHuertosUI {
         String nombreHuerto = sc.nextLine();
 
         try {
-            Huerto h = control.findHuertoByNombre(nombreHuerto);
+            Optional<Huerto> h = control.findHuertoByNombre(nombreHuerto);
             System.out.println("¡Huerto encontrado!");
 
             System.out.println("Ingrese el ID del cuartel:");
             int idCuartel = sc.nextInt();
             sc.nextLine(); //Diossss odio limpiar el buffer, se me olvida ):(
 
-            Cuartel c = h.getCuartel(idCuartel);
+            Cuartel c = h.get().getCuartel(idCuartel);
             System.out.println("Ingrese el estado al que quiere cambiar (ESTADO ACTUAL = " +
                     c.getEstado().toString() + "):");
             System.out.println("""
@@ -277,8 +277,118 @@ public class GestionHuertosUI {
             case 1 -> creaPlanDeCosecha();
             case 2 -> cambiarEstadoDePlan();
             case 3 -> agregarCuadrillaToPlan();
-            case 4 -> agregarCosechador
+            case 4 -> agregarCosechador();
+            case 5 -> agregarPesajeACosechador();
+            case 7 -> pagarPesajesImpagosCosechador();
+            case 8 -> System.out.println(" ");
         }
+    }
+
+    private void cambiarEstadoDePlan(){
+        System.out.println("Cambiando estado de Plan...");
+        System.out.println("Ingrese ID del Plan");
+        int id = sc.nextInt();
+
+        try{
+            Optional<PlanCosecha> p = control.findPlanCosechaById(id);
+            System.out.println("Plan Ecnontrado!!");
+            System.out.println("Estado Actual: " + p.get().getEstado().toString());
+            System.out.println("Ingrese el estado que desea " +
+                    "(1=Planificado 2=Ejecutando 3=Cerrado 4=Cancelado)");
+            int op = sc.nextInt();
+
+            if(op < 1 || op > EstadoFenologico.values().length){
+                System.out.println("Error: Opción no válida, debe ser un valor entre 1 y 4");
+                return;
+            }
+
+            EstadoPlan nuevoEstado = EstadoPlan.values()[op-1];
+            p.get().setEstado(nuevoEstado);
+
+            System.out.println("Estado del plan cambiado exitosamente!");
+        }catch(GestionHuertosException e){
+            System.out.println("Error: " + e.getMessage());
+        }catch(InputMismatchException e){
+            System.out.println("Error: Debe ser un número válido");
+        }
+    }
+
+    private void agregarCuadrillaToPlan(){
+        System.out.println("Agregando Cuadrilla a Plan de Cosecha...");
+        System.out.println("Ingrese ID del Plan: ");
+        int id = sc.nextInt();
+        System.out.println("Ingrese Nro De Cuadrillas: ");
+        int nCuadrillas = sc.nextInt();
+
+        try{
+            Optional<PlanCosecha> p = control.findPlanCosechaById(id);
+            for(int i=0; i<nCuadrillas; i++){
+                System.out.println("ID Cuadrilla: ");
+                int idCuad = sc.nextInt();
+                sc.nextLine();
+                System.out.println("Nombre Cuadrilla: ");
+                String nombre = sc.nextLine();
+                System.out.println("Rut Supervisor: ");
+                String rut = sc.nextLine();
+                Rut run = Rut.of(rut);
+
+                try{
+                    Optional<Supervisor> s = control.findSupervisorByRut(run);
+                    p.get().addCuadrilla(idCuad, nombre, s.get());
+                    System.out.println("Cuadrilla agregada exitosamente!");
+                }catch (GestionHuertosException e){
+                    System.out.println("Error: " + e.getMessage());
+                }
+            }
+        }catch(GestionHuertosException e){
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+
+    private void agregarCosechador(){
+        System.out.println("Asignando Cosechadores A Plan...");
+        System.out.println("ID del Plan: ");
+        int id = sc.nextInt();
+        System.out.println("ID de Cuadrilla: ");
+        int idCuad = sc.nextInt();
+        System.out.println("Nro de Cosechadores a Asignar: ");
+        int cantidad = sc.nextInt();
+        sc.nextLine();
+
+        try{
+            Optional<PlanCosecha> p = control.findPlanCosechaById(id);
+            Cuadrilla cua = null;
+            for(Cuadrilla c : p.get().getCuadrillas()){
+                if(c.getId() == idCuad){
+                   cua = c;
+                   break;
+                }
+            }
+            System.out.println("Fecha de Inicio Asignación (dd/mm/yyy): ");
+            String fechaInicio = sc.nextLine();
+            System.out.println("Fecha de Termindo Asignación (dd/mm/yyy): ");
+            String fechaTermino = sc.nextLine();
+            System.out.println("Rut cosechador: ");
+            String rut = sc.nextLine();
+            System.out.println("Meta(Kilos): ");
+            double kilos = sc.nextDouble();
+
+            Rut run = Rut.of(rut);
+            Optional<Cosechador> cos = control.findCosechadorByRut(run);
+            LocalDate fechaI = LocalDate.parse(fechaInicio, formatter);
+            LocalDate fechaT = LocalDate.parse(fechaTermino, formatter);
+
+            CosechadorAsignado cosA = new CosechadorAsignado(fechaI, fechaT, kilos, cua, cos.get());
+            cos.get().addCuadrilla(cosA);
+
+            System.out.println("Cosechador agregado exitosamente!");
+        }catch(GestionHuertosException e){
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+
+    private void agregarPesajeACosechador(){
+        System.out.println();
     }
 
     private void creaPlanDeCosecha() {
