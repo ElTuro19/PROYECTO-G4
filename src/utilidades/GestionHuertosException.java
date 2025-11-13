@@ -1,5 +1,7 @@
-package utilidades;
+package excepciones;
 
-public class GestionHuertosException extends RuntimeException {
-    public GestionHuertosException(String msg) { super(msg); }
+public class GestionHuertosException extends Exception {
+    public GestionHuertosException(String mensaje) {
+        super(mensaje);
+    }
 }
