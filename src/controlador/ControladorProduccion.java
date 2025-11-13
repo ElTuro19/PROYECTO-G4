@@ -3,453 +3,746 @@ package controlador;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import modelo.*;
-import enumeraciones.*;
+import java.util.*;
+
+// modelo
+import modelo.Cosechador;
+import modelo.CosechadorAsignado;
+import modelo.Cuadrilla;
+import modelo.Cuartel;
+import modelo.Cultivo;
+import modelo.Huerto;
+import modelo.PagoPesaje;
+import modelo.Persona;
+import modelo.Pesaje;
+import modelo.PlanCosecha;
+import modelo.Propietario;
+import modelo.Supervisor;
+
+// utilidades / enumeraciones / excepciones
+import utilidades.Rut;
+import utilidades.*;
+import enumeraciones.EstadoFenologico;
+import enumeraciones.EstadoPlan;
+import enumeraciones.Calidad;
 import excepciones.GestionHuertosException;
 
 public class ControladorProduccion {
-    private List<Propietario> propietarios;
-    private List<Supervisor> supervisores;
-    private List<Cosechador> cosechadores;
-    private List<Cultivo> cultivos;
-    private List<Huerto> huertos;
-    private List<PlanCosecha> planes;
-    private List<Pesaje> pesajes;
-    private List<PagoPesaje> pagos;
 
-    public ControladorProduccion() {
-        this.propietarios = new ArrayList<>();
-        this.supervisores = new ArrayList<>();
-        this.cosechadores = new ArrayList<>();
-        this.cultivos = new ArrayList<>();
-        this.huertos = new ArrayList<>();
-        this.planes = new ArrayList<>();
-        this.pesajes = new ArrayList<>();
-        this.pagos = new ArrayList<>();
+    private ArrayList<Cultivo> cultivos = new ArrayList<>();
+    private ArrayList<Supervisor> supervisores = new ArrayList<>();
+    private ArrayList<EstadoFenologico> estados = new ArrayList<>();
+    private ArrayList<PlanCosecha> planesDeCosecha = new ArrayList<>();
+    private ArrayList<Propietario> propietarios = new ArrayList<>();
+    private ArrayList<Persona> personas = new ArrayList<>();
+    private ArrayList<Cosechador> cosechadores = new ArrayList<>();
+    private ArrayList<Huerto> huertos = new ArrayList<>();
+    private ArrayList<Pesaje> pesajes = new ArrayList<>();
+    private ArrayList<PagoPesaje> Ppesajes = new ArrayList<>();
+
+    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+    private static ControladorProduccion instance = null;
+
+    // Constructor privado para singleton
+    private ControladorProduccion() {}
+
+    public static ControladorProduccion getInstance() {
+        if (instance == null) {
+            instance = new ControladorProduccion();
+        }
+        return instance;
     }
 
-    // Métodos CREATE
-    public void createPropietario(Rut rut, String nombre, String email, String direccion, String direccionComercial)
-            throws GestionHuertosException {
-        if (findPropietarioByRut(rut).isPresent()) {
-            throw new GestionHuertosException("Ya existe un propietario con el rut indicado");
+    // CREATE
+    public boolean createPropietario(String rut, String nombre, String email, String dirParticular, String dirComercial) {
+        for (Propietario p : propietarios) {
+            if (p.getRut().equals(rut)) {
+                return false;
+            }
         }
-        propietarios.add(new Propietario(rut, nombre, email, direccion, direccionComercial));
+        Propietario nuevo = new Propietario(rut, nombre, email, dirParticular, dirComercial);
+        propietarios.add(nuevo);
+        return true;
     }
 
-    public void createSupervisor(Rut rut, String nombre, String email, String direccion, String profesion)
-            throws GestionHuertosException {
-        if (findSupervisorByRut(rut).isPresent()) {
-            throw new GestionHuertosException("Ya existe un supervisor con el rut indicado");
+    public boolean createSupervisor(String rut, String nombre, String email, String direccion, String profesion) {
+        for (Supervisor s : supervisores) {
+            if (s.getRut().equals(rut)) {
+                return false;
+            }
         }
-        supervisores.add(new Supervisor(rut, nombre, email, direccion, profesion));
+        Supervisor nuevo = new Supervisor(rut, nombre, email, direccion, profesion);
+        supervisores.add(nuevo);
+        return true;
     }
 
-    public void createCosechador(Rut rut, String nombre, String email, String direccion, LocalDate fechaNacimiento)
-            throws GestionHuertosException {
-        if (findCosechadorByRut(rut).isPresent()) {
-            throw new GestionHuertosException("Ya existe un cosechador con el rut indicado");
+    public boolean createCosechador(String rut, String nombre, String email, String direccion, LocalDate fechaNacimiento) {
+        for (Cosechador c : cosechadores) {
+            if (c.getRut().equals(rut)) {
+                return false;
+            }
         }
-        cosechadores.add(new Cosechador(rut, nombre, email, direccion, fechaNacimiento));
+        Cosechador nuevo = new Cosechador(rut, nombre, email, direccion, fechaNacimiento);
+        cosechadores.add(nuevo);
+        return true;
     }
 
-    public void createCultivo(int id, String especie, String variedad, float rendimiento)
-            throws GestionHuertosException {
-        if (findCultivoById(id).isPresent()) {
-            throw new GestionHuertosException("Ya existe un cultivo con el id indicado");
+    public boolean createCultivo(int id, String especie, String variedad, double rendimiento) {
+        for (Cultivo c : cultivos) {
+            if (c.getId() == id) {
+                return false;
+            }
         }
-        cultivos.add(new Cultivo(id, especie, variedad, rendimiento));
+        Cultivo nuevo = new Cultivo(id, especie, variedad, rendimiento);
+        cultivos.add(nuevo);
+        return true;
     }
 
-    public void createHuerto(String nombre, float superficie, String ubicacion, Rut rutPropietario)
-            throws GestionHuertosException {
-        if (findHuertoByNombre(nombre).isPresent()) {
-            throw new GestionHuertosException("Ya existe un huerto con el nombre indicado");
+    public boolean createHuerto(String nombre, float superficie, String ubicacion, String rutPropietario) {
+        Propietario propietario = null;
+
+        for (Huerto h : huertos) {
+            if (h.getNombre().equals(nombre)) {
+                return false;
+            }
         }
 
-        Optional<Propietario> propietarioOpt = findPropietarioByRut(rutPropietario);
-        if (propietarioOpt.isEmpty()) {
-            throw new GestionHuertosException("No existe un propietario con el rut indicado");
-        }
-
-        huertos.add(new Huerto(nombre, superficie, ubicacion, propietarioOpt.get()));
-    }
-
-    public void addCuartelToHuerto(String nombreHuerto, int idCuartel, float superficie, int idCultivo)
-            throws GestionHuertosException {
-        Optional<Huerto> huertoOpt = findHuertoByNombre(nombreHuerto);
-        if (huertoOpt.isEmpty()) {
-            throw new GestionHuertosException("No existe un huerto con el nombre indicado");
-        }
-
-        Optional<Cultivo> cultivoOpt = findCultivoById(idCultivo);
-        if (cultivoOpt.isEmpty()) {
-            throw new GestionHuertosException("No existe un cultivo con el id indicado");
-        }
-
-        Huerto huerto = huertoOpt.get();
-        huerto.addCuartel(idCuartel, superficie, cultivoOpt.get());
-    }
-
-    public void changeEstadoCuartel(String nombreHuerto, int idCuartel, EstadoFenologico estado)
-            throws GestionHuertosException {
-        Optional<Huerto> huertoOpt = findHuertoByNombre(nombreHuerto);
-        if (huertoOpt.isEmpty()) {
-            throw new GestionHuertosException("No existe un huerto con el nombre indicado");
-        }
-
-        Huerto huerto = huertoOpt.get();
-        huerto.setEstadoCuartel(idCuartel, estado);
-    }
-
-    public void createPlanCosecha(int id, String nombrePlan, LocalDate fechaInicio, LocalDate fechaTermino,
-                                  double metaKilos, double precioBaseKilo, String nomHuerto, int idCuartel)
-            throws GestionHuertosException {
-        if (findPlanById(id).isPresent()) {
-            throw new GestionHuertosException("Ya existe un plan con el id indicado");
-        }
-
-        Optional<Huerto> huertoOpt = findHuertoByNombre(nomHuerto);
-        if (huertoOpt.isEmpty()) {
-            throw new GestionHuertosException("No existe un huerto con el nombre indicado");
-        }
-
-        Huerto huerto = huertoOpt.get();
-        Optional<Cuartel> cuartelOpt = huerto.getCuartelById(idCuartel);
-        if (cuartelOpt.isEmpty()) {
-            throw new GestionHuertosException("No existe en el huerto un cuartel con el id indicado");
-        }
-
-        planes.add(new PlanCosecha(id, nombrePlan, fechaInicio, fechaTermino, metaKilos, precioBaseKilo, cuartelOpt.get()));
-    }
-
-    public void changeEstadoPlan(int idPlan, EstadoPlan nuevoEstado) throws GestionHuertosException {
-        Optional<PlanCosecha> planOpt = findPlanById(idPlan);
-        if (planOpt.isEmpty()) {
-            throw new GestionHuertosException("No existe un plan con el id indicado");
-        }
-
-        PlanCosecha plan = planOpt.get();
-        if (!plan.setEstado(nuevoEstado)) {
-            throw new GestionHuertosException("No está permitido el cambio de estado solicitado");
-        }
-    }
-
-    public void addCuadrillaToPlan(int idPlan, int idCuadrilla, String nombreCuadrilla, Rut rutSupervisor)
-            throws GestionHuertosException {
-        Optional<PlanCosecha> planOpt = findPlanById(idPlan);
-        if (planOpt.isEmpty()) {
-            throw new GestionHuertosException("No existe un plan con el id indicado");
-        }
-
-        Optional<Supervisor> supervisorOpt = findSupervisorByRut(rutSupervisor);
-        if (supervisorOpt.isEmpty()) {
-            throw new GestionHuertosException("No existe un supervisor con el rut indicado");
-        }
-
-        Supervisor supervisor = supervisorOpt.get();
-        if (supervisor.getCuadrilla() != null) {
-            throw new GestionHuertosException("El supervisor ya tiene asignada una cuadrilla a su cargo");
-        }
-
-        PlanCosecha plan = planOpt.get();
-        plan.addCuadrilla(idCuadrilla, nombreCuadrilla, supervisor);
-    }
-
-    public void addCosechadorToCuadrilla(int idPlanCosecha, int idCuadrilla, LocalDate fechaIniCosechador,
-                                         LocalDate fechaFinCosechador, double metaKilosCosechador, Rut rutCosechador)
-            throws GestionHuertosException {
-        Optional<PlanCosecha> planOpt = findPlanById(idPlanCosecha);
-        if (planOpt.isEmpty()) {
-            throw new GestionHuertosException("No existe un plan con el id indicado");
-        }
-
-        Optional<Cosechador> cosechadorOpt = findCosechadorByRut(rutCosechador);
-        if (cosechadorOpt.isEmpty()) {
-            throw new GestionHuertosException("No existe un cosechador con el rut indicado");
-        }
-
-        PlanCosecha plan = planOpt.get();
-        if (fechaIniCosechador.isBefore(plan.getFechaInicio()) || fechaFinCosechador.isAfter(plan.getFechaTermino())) {
-            throw new GestionHuertosException("El rango de fechas de asignación del cosechador a la cuadrilla está fuera del rango de fechas del plan");
-        }
-
-        plan.addCosechadorToCuadrilla(idCuadrilla, fechaIniCosechador, fechaFinCosechador, metaKilosCosechador, cosechadorOpt.get());
-    }
-
-    public void addPesaje(int id, Rut rutCosechador, int idPlan, int idCuadrilla, float cantidadKg, Calidad calidad)
-            throws GestionHuertosException {
-        if (findPesajeById(id).isPresent()) {
-            throw new GestionHuertosException("Ya existe un pesaje con id indicado");
-        }
-
-        Optional<Cosechador> cosechadorOpt = findCosechadorByRut(rutCosechador);
-        if (cosechadorOpt.isEmpty()) {
-            throw new GestionHuertosException("No existe un cosechador con el rut indicado");
-        }
-
-        Optional<PlanCosecha> planOpt = findPlanById(idPlan);
-        if (planOpt.isEmpty()) {
-            throw new GestionHuertosException("No existe un plan con el id indicado");
-        }
-
-        PlanCosecha plan = planOpt.get();
-        if (plan.getEstado() != EstadoPlan.EJECUTANDO) {
-            throw new GestionHuertosException("El plan no se encuentra en estado \"en ejecución\"");
-        }
-
-        Cosechador cosechador = cosechadorOpt.get();
-        Optional<CosechadorAsignado> asignacionOpt = cosechador.getAsignacion(idPlan, idCuadrilla);
-        if (asignacionOpt.isEmpty()) {
-            throw new GestionHuertosException("El cosechador no tiene una asignación a una cuadrilla con el id indicado en el plan con el id señalado");
-        }
-
-        CosechadorAsignado asignacion = asignacionOpt.get();
-        LocalDate fechaActual = LocalDate.now();
-        if (fechaActual.isBefore(asignacion.getFechaInicio()) || fechaActual.isAfter(asignacion.getFechaTermino())) {
-            throw new GestionHuertosException("La fecha no está en el rango de la asignación del cosechador a la cuadrilla");
-        }
-
-        if (plan.getCuartel().getEstado() != EstadoFenologico.COSECHA) {
-            throw new GestionHuertosException("El cuartel no se encuentra en estado fenológico cosecha");
-        }
-
-        Pesaje pesaje = new Pesaje(id, fechaActual, cantidadKg, calidad, asignacion);
-        pesajes.add(pesaje);
-        asignacion.addPesaje(pesaje);
-    }
-
-    public void addPagoPesaje(int id, Rut rutCosechador) throws GestionHuertosException {
-        if (findPagoPesajeById(id).isPresent()) {
-            throw new GestionHuertosException("Ya existe un pago de pesaje con el id indicado");
-        }
-
-        Optional<Cosechador> cosechadorOpt = findCosechadorByRut(rutCosechador);
-        if (cosechadorOpt.isEmpty()) {
-            throw new GestionHuertosException("No existe un cosechador con el rut indicado");
-        }
-
-        Cosechador cosechador = cosechadorOpt.get();
-        if (cosechador.getAsignaciones().length == 0) {
-            throw new GestionHuertosException("El cosechador no ha sido asignado a una cuadrilla");
-        }
-
-        // Verificar si hay pesajes impagos
-        boolean tienePesajesImpagos = false;
-        for (CosechadorAsignado asignacion : cosechador.getAsignaciones()) {
-            if (!asignacion.getPesajesImpagos().isEmpty()) {
-                tienePesajesImpagos = true;
+        for (Propietario p : propietarios) {
+            if (p.getRut().equals(rutPropietario)) {
+                propietario = p;
                 break;
             }
         }
 
-        if (!tienePesajesImpagos) {
-            throw new GestionHuertosException("El cosechador no tiene pesajes impagos");
+        if (propietario == null) {
+            return false;
         }
 
-        LocalDate fechaActual = LocalDate.now();
-        PagoPesaje pago = new PagoPesaje(id, fechaActual, cosechador);
+        Huerto nuevo = new Huerto(nombre, superficie, ubicacion, propietario);
+        huertos.add(nuevo);
+        propietario.addHuerto(nuevo);
+        return true;
+    }
 
-        // Agregar todos los pesajes impagos al pago
-        for (CosechadorAsignado asignacion : cosechador.getAsignaciones()) {
-            for (Pesaje pesaje : asignacion.getPesajesImpagos()) {
-                pago.addPesaje(pesaje);
+    public boolean addCuartelToHuerto(String nombreHuerto, int idCuartel, float superficie, int idCultivo) {
+        Huerto huerto;
+        Cultivo cultivo;
+
+        for (Huerto h : huertos) {
+            if (h.getNombre().equals(nombreHuerto)) {
+                huerto = h;
+                for (Cultivo c : cultivos) {
+                    if (c.getId() == idCultivo) {
+                        cultivo = c;
+
+                        Cuartel[] cuarteles = cultivo.getCuarteles();
+                        for (Cuartel cu : cuarteles) {
+                            if (cu.getId() == idCuartel) {
+                                return false;
+                            }
+                        }
+
+                        Cuartel nuevo = new Cuartel(idCuartel, superficie, cultivo, huerto);
+                        huerto.addCuartel(idCuartel, superficie, cultivo);
+                        cultivo.addCuartel(nuevo);
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean createPlanCosecha(int idPlan, String nom, LocalDate inicio, LocalDate finEstim,
+                                     double meta, float precioBase, String nomHuerto, int idCuartel) {
+        Huerto huerto = null;
+        for (Huerto h : huertos) {
+            if (h.getNombre().equalsIgnoreCase(nomHuerto)) {
+                huerto = h;
+                break;
+            }
+        }
+        if (huerto == null) {
+            return false;
+        }
+
+        Cuartel cuartel = huerto.getCuartel(idCuartel);
+        if (cuartel == null) {
+            return false;
+        }
+
+        for (PlanCosecha pc : planesDeCosecha) {
+            if (pc.getId() == idPlan) {
+                return false;
             }
         }
 
-        pagos.add(pago);
+        PlanCosecha nuevo = new PlanCosecha(idPlan, nom, inicio, finEstim, meta, precioBase, cuartel);
+        cuartel.addPlanCosecha(nuevo);
+        planesDeCosecha.add(nuevo);
+        return true;
     }
 
-    // Métodos de listado
-    public String[] listPropietarios() {
-        return propietarios.stream()
-                .map(p -> String.format("%s; %s; %s; %s; %s; %d",
-                        p.getRut(), p.getNombre(), p.getDireccion(), p.getEmail(),
-                        p.getDireccionComercial(),
-                        huertos.stream().filter(h -> h.getPropietario().equals(p)).count()))
-                .toArray(String[]::new);
+    public boolean addCuadrillatoPlan(int idPlan, int idCuad, String nomCuad, String rutSup) {
+        PlanCosecha plan = null;
+        for (PlanCosecha pc : planesDeCosecha) {
+            if (pc.getId() == idPlan) {
+                plan = pc;
+                break;
+            }
+        }
+        if (plan == null) return false;
+
+        Supervisor supervisor = null;
+        for (Supervisor sup : supervisores) {
+            if (sup.getRut().equals(rutSup)) {
+                supervisor = sup;
+                break;
+            }
+        }
+        if (supervisor == null) return false;
+
+        boolean ok = plan.addCuadrilla(idCuad, nomCuad, supervisor);
+        if (!ok) return false;
+
+        for (Cuadrilla c : plan.getCuadrillas()) {
+            if (c.getId() == idCuad) {
+                supervisor.setCuadrilla(c);
+                break;
+            }
+        }
+
+        return true;
     }
 
-    public String[] listSupervisores() {
-        return supervisores.stream()
-                .map(s -> {
-                    String nomenclatura = "S/A";
-                    double kilosPesados = 0;
-                    int pesajesImpagos = 0;
+    public boolean addCosechadorToCuadrilla(int idPlan, int idCuadrilla,
+                                            LocalDate fInicio, LocalDate fFin,
+                                            double meta, String rutCosechador) {
+        PlanCosecha plan = null;
+        for (PlanCosecha pc : planesDeCosecha) {
+            if (pc.getId() == idPlan) {
+                plan = pc;
+                break;
+            }
+        }
+        if (plan == null) return false;
 
-                    if (s.getCuadrilla() != null) {
-                        nomenclatura = s.getCuadrilla().getNombre();
-                        kilosPesados = s.getCuadrilla().getKilosPesados();
-                        pesajesImpagos = (int) s.getCuadrilla().getAsignaciones().stream()
-                                .flatMap(a -> a.getPesajes().stream())
-                                .filter(p -> !p.isPagado())
-                                .count();
-                    }
+        Cuadrilla cuadrilla = null;
+        for (Cuadrilla c : plan.getCuadrillas()) {
+            if (c.getId() == idCuadrilla) {
+                cuadrilla = c;
+                break;
+            }
+        }
+        if (cuadrilla == null) return false;
 
-                    return String.format("%s; %s; %s; %s; %s; %s; %.1f; %d",
-                            s.getRut(), s.getNombre(), s.getDireccion(), s.getEmail(),
-                            s.getProfesion(), nomenclatura, kilosPesados, pesajesImpagos);
-                })
-                .toArray(String[]::new);
+        Cosechador cosechador = null;
+        for (Cosechador c : cosechadores) {
+            // aquí asumimos que getRut().toString() da el formato del archivo
+            if (c.getRut().toString().equals(rutCosechador)) {
+                cosechador = c;
+                break;
+            }
+        }
+        if (cosechador == null) return false;
+
+        CosechadorAsignado ca = new CosechadorAsignado(fInicio, fFin, meta, cuadrilla, cosechador);
+        cosechador.addCuadrilla(ca);
+
+        return cuadrilla.addCosechador(fInicio, fFin, meta, cosechador);
     }
 
-    public String[] listCosechadores() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        return cosechadores.stream()
-                .map(c -> {
-                    double montoImpago = 0;
-                    double montoPagado = 0;
-                    int numCuadrillas = c.getAsignaciones().length;
-
-                    for (CosechadorAsignado asignacion : c.getAsignaciones()) {
-                        montoImpago += asignacion.getMontoImpago();
-                        montoPagado += asignacion.getMontoPagado();
-                    }
-
-                    return String.format("%s; %s; %s; %s; %s; %d; %,.1f; %,.1f",
-                            c.getRut(), c.getNombre(), c.getDireccion(), c.getEmail(),
-                            c.getFechaNacimiento().format(formatter), numCuadrillas,
-                            montoImpago, montoPagado);
-                })
-                .toArray(String[]::new);
-    }
+    // LISTADOS
 
     public String[] listCultivos() {
-        return cultivos.stream()
-                .map(c -> String.format("%d; %s; %s; %.1f; %d",
-                        c.getId(), c.getEspecie(), c.getVariedad(), c.getRendimiento() * 100,
-                        huertos.stream()
-                                .flatMap(h -> h.getCuarteles().stream())
-                                .filter(cuartel -> cuartel.getCultivo().equals(c))
-                                .count()))
-                .toArray(String[]::new);
+        if (this.cultivos.isEmpty()) {
+            return new String[0];
+        }
+
+        List<String> resultados = new ArrayList<>();
+
+        for (Cultivo c : this.cultivos) {
+            String lineaCultivo = String.format(
+                    "%-10d %-20s %-15s %-10.2f %-5d",
+                    c.getId(),
+                    c.getEspecie(),
+                    c.getVariedad() != null ? c.getVariedad() : "N/A",
+                    c.getRendimiento(),
+                    c.getCuarteles().length
+            );
+            resultados.add(lineaCultivo);
+        }
+        return resultados.toArray(new String[0]);
     }
 
     public String[] listHuertos() {
-        return huertos.stream()
-                .map(h -> String.format("%s; %,.1f; %s; %s; %s; %d",
-                        h.getNombre(), h.getSuperficie(), h.getUbicacion(),
-                        h.getPropietario().getRut(), h.getPropietario().getNombre(),
-                        h.getCuarteles().size()))
-                .toArray(String[]::new);
+        if (this.huertos.isEmpty()) {
+            return new String[0];
+        }
+        List<String> resultados = new ArrayList<>();
+        for (Huerto h : this.huertos) {
+            String lineaHuertos = String.format(
+                    "%-20s %-20s %-20s %-20s %-20s %-20d",
+                    h.getNombre(),
+                    h.getSuperficie(),
+                    h.getUbicacion(),
+                    h.getPropietario().getRut(),
+                    h.getPropietario().getNombre(),
+                    h.getCuarteles().size()
+            );
+            resultados.add(lineaHuertos);
+        }
+        return resultados.toArray(new String[0]);
     }
 
-    public String[] listPlanes() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        return planes.stream()
-                .map(p -> String.format("%d; %s; %s; %s; %,.1f; %,.1f; %s; %d; %s; %d; %.1f",
-                        p.getId(), p.getNombre(), p.getFechaInicio().format(formatter),
-                        p.getFechaTermino().format(formatter), p.getMetaKilos(), p.getPrecioBaseKilo(),
-                        p.getEstado(), p.getCuartel().getId(), p.getCuartel().getCultivo().getEspecie(),
-                        p.getCuadrillas().size(), p.getCumplimientoMeta()))
-                .toArray(String[]::new);
+    public String[] listPropietarios() {
+        if (this.propietarios.isEmpty()) {
+            return new String[0];
+        }
+        List<String> resultados = new ArrayList<>();
+        for (Propietario p : this.propietarios) {
+            String lineaPropietarios = String.format(
+                    "%-15s %-15s %-20s %-25s %-15s %15d",
+                    p.getRut(),
+                    p.getNombre(),
+                    p.getDireccion(),
+                    p.getEmail(),
+                    p.getDireccionComercial(),
+                    p.getHuertos().size()
+            );
+            resultados.add(lineaPropietarios);
+        }
+        return resultados.toArray(new String[0]);
     }
 
-    public String[] listPesajes() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        return pesajes.stream()
-                .map(p -> {
-                    String fechaPago = "Impago";
-                    if (p.isPagado()) {
-                        fechaPago = p.getPago().getFecha().format(formatter);
-                    }
-
-                    return String.format("%d; %s; %s; %s; %s; %.1f; %s; %s; %,.1f; %s",
-                            p.getId(), p.getAsignacion().getCosechador().getRut(),
-                            p.getAsignacion().getCosechador().getNombre(),
-                            p.getAsignacion().getCuadrilla().getPlan().getNombre(),
-                            p.getAsignacion().getCuadrilla().getNombre(),
-                            p.getCantidadKg(), p.getCalidad(),
-                            p.getFecha().format(formatter), p.getMonto(), fechaPago);
-                })
-                .toArray(String[]::new);
+    public String[] listSupervisores() {
+        if (this.supervisores.isEmpty()) {
+            return new String[0];
+        }
+        List<String> resultados = new ArrayList<>();
+        for (Supervisor s : this.supervisores) {
+            String nombreCuadrilla = s.getCuadrilla() != null ? s.getCuadrilla().getNombre() : "N/A";
+            String lineaSupervisores = String.format(
+                    "%-15s %-15s %-20s %-20s %15s %15s",
+                    s.getRut(),
+                    s.getNombre(),
+                    s.getDireccion(),
+                    s.getEmail(),
+                    s.getProfesion(),
+                    nombreCuadrilla
+            );
+            resultados.add(lineaSupervisores);
+        }
+        return resultados.toArray(new String[0]);
     }
 
-    public String[] listPesajes(Rut rutCosechador) throws GestionHuertosException {
-        Optional<Cosechador> cosechadorOpt = findCosechadorByRut(rutCosechador);
-        if (cosechadorOpt.isEmpty()) {
+    public String[] listCosechadores() {
+        if (this.cosechadores.isEmpty()) {
+            return new String[0];
+        }
+        List<String> resultados = new ArrayList<>();
+        for (Cosechador c : this.cosechadores) {
+            int nroCuadrillas = c.getCuadrillas().length;
+            String lineaCosechadores = String.format(
+                    "%-15s %-15s %-20s %-20s %15s %15d",
+                    c.getRut(),
+                    c.getNombre(),
+                    c.getDireccion(),
+                    c.getEmail(),
+                    c.getFechaNacimiento(),
+                    nroCuadrillas
+            );
+            resultados.add(lineaCosechadores);
+        }
+        return resultados.toArray(new String[0]);
+    }
+
+    public String[] listPlanesCosecha() {
+        if (this.planesDeCosecha.isEmpty()) {
+            return new String[0];
+        }
+        List<String> resultados = new ArrayList<>();
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        for (PlanCosecha pc : this.planesDeCosecha) {
+            int nroCuadrillas = pc.getCuadrillas().length;
+
+            String inicioStr = pc.getInicio().format(fmt);
+            String finStr = pc.getFinEstimado().format(fmt);
+
+            String lineaPlanesCosecha = String.format(
+                    "%-15d %-15s %-20s %-20s %15.2f %15.2f %20s %20d %25s %25d",
+                    pc.getId(),
+                    pc.getNombre(),
+                    inicioStr,
+                    finStr,
+                    pc.getMetaKilos(),
+                    pc.getPrecioBaseKilo(),
+                    pc.getEstado(),
+                    pc.getCuartel().getId(),
+                    pc.getCuartel().getHuerto().getNombre(),
+                    nroCuadrillas
+            );
+            resultados.add(lineaPlanesCosecha);
+        }
+        return resultados.toArray(new String[0]);
+    }
+
+    // AVANCE 2: PESAJES Y PAGOS
+
+    public String[] listPesajesCosechador(Rut rut) throws GestionHuertosException {
+
+        Optional<Cosechador> optC = findCosechadorByRut(rut);
+        if (optC.isEmpty()) {
             throw new GestionHuertosException("No existe un cosechador con el rut indicado");
         }
 
-        Cosechador cosechador = cosechadorOpt.get();
-        if (cosechador.getAsignaciones().length == 0) {
+        Cosechador cosechador = optC.get();
+        Cuadrilla[] cuadri = cosechador.getCuadrillas();
+        if (cuadri.length == 0) {
             throw new GestionHuertosException("El cosechador no ha sido asignado a una cuadrilla");
         }
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        List<String> resultado = new ArrayList<>();
+        if (this.pesajes.isEmpty()) {
+            return new String[0];
+        }
 
-        for (CosechadorAsignado asignacion : cosechador.getAsignaciones()) {
-            for (Pesaje pesaje : asignacion.getPesajes()) {
-                String fechaPago = "Impago";
-                if (pesaje.isPagado()) {
-                    fechaPago = pesaje.getPago().getFecha().format(formatter);
-                }
+        DateTimeFormatter fmtFecha = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
-                resultado.add(String.format("%d; %s; %s; %s; %.1f; %s; %s; %,.1f; %s",
-                        pesaje.getId(),
-                        asignacion.getCuadrilla().getPlan().getNombre(),
-                        asignacion.getCuadrilla().getNombre(),
-                        pesaje.getFecha().format(formatter),
-                        pesaje.getCantidadKg(), pesaje.getCalidad(),
-                        pesaje.getAsignacion().getCuadrilla().getPlan().getCuartel().getCultivo().getEspecie(),
-                        pesaje.getMonto(), fechaPago));
+        List<String> resultados = new ArrayList<>();
+
+        for (Pesaje p : this.pesajes) {
+
+            if (!p.getCosechadorAsignado().getCosechador().equals(cosechador)) {
+                continue;
+            }
+
+            int id = p.getId();
+            String fecha = p.getFechaHora().format(fmtFecha);
+            String calidad = p.getCalidad().toString();
+            String cantidadKg = String.valueOf(p.getCantidadKg());
+            String precio = String.valueOf(p.getPrecioKg());
+            String monto = String.valueOf(p.getMonto());
+
+            PagoPesaje pago = p.getPagoPesaje();
+            String pagadoEl;
+
+            if (pago != null && pago.getFecha() != null) {
+                Date fechaPago = pago.getFecha();
+                pagadoEl = sdf.format(fechaPago);
+            } else {
+                pagadoEl = "Impago";
+            }
+
+            String linea = String.format(
+                    "%-4d %-10s %-10s %10s %10s %10s %-10s",
+                    id,
+                    fecha,
+                    calidad,
+                    cantidadKg,
+                    precio,
+                    monto,
+                    pagadoEl
+            );
+
+            resultados.add(linea);
+        }
+
+        return resultados.toArray(new String[0]);
+    }
+
+    public String[] listPesajes() {
+
+        if (this.pesajes.isEmpty()) {
+            return new String[0];
+        }
+
+        DateTimeFormatter fmtFecha = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
+        List<String> resultados = new ArrayList<>();
+
+        for (Pesaje p : this.pesajes) {
+
+            int id = p.getId();
+            String fecha = p.getFechaHora().format(fmtFecha);
+            String rutCosechador = p.getCosechadorAsignado()
+                    .getCosechador()
+                    .getRut()
+                    .toString();
+            String calidad = p.getCalidad().toString();
+            String cantidadKg = String.valueOf(p.getCantidadKg());
+            String precio = String.valueOf(p.getPrecioKg());
+            String monto = String.valueOf(p.getMonto());
+
+            PagoPesaje pago = p.getPagoPesaje();
+            String pagadoEl;
+
+            if (pago != null && pago.getFecha() != null) {
+                Date fechaPago = pago.getFecha();
+                pagadoEl = sdf.format(fechaPago);
+            } else {
+                pagadoEl = "Impago";
+            }
+
+            String linea = String.format(
+                    "%-4d %-10s %-13s %-10s %10s %10s %10s %-10s",
+                    id,
+                    fecha,
+                    rutCosechador,
+                    calidad,
+                    cantidadKg,
+                    precio,
+                    monto,
+                    pagadoEl
+            );
+
+            resultados.add(linea);
+        }
+
+        return resultados.toArray(new String[0]);
+    }
+
+    public String[] listPagoPesajes() {
+
+        if (this.Ppesajes.isEmpty()) {
+            return new String[0];
+        }
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        List<String> resultados = new ArrayList<>();
+
+        for (PagoPesaje pago : this.Ppesajes) {
+
+            int id = pago.getId();
+
+            Date fechaDate = pago.getFecha();
+            String fecha = (fechaDate != null) ? sdf.format(fechaDate) : "N/A";
+
+            String monto = String.valueOf(pago.getMonto());
+            Pesaje[] pesajes1 = pago.getPesajes();
+            int nroPesajes = pesajes1.length;
+
+            Pesaje pesajeEjemplo = pesajes1[0];
+            String rutCosechador = pesajeEjemplo
+                    .getCosechadorAsignado()
+                    .getCosechador()
+                    .getRut()
+                    .toString();
+
+            String linea = String.format(
+                    "%-4d %-10s %10s %10d %-13s",
+                    id,
+                    fecha,
+                    monto,
+                    nroPesajes,
+                    rutCosechador
+            );
+
+            resultados.add(linea);
+        }
+
+        return resultados.toArray(new String[0]);
+    }
+
+    public double addPagoPesaje(int id, Rut rutCosechador) throws GestionHuertosException {
+
+        for (PagoPesaje p : this.Ppesajes) {
+            if (p.getId() == id) {
+                throw new GestionHuertosException("Ya existe un pago de pesaje con el id indicado");
             }
         }
 
-        return resultado.toArray(new String[0]);
+        boolean verif = false;
+        for (Cosechador c : this.cosechadores) {
+            if (c.getRut().equals(rutCosechador)) {
+                verif = true;
+                break;
+            }
+        }
+        if (!verif) {
+            throw new GestionHuertosException("No existe un cosechador con el rut indicado");
+        }
+
+        return 0;
     }
 
-    public String[] listPagosPesajes() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        return pagos.stream()
-                .map(p -> String.format("%d; %s; %s; %s; %s; %,.1f",
-                        p.getId(), p.getCosechador().getRut(), p.getCosechador().getNombre(),
-                        p.getFecha().format(formatter),
-                        p.getPesajes().stream().map(ps -> String.valueOf(ps.getId())).reduce("", (a, b) -> a + (a.isEmpty() ? "" : ", ") + b),
-                        p.getMonto()))
-                .toArray(String[]::new);
+    public void addPesaje(int id, Rut rutCosechador, int idPlan, int idCuadrilla,
+                          float cantidadKg, Calidad calidad) throws GestionHuertosException {
+
+        for (Pesaje p : pesajes) {
+            if (p.getId() == id) {
+                throw new GestionHuertosException("Ya existe un pesaje con id indicado");
+            }
+        }
+
+        Optional<Cosechador> C = findCosechadorByRut(rutCosechador);
+        if (C.isEmpty()) {
+            throw new GestionHuertosException("No existe un cosechador con el rut indicado");
+        }
+
+        Optional<PlanCosecha> PC = findPlanCosechaById(idPlan);
+        if (PC.isEmpty()) {
+            throw new GestionHuertosException("No existe un plan con el id indicado");
+        }
+
+        PlanCosecha pC = PC.get();
+        if (pC.getEstado() != EstadoPlan.EJECUTANDO) {
+            throw new GestionHuertosException("El plan no se encuentra en estado \"en ejecución\"");
+        }
+
+        Cosechador cos = C.get();
+        Cuadrilla[] cuad = cos.getCuadrillas();
+        Cuadrilla cuadsel = null;
+        boolean verif = false;
+
+        for (Cuadrilla c : cuad) {
+            if (c.getId() == idCuadrilla) {
+                cuadsel = c;
+                verif = true;
+                break;
+            }
+        }
+
+        if (!verif || cuadsel.getPlanCosecha() != pC) {
+            throw new GestionHuertosException(
+                    "El cosechador no tiene una asignación a una cuadrilla con el id indicado en el plan con el id señalado"
+            );
+        }
+
+        LocalDate hoy = LocalDate.now();
+        CosechadorAsignado asig = C.get().getAsignacion(idCuadrilla, idPlan).get();
+
+        LocalDate inicio = asig.getDesde();
+        LocalDate termino = asig.getHasta();
+
+        if (hoy.isBefore(inicio) || hoy.isAfter(termino)) {
+            throw new GestionHuertosException(
+                    "La fecha no está en el rango de la asignación del cosechador a la cuadrilla"
+            );
+        }
+
+        Cuartel cuart = pC.getCuartel();
+        if (cuart.getEstado() != EstadoFenologico.COSECHA) {
+            throw new GestionHuertosException("El cuartel no se encuentra en estado fenológico cosecha");
+        }
+
+        // Crear el Pesaje y agregarlo a la lista
+
     }
 
-    // Métodos de búsqueda privados
-    private Optional<Propietario> findPropietarioByRut(Rut rut) {
-        return propietarios.stream().filter(p -> p.getRut().equals(rut)).findFirst();
+    public void changeEstadoPlan(int idPlan, EstadoPlan estado) throws GestionHuertosException {
+        PlanCosecha pp = null;
+        for (PlanCosecha p : planesDeCosecha) {
+            if (p.getId() == idPlan) {
+                pp = p;
+                break;
+            }
+        }
+        if (pp == null) {
+            throw new GestionHuertosException("No existe un plan con el id indicado");
+        }
+
+        pp.setEstado(estado);
+    }
+
+    public void changeEstadoCuartel(String nombreHuerto, int idCuartel, EstadoFenologico estado)
+            throws GestionHuertosException {
+
+        Optional<Huerto> H = findHuertoByNombre(nombreHuerto);
+        if (H.isEmpty()) {
+            throw new GestionHuertosException("No existe huerto con el nombre indicado");
+        }
+
+        Huerto HH = H.get();
+
+        if (HH.getCuartel(idCuartel) == null) {
+            throw new GestionHuertosException(
+                    "No existe en el huerto " + nombreHuerto + " un cuartel con el id indicado"
+            );
+        }
+
+        Cuartel C = HH.getCuartel(idCuartel);
+        C.setEstado(estado);
+    }
+
+    private Optional<Persona> findPropietarioByRut(Rut rut) {
+        for (Propietario p : propietarios) {
+            if (p.getRut().equals(rut)) {
+                return Optional.of(p);
+            }
+        }
+        return Optional.empty();
     }
 
     private Optional<Supervisor> findSupervisorByRut(Rut rut) {
-        return supervisores.stream().filter(s -> s.getRut().equals(rut)).findFirst();
+        for (Supervisor p : supervisores) {
+            if (p.getRut().equals(rut)) {
+                return Optional.of(p);
+            }
+        }
+        return Optional.empty();
     }
 
     private Optional<Cosechador> findCosechadorByRut(Rut rut) {
-        return cosechadores.stream().filter(c -> c.getRut().equals(rut)).findFirst();
+        for (Cosechador p : cosechadores) {
+            if (p.getRut().equals(rut)) {
+                return Optional.of(p);
+            }
+        }
+        return Optional.empty();
     }
 
     private Optional<Cultivo> findCultivoById(int id) {
-        return cultivos.stream().filter(c -> c.getId() == id).findFirst();
+        for (Cultivo p : cultivos) {
+            if (p.getId() == id) {
+                return Optional.of(p);
+            }
+        }
+        return Optional.empty();
     }
 
     private Optional<Huerto> findHuertoByNombre(String nombre) {
-        return huertos.stream().filter(h -> h.getNombre().equals(nombre)).findFirst();
+        for (Huerto p : huertos) {
+            if (p.getNombre().equals(nombre)) {
+                return Optional.of(p);
+            }
+        }
+        return Optional.empty();
     }
 
-    private Optional<PlanCosecha> findPlanById(int id) {
-        return planes.stream().filter(p -> p.getId() == id).findFirst();
+    private Optional<PlanCosecha> findPlanCosechaById(long id) {
+        for (PlanCosecha p : planesDeCosecha) {
+            if (p.getId() == id) {
+                return Optional.of(p);
+            }
+        }
+        return Optional.empty();
     }
 
-    private Optional<Pesaje> findPesajeById(int id) {
-        return pesajes.stream().filter(p -> p.getId() == id).findFirst();
+    private Optional<Pesaje> findPesajeById(int idPesaje) {
+        for (Pesaje p : pesajes) {
+            if (p.getId() == idPesaje) {
+                return Optional.of(p);
+            }
+        }
+        return Optional.empty();
     }
 
     private Optional<PagoPesaje> findPagoPesajeById(int id) {
-        return pagos.stream().filter(p -> p.getId() == id).findFirst();
+        for (PagoPesaje p : Ppesajes) {
+            if (p.getId() == id) {
+                return Optional.of(p);
+            }
+        }
+        return Optional.empty();
     }
 
-    // Método para leer datos desde archivo
     public void readDataFromTextFile(String filename) throws GestionHuertosException {
         try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
             String line;
@@ -466,125 +759,158 @@ public class ControladorProduccion {
                 int n = Integer.parseInt(parts[1].trim());
 
                 for (int i = 0; i < n; i++) {
-                    String dataLine = br.readLine().trim();
+                    String dataLine = br.readLine();
+                    if (dataLine == null) {
+                        break;
+                    }
+                    dataLine = dataLine.trim();
+                    if (dataLine.isEmpty()) {
+                        i--;
+                        continue;
+                    }
+
                     String[] data = dataLine.split(";");
 
-                    switch (operacion) {
-                        case "createPropietario":
-                            createPropietario(
-                                    new Rut(data[0].trim()),
-                                    data[1].trim(),
-                                    data[2].trim(),
-                                    data[3].trim(),
-                                    data[4].trim()
-                            );
-                            break;
+                    try {
+                        switch (operacion) {
+                            case "createPropietario":
+                                createPropietario(
+                                        data[0].trim(),
+                                        data[1].trim(),
+                                        data[2].trim(),
+                                        data[3].trim(),
+                                        data[4].trim()
+                                );
+                                break;
 
-                        case "createSupervisor":
-                            createSupervisor(
-                                    new Rut(data[0].trim()),
-                                    data[1].trim(),
-                                    data[2].trim(),
-                                    data[3].trim(),
-                                    data[4].trim()
-                            );
-                            break;
+                            case "createSupervisor":
+                                createSupervisor(
+                                        data[0].trim(),
+                                        data[1].trim(),
+                                        data[2].trim(),
+                                        data[3].trim(),
+                                        data[4].trim()
+                                );
+                                break;
 
-                        case "createCosechador":
-                            createCosechador(
-                                    new Rut(data[0].trim()),
-                                    data[1].trim(),
-                                    data[2].trim(),
-                                    data[3].trim(),
-                                    LocalDate.parse(data[4].trim(), dateFormatter)
-                            );
-                            break;
+                            case "createCosechador":
+                                createCosechador(
+                                        data[0].trim(),
+                                        data[1].trim(),
+                                        data[2].trim(),
+                                        data[3].trim(),
+                                        LocalDate.parse(data[4].trim(), dateFormatter)
+                                );
+                                break;
 
-                        case "createCultivo":
-                            createCultivo(
-                                    Integer.parseInt(data[0].trim()),
-                                    data[1].trim(),
-                                    data[2].trim(),
-                                    Float.parseFloat(data[3].trim())
-                            );
-                            break;
+                            case "createCultivo":
+                                createCultivo(
+                                        Integer.parseInt(data[0].trim()),
+                                        data[1].trim(),
+                                        data[2].trim(),
+                                        Double.parseDouble(data[3].trim())
+                                );
+                                break;
 
-                        case "createHuerto":
-                            createHuerto(
-                                    data[0].trim(),
-                                    Float.parseFloat(data[1].trim()),
-                                    data[2].trim(),
-                                    new Rut(data[3].trim())
-                            );
-                            break;
+                            case "createHuerto":
+                                createHuerto(
+                                        data[0].trim(),
+                                        Float.parseFloat(data[1].trim()),
+                                        data[2].trim(),
+                                        data[3].trim()
+                                );
+                                break;
 
-                        case "addCuartelToHuerto":
-                            addCuartelToHuerto(
-                                    data[0].trim(),
-                                    Integer.parseInt(data[1].trim()),
-                                    Float.parseFloat(data[2].trim()),
-                                    Integer.parseInt(data[3].trim())
-                            );
-                            break;
+                            case "addCuartelToHuerto":
+                                addCuartelToHuerto(
+                                        data[0].trim(),
+                                        Integer.parseInt(data[1].trim()),
+                                        Float.parseFloat(data[2].trim()),
+                                        Integer.parseInt(data[3].trim())
+                                );
+                                break;
 
-                        case "createPlanCosecha":
-                            createPlanCosecha(
-                                    Integer.parseInt(data[0].trim()),
-                                    data[1].trim(),
-                                    LocalDate.parse(data[2].trim(), dateFormatter),
-                                    LocalDate.parse(data[3].trim(), dateFormatter),
-                                    Double.parseDouble(data[4].trim()),
-                                    Double.parseDouble(data[5].trim()),
-                                    data[6].trim(),
-                                    Integer.parseInt(data[7].trim())
-                            );
-                            break;
+                            case "createPlanCosecha":
+                                createPlanCosecha(
+                                        Integer.parseInt(data[0].trim()),
+                                        data[1].trim(),
+                                        LocalDate.parse(data[2].trim(), dateFormatter),
+                                        LocalDate.parse(data[3].trim(), dateFormatter),
+                                        Double.parseDouble(data[4].trim()),
+                                        Float.parseFloat(data[5].trim()),
+                                        data[6].trim(),
+                                        Integer.parseInt(data[7].trim())
+                                );
+                                break;
 
-                        case "addCuadrillaToPlan":
-                            addCuadrillaToPlan(
-                                    Integer.parseInt(data[0].trim()),
-                                    Integer.parseInt(data[1].trim()),
-                                    data[2].trim(),
-                                    new Rut(data[3].trim())
-                            );
-                            break;
+                            case "addCuadrillaToPlan":
+                                addCuadrillatoPlan(
+                                        Integer.parseInt(data[0].trim()),
+                                        Integer.parseInt(data[1].trim()),
+                                        data[2].trim(),
+                                        data[3].trim()
+                                );
+                                break;
 
-                        case "addCosechadorToCuadrilla":
-                            addCosechadorToCuadrilla(
-                                    Integer.parseInt(data[0].trim()),
-                                    Integer.parseInt(data[1].trim()),
-                                    LocalDate.parse(data[2].trim(), dateFormatter),
-                                    LocalDate.parse(data[3].trim(), dateFormatter),
-                                    Double.parseDouble(data[4].trim()),
-                                    new Rut(data[5].trim())
-                            );
-                            break;
+                            case "addCosechadorToCuadrilla":
+                                addCosechadorToCuadrilla(
+                                        Integer.parseInt(data[0].trim()),
+                                        Integer.parseInt(data[1].trim()),
+                                        LocalDate.parse(data[2].trim(), dateFormatter),
+                                        LocalDate.parse(data[3].trim(), dateFormatter),
+                                        Double.parseDouble(data[4].trim()),
+                                        data[5].trim()
+                                );
+                                break;
 
-                        case "changeEstadoPlan":
-                            changeEstadoPlan(
-                                    Integer.parseInt(data[0].trim()),
-                                    EstadoPlan.valueOf(data[1].trim())
-                            );
-                            break;
+                            case "changeEstadoPlan":
+                                changeEstadoPlan(
+                                        Integer.parseInt(data[0].trim()),
+                                        EstadoPlan.valueOf(data[1].trim().toUpperCase())
+                                );
+                                break;
 
-                        case "changeEstadoCuartel":
-                            changeEstadoCuartel(
-                                    data[1].trim(),
-                                    Integer.parseInt(data[0].trim()),
-                                    EstadoFenologico.valueOf(data[2].trim())
-                            );
-                            break;
+                            case "changeEstadoCuartel":
+                                changeEstadoCuartel(
+                                        data[0].trim(),
+                                        Integer.parseInt(data[1].trim()),
+                                        EstadoFenologico.valueOf(data[2].trim().toUpperCase())
+                                );
+                                break;
 
-                        case "addPesaje":
-                            addPesaje(
-                                    Integer.parseInt(data[0].trim()),
-                                    new Rut(data[1].trim()),
-                                    Integer.parseInt(data[2].trim()),
-                                    Integer.parseInt(data[3].trim()),
-                                    Float.parseFloat(data[4].trim()),
-                                    Calidad.valueOf(data[5].trim())
-                            );
-                            break;
+                            case "addPesaje":
+                                String rutString = data[1].trim();
+
+                                String rutSinPuntos = rutString.replace(".", "");
+                                String[] partesRut = rutSinPuntos.split("-");
+
+                                if (partesRut.length != 2) {
+                                    throw new GestionHuertosException("Formato de RUT inválido: " + rutString);
+                                }
+
+                                long numeroRut = Long.parseLong(partesRut[0]);
+                                char dvRut = partesRut[1].charAt(0);
+
+                                Rut rutObj = new Rut(numeroRut, dvRut);
+
+                                addPesaje(
+                                        Integer.parseInt(data[0].trim()),
+                                        rutObj,
+                                        Integer.parseInt(data[2].trim()),
+                                        Integer.parseInt(data[3].trim()),
+                                        Float.parseFloat(data[4].trim()),
+                                        Calidad.valueOf(data[5].trim().toUpperCase())
+                                );
+                                break;
+
+                            default:
+                                System.err.println("Operación desconocida: " + operacion);
+                                break;
+                        }
+                    } catch (Exception e) {
+                        throw new GestionHuertosException(
+                                "Error procesando línea: " + dataLine + " - " + e.getMessage()
+                        );
                     }
                 }
             }

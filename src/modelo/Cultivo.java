@@ -10,6 +10,9 @@ public class Cultivo {
         this.id = id; this.especie = especie; this.variedad = variedad; this.signo = signo; this.rendimiento = rendimiento;
     }
 
+    public Cultivo(int id, String especie, String variedad, double rendimiento) {
+    }
+
     public int getId(){ return id; }
     public String getEspecie(){ return especie; }
     public String getVariedad(){ return variedad; }
