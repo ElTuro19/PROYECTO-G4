@@ -695,124 +695,149 @@ public class ControladorProduccion {
 
                 for (int i = 0; i < n; i++) {
                     String dataLine = br.readLine().trim();
+                    if (dataLine == null) continue;
+
                     String[] data = dataLine.split(";");
 
-                    switch (operacion) {
-                        case "createPropietario":
-                            createPropietario(
-                                    new Rut(data[0].trim()),
-                                    data[1].trim(),
-                                    data[2].trim(),
-                                    data[3].trim(),
-                                    data[4].trim()
-                            );
-                            break;
+                    try {
+                        switch (operacion) {
+                            case "createPropietario":
+                                createPropietario(
+                                        data[0].trim(),
+                                        data[1].trim(),
+                                        data[2].trim(),
+                                        data[3].trim(),
+                                        data[4].trim()
+                                );
+                                break;
 
-                        case "createSupervisor":
-                            createSupervisor(
-                                    new Rut(data[0].trim()),
-                                    data[1].trim(),
-                                    data[2].trim(),
-                                    data[3].trim(),
-                                    data[4].trim()
-                            );
-                            break;
+                            case "createSupervisor":
+                                createSupervisor(
+                                        data[0].trim(),
+                                        data[1].trim(),
+                                        data[2].trim(),
+                                        data[3].trim(),
+                                        data[4].trim()
+                                );
+                                break;
 
-                        case "createCosechador":
-                            createCosechador(
-                                    new Rut(data[0].trim()),
-                                    data[1].trim(),
-                                    data[2].trim(),
-                                    data[3].trim(),
-                                    LocalDate.parse(data[4].trim(), dateFormatter)
-                            );
-                            break;
+                            case "createCosechador":
+                                createCosechador(
+                                        data[0].trim(),
+                                        data[1].trim(),
+                                        data[2].trim(),
+                                        data[3].trim(),
+                                        LocalDate.parse(data[4].trim(), dateFormatter)
+                                );
+                                break;
 
-                        case "createCultivo":
-                            createCultivo(
-                                    Integer.parseInt(data[0].trim()),
-                                    data[1].trim(),
-                                    data[2].trim(),
-                                    Float.parseFloat(data[3].trim())
-                            );
-                            break;
+                            case "createCultivo":
+                                createCultivo(
+                                        Integer.parseInt(data[0].trim()),
+                                        data[1].trim(),
+                                        data[2].trim(),
+                                        Double.parseDouble(data[3].trim())
+                                );
+                                break;
 
-                        case "createHuerto":
-                            createHuerto(
-                                    data[0].trim(),
-                                    Float.parseFloat(data[1].trim()),
-                                    data[2].trim(),
-                                    new Rut(data[3].trim())
-                            );
-                            break;
+                            case "createHuerto":
+                                createHuerto(
+                                        data[0].trim(),
+                                        Float.parseFloat(data[1].trim()),
+                                        data[2].trim(),
+                                        data[3].trim()
+                                );
+                                break;
 
-                        case "addCuartelToHuerto":
-                            addCuartelToHuerto(
-                                    data[0].trim(),
-                                    Integer.parseInt(data[1].trim()),
-                                    Float.parseFloat(data[2].trim()),
-                                    Integer.parseInt(data[3].trim())
-                            );
-                            break;
+                            case "addCuartelToHuerto":
+                                addCuartelToHuerto(
+                                        data[0].trim(),
+                                        Integer.parseInt(data[1].trim()),
+                                        Float.parseFloat(data[2].trim()),
+                                        Integer.parseInt(data[3].trim())
+                                );
+                                break;
 
-                        case "createPlanCosecha":
-                            createPlanCosecha(
-                                    Integer.parseInt(data[0].trim()),
-                                    data[1].trim(),
-                                    LocalDate.parse(data[2].trim(), dateFormatter),
-                                    LocalDate.parse(data[3].trim(), dateFormatter),
-                                    Double.parseDouble(data[4].trim()),
-                                    (float) Double.parseDouble(data[5].trim()),
-                                    data[6].trim(),
-                                    Integer.parseInt(data[7].trim())
-                            );
-                            break;
+                            case "createPlanCosecha":
+                                createPlanCosecha(
+                                        Integer.parseInt(data[0].trim()),
+                                        data[1].trim(),
+                                        LocalDate.parse(data[2].trim(), dateFormatter),
+                                        LocalDate.parse(data[3].trim(), dateFormatter),
+                                        Double.parseDouble(data[4].trim()),
+                                        Float.parseFloat(data[5].trim()),
+                                        data[6].trim(),
+                                        Integer.parseInt(data[7].trim())
+                                );
+                                break;
 
-                        case "addCuadrillaToPlan":
-                            addCuadrillatoPlan(
-                                    Integer.parseInt(data[0].trim()),
-                                    Integer.parseInt(data[1].trim()),
-                                    data[2].trim(),
-                                    new Rut(data[3].trim())
-                            );
-                            break;
+                            case "addCuadrillaToPlan":
+                                addCuadrillatoPlan(
+                                        Integer.parseInt(data[0].trim()),
+                                        Integer.parseInt(data[1].trim()),
+                                        data[2].trim(),
+                                        data[3].trim()
+                                );
+                                break;
 
-                        case "addCosechadorToCuadrilla":
-                            addCosechadorToCuadrilla(
-                                    Integer.parseInt(data[0].trim()),
-                                    Integer.parseInt(data[1].trim()),
-                                    LocalDate.parse(data[2].trim(), dateFormatter),
-                                    LocalDate.parse(data[3].trim(), dateFormatter),
-                                    Double.parseDouble(data[4].trim()),
-                                    new Rut(data[5].trim())
-                            );
-                            break;
+                            case "addCosechadorToCuadrilla":
+                                addCosechadorToCuadrilla(
+                                        Integer.parseInt(data[0].trim()),
+                                        Integer.parseInt(data[1].trim()),
+                                        LocalDate.parse(data[2].trim(), dateFormatter),
+                                        LocalDate.parse(data[3].trim(), dateFormatter),
+                                        Double.parseDouble(data[4].trim()),
+                                        data[5].trim()
+                                );
+                                break;
 
-                        case "changeEstadoPlan":
-                            changeEstadoPlan(
-                                    Integer.parseInt(data[0].trim()),
-                                    EstadoPlan.valueOf(data[1].trim())
-                            );
-                            break;
+                            case "changeEstadoPlan":
+                                changeEstadoPlan(
+                                        Integer.parseInt(data[0].trim()),
+                                        EstadoPlan.valueOf(data[1].trim().toUpperCase())
+                                );
+                                break;
 
-                        case "changeEstadoCuartel":
-                            changeEstadoCuartel(
-                                    data[1].trim(),
-                                    Integer.parseInt(data[0].trim()),
-                                    EstadoFenologico.valueOf(data[2].trim())
-                            );
-                            break;
+                            case "changeEstadoCuartel":
+                                changeEstadoCuartel(
+                                        data[0].trim(),
+                                        Integer.parseInt(data[1].trim()),
+                                        EstadoFenologico.valueOf(data[2].trim().toUpperCase())
+                                );
+                                break;
 
-                        case "addPesaje":
-                            addPesaje(
-                                    Integer.parseInt(data[0].trim()),
-                                    new Rut(data[1].trim()),
-                                    Integer.parseInt(data[2].trim()),
-                                    Integer.parseInt(data[3].trim()),
-                                    Float.parseFloat(data[4].trim()),
-                                    Calidad.valueOf(data[5].trim())
-                            );
-                            break;
+                            case "addPesaje":
+
+                                String rutString = data[1].trim();
+
+                                String rutSinPuntos = rutString.replace(".", "");
+                                String[] partesRut = rutSinPuntos.split("-");
+
+                                if (partesRut.length != 2) {
+                                    throw new GestionHuertosException("Formato de RUT inválido: " + rutString);
+                                }
+
+                                long numeroRut = Long.parseLong(partesRut[0]);
+                                char dvRut = partesRut[1].charAt(0);
+
+                                Rut rutObj = new Rut(numeroRut, dvRut);
+
+                                addPesaje(
+                                        Integer.parseInt(data[0].trim()),
+                                        rutObj,
+                                        Integer.parseInt(data[2].trim()),
+                                        Integer.parseInt(data[3].trim()),
+                                        Float.parseFloat(data[4].trim()),
+                                        Calidad.valueOf(data[5].trim().toUpperCase())
+                                );
+                                break;
+
+                            default:
+                                System.err.println("Operación desconocida: " + operacion);
+                                break;
+                        }
+                    } catch (Exception e) {
+                        throw new GestionHuertosException("Error procesando línea: " + dataLine + " - " + e.getMessage());
                     }
                 }
             }
