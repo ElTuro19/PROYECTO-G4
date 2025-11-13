@@ -452,15 +452,11 @@ public class ControladorProduccion {
         return Optional.empty();
     }
 
-    public Optional<PlanCosecha> findPesajeById(int idPesaje) {
-        for (PlanCosecha plan : planesDeCosecha) {
-            for (Cuadrilla cua : plan.getCuadrillas()) {
-                for (Pesaje pesaje : cua.getPesajes()) {
-                    if (pesaje.getId() == idPesaje) {
-                        return Optional.of(plan);
+    public Optional<Pesaje> findPesajeById(int idPesaje) {
+        for (Pesaje p : pesajes) {
+                    if (p.getId() == idPesaje) {
+                        return Optional.of(p);
                     }
-                }
-            }
         }
         return Optional.empty();
     }
