@@ -522,7 +522,7 @@ public class ControladorProduccion {
         }
         boolean verif = false;
         for (Cosechador c : this.cosechadores) {
-            if (c.getRut()==rutCosechador) {verif=true; break;}
+            if (c.getRut().equals(rutCosechador.getNumero()) ) {verif=true; break;}
         }
         if (verif==false) {throw new GestionHuertosException(
                 "No existe un cosechador con el rut indicado");}
@@ -581,7 +581,7 @@ public class ControladorProduccion {
 
     public void changeEstadoPlan (int idPlan, EstadoPlan estado) {
         PlanCosecha pp = null;
-        for (PlanCosecha p : planesDeCosecha) {if (p.getId()==()) {pp=p; break;}}
+        for (PlanCosecha p : planesDeCosecha) {if (p.getId()==idPlan) {pp=p; break;}}
         if (pp==null) {throw new GestionHuertosException("No existe un plan con el id indicado");}
 
 
