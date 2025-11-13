@@ -563,7 +563,7 @@ public class ControladorProduccion {
         /// añadir aqui penultima excepcion faltante
         java.time.LocalDate hoy = java.time.LocalDate.now();
 
-        CosechadorAsignado asig = C.get().getAsignacion
+        CosechadorAsignado asig = C.get().ge
 
         java.time.LocalDate inicio  = asig.getFechaInicio();  // <-- CAMBIA SI TU GETTER ES DISTINTO
         java.time.LocalDate termino = asig.getFechaTermino(); // <-- IGUAL

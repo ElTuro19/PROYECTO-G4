@@ -6,16 +6,18 @@ import utilidades.EstadoPlan;
 import utilidades.GestionHuertosException;
 import utilidades.Rut;
 
+import javax.swing.text.html.Option;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-public class Cosechador extends Persona{
+public class Cosechador extends Persona {
     //Atributo
     private LocalDate fechaNacimiento;
     //Guarda las asignaciones de cosechador en las distintas cuadrillas
-    private final List<CosechadorAsignado>asignaciones = new ArrayList<>();
+    private final List<CosechadorAsignado> asignaciones = new ArrayList<>();
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     public Cosechador(String rut, String nombre, String email, String direccion, LocalDate fechaNacimiento) {
@@ -24,24 +26,31 @@ public class Cosechador extends Persona{
 
     }
 
-    public LocalDate getFechaNacimiento(){
+    public LocalDate getFechaNacimiento() {
         return fechaNacimiento;
     }
 
     public void setFechaNacimiento(LocalDate fNac) {
         this.fechaNacimiento = fNac;
     }
+
     //Agregar un cosechador a la cuadrilla
-    public void addCuadrilla(CosechadorAsignado cosAs){
+    public void addCuadrilla(CosechadorAsignado cosAs) {
         if (cosAs == null) return;
         asignaciones.add(cosAs);
     }
+
     //Muestra las cuadrillas a las que está asociado
-    public Cuadrilla[] getCuadrillas(){
+    public Cuadrilla[] getCuadrillas() {
         Cuadrilla[] cuadrillas = new Cuadrilla[asignaciones.size()];
         for (int i = 0; i < asignaciones.size(); i++) {
             cuadrillas[i] = asignaciones.get(i).getCuadrilla();
         }
         return cuadrillas;
     }
+
+    public Optional<CosechadorAsignado> getAsignaciones(int idCuad, int idPlan) { }
+
+    public CosechadorAsignado[] getAsignaciones() {}
+
 }
