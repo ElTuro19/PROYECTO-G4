@@ -24,7 +24,6 @@ import modelo.Supervisor;
 
 // utilidades / enumeraciones / excepciones
 import utilidades.Rut;
-import utilidades.*;
 import enumeraciones.EstadoFenologico;
 import enumeraciones.EstadoPlan;
 import enumeraciones.Calidad;
@@ -58,56 +57,52 @@ public class ControladorProduccion {
     }
 
     // CREATE
-    public boolean createPropietario(String rut, String nombre, String email, String dirParticular, String dirComercial) {
+    public void createPropietario(String rut, String nombre, String email, String dirParticular, String dirComercial) {
         for (Propietario p : propietarios) {
             if (p.getRut().equals(rut)) {
-                return false;
+                return;
             }
         }
         Propietario nuevo = new Propietario(rut, nombre, email, dirParticular, dirComercial);
         propietarios.add(nuevo);
-        return true;
     }
 
-    public boolean createSupervisor(String rut, String nombre, String email, String direccion, String profesion) {
+    public void createSupervisor(String rut, String nombre, String email, String direccion, String profesion) {
         for (Supervisor s : supervisores) {
             if (s.getRut().equals(rut)) {
-                return false;
+                return;
             }
         }
         Supervisor nuevo = new Supervisor(rut, nombre, email, direccion, profesion);
         supervisores.add(nuevo);
-        return true;
     }
 
-    public boolean createCosechador(String rut, String nombre, String email, String direccion, LocalDate fechaNacimiento) {
+    public void createCosechador(String rut, String nombre, String email, String direccion, LocalDate fechaNacimiento) {
         for (Cosechador c : cosechadores) {
             if (c.getRut().equals(rut)) {
-                return false;
+                return;
             }
         }
         Cosechador nuevo = new Cosechador(rut, nombre, email, direccion, fechaNacimiento);
         cosechadores.add(nuevo);
-        return true;
     }
 
-    public boolean createCultivo(int id, String especie, String variedad, double rendimiento) {
+    public void createCultivo(int id, String especie, String variedad, double rendimiento) {
         for (Cultivo c : cultivos) {
             if (c.getId() == id) {
-                return false;
+                return;
             }
         }
         Cultivo nuevo = new Cultivo(id, especie, variedad, rendimiento);
         cultivos.add(nuevo);
-        return true;
     }
 
-    public boolean createHuerto(String nombre, float superficie, String ubicacion, String rutPropietario) {
+    public void createHuerto(String nombre, float superficie, String ubicacion, String rutPropietario) {
         Propietario propietario = null;
 
         for (Huerto h : huertos) {
             if (h.getNombre().equals(nombre)) {
-                return false;
+                return;
             }
         }
 
@@ -119,13 +114,12 @@ public class ControladorProduccion {
         }
 
         if (propietario == null) {
-            return false;
+            return;
         }
 
         Huerto nuevo = new Huerto(nombre, superficie, ubicacion, propietario);
         huertos.add(nuevo);
         propietario.addHuerto(nuevo);
-        return true;
     }
 
     public boolean addCuartelToHuerto(String nombreHuerto, int idCuartel, float superficie, int idCultivo) {
@@ -157,8 +151,8 @@ public class ControladorProduccion {
         return false;
     }
 
-    public boolean createPlanCosecha(int idPlan, String nom, LocalDate inicio, LocalDate finEstim,
-                                     double meta, float precioBase, String nomHuerto, int idCuartel) {
+    public void createPlanCosecha(int idPlan, String nom, LocalDate inicio, LocalDate finEstim,
+                                  double meta, float precioBase, String nomHuerto, int idCuartel) {
         Huerto huerto = null;
         for (Huerto h : huertos) {
             if (h.getNombre().equalsIgnoreCase(nomHuerto)) {
@@ -167,27 +161,26 @@ public class ControladorProduccion {
             }
         }
         if (huerto == null) {
-            return false;
+            return;
         }
 
         Cuartel cuartel = huerto.getCuartel(idCuartel);
         if (cuartel == null) {
-            return false;
+            return;
         }
 
         for (PlanCosecha pc : planesDeCosecha) {
             if (pc.getId() == idPlan) {
-                return false;
+                return;
             }
         }
 
         PlanCosecha nuevo = new PlanCosecha(idPlan, nom, inicio, finEstim, meta, precioBase, cuartel);
         cuartel.addPlanCosecha(nuevo);
         planesDeCosecha.add(nuevo);
-        return true;
     }
 
-    public boolean addCuadrillatoPlan(int idPlan, int idCuad, String nomCuad, String rutSup) {
+    public void addCuadrillatoPlan(int idPlan, int idCuad, String nomCuad, String rutSup) {
         PlanCosecha plan = null;
         for (PlanCosecha pc : planesDeCosecha) {
             if (pc.getId() == idPlan) {
@@ -195,7 +188,7 @@ public class ControladorProduccion {
                 break;
             }
         }
-        if (plan == null) return false;
+        if (plan == null) return;
 
         Supervisor supervisor = null;
         for (Supervisor sup : supervisores) {
@@ -204,10 +197,10 @@ public class ControladorProduccion {
                 break;
             }
         }
-        if (supervisor == null) return false;
+        if (supervisor == null) return;
 
         boolean ok = plan.addCuadrilla(idCuad, nomCuad, supervisor);
-        if (!ok) return false;
+        if (!ok) return;
 
         for (Cuadrilla c : plan.getCuadrillas()) {
             if (c.getId() == idCuad) {
@@ -216,12 +209,11 @@ public class ControladorProduccion {
             }
         }
 
-        return true;
     }
 
-    public boolean addCosechadorToCuadrilla(int idPlan, int idCuadrilla,
-                                            LocalDate fInicio, LocalDate fFin,
-                                            double meta, String rutCosechador) {
+    public void addCosechadorToCuadrilla(int idPlan, int idCuadrilla,
+                                         LocalDate fInicio, LocalDate fFin,
+                                         double meta, String rutCosechador) {
         PlanCosecha plan = null;
         for (PlanCosecha pc : planesDeCosecha) {
             if (pc.getId() == idPlan) {
@@ -229,7 +221,7 @@ public class ControladorProduccion {
                 break;
             }
         }
-        if (plan == null) return false;
+        if (plan == null) return;
 
         Cuadrilla cuadrilla = null;
         for (Cuadrilla c : plan.getCuadrillas()) {
@@ -238,7 +230,7 @@ public class ControladorProduccion {
                 break;
             }
         }
-        if (cuadrilla == null) return false;
+        if (cuadrilla == null) return;
 
         Cosechador cosechador = null;
         for (Cosechador c : cosechadores) {
@@ -248,12 +240,12 @@ public class ControladorProduccion {
                 break;
             }
         }
-        if (cosechador == null) return false;
+        if (cosechador == null) return;
 
         CosechadorAsignado ca = new CosechadorAsignado(fInicio, fFin, meta, cuadrilla, cosechador);
         cosechador.addCuadrilla(ca);
 
-        return cuadrilla.addCosechador(fInicio, fFin, meta, cosechador);
+        cuadrilla.addCosechador(fInicio, fFin, meta, cosechador);
     }
 
     // LISTADOS
