@@ -520,72 +520,86 @@ public class ControladorProduccion {
         return resultados.toArray(new String[0]);
     }
 
-    public double addPagoPesaje (int id, Rut rutCosechador) throws GestionHuertosException {
-        Cosechador cosechador = null;
-        Pesaje pesaje = null;
-        for (PagoPesaje p : this.Ppesajes ) {
-            if (p.getId() == id) {throw new GestionHuertosException("Ya existe un pago de pesaje con el id indicado");}
-        }
-        for(Pesaje p : pesajes){
-            if(p.getId() == id){
-                pesaje = p;
-                break;
+    public double addPagoPesaje(int id, Rut rutCosechador) throws GestionHuertosException {
+        for (PagoPesaje p : this.Ppesajes) {
+            if (p.getId() == id) {
+                throw new GestionHuertosException("Ya existe un pago de pesaje con el id indicado");
             }
         }
-
-        if(pesaje == null){
-            throw new GestionHuertosException(
-                    "No se ha encontrado el Pesaje con el id Indicado"
-            );
+        Optional<Cosechador> optC = findCosechadorByRut(rutCosechador);
+        if (optC.isEmpty()) {
+            throw new GestionHuertosException("No existe un cosechador con el rut indicado");
         }
-
-        boolean verif = false;
-        for (Cosechador c : this.cosechadores) {
-            if (c.getRut().equals(rutCosechador.getNumero()) ) {
-                verif=true;
-                cosechador = c;
-                break;}
+        Cosechador cosechador = optC.get();
+        java.util.List<Pesaje> pesajesAPagar = new java.util.ArrayList<>();
+        for (Pesaje p : this.pesajes) {
+            Cosechador c = p.getCosechadorAsignado().getCosechador();
+            if (c.getRut().equals(cosechador.getRut()) && !p.isPagado()) {
+                pesajesAPagar.add(p);
+            }
         }
-        if (verif==false) {throw new GestionHuertosException(
-                "No existe un cosechador con el rut indicado");}
+        if (pesajesAPagar.isEmpty()) {
+            throw new GestionHuertosException("El cosechador no tiene pesajes impagos");
+        }
+        java.util.Date hoy = new java.util.Date();
+        PagoPesaje pago = new PagoPesaje(id, hoy, pesajesAPagar);
+        this.Ppesajes.add(pago);
 
-        return 0;
+        for (Pesaje p : pesajesAPagar) {
+            p.setPago(pago);
+        }
+        return pago.getMonto();
     }
 
-    public void addPesaje (int id, Rut rutCosechador, int idPlan, int idCuadrilla, float cantidadKg, Calidad calidad) throws GestionHuertosException {
+    public void addPesaje(int id, Rut rutCosechador, int idPlan, int idCuadrilla, float cantidadKg, Calidad calidad) throws GestionHuertosException {
+
         for (Pesaje p : pesajes) {
             if (p.getId() == id) {
                 throw new GestionHuertosException("Ya existe un pesaje con id indicado");
             }
         }
-        Optional<Cosechador> C = findCosechadorByRut(rutCosechador);
-        if (C.isEmpty()) {throw new GestionHuertosException("No existe un cosechador con el rut indicado");}
-        Optional<PlanCosecha> PC = findPlanCosechaById(idPlan);
-        if (PC.isEmpty()) {throw new GestionHuertosException("No existe un plan con el id indicado");}
-        PlanCosecha pC = PC.get();
-        if (pC.getEstado()!=EstadoPlan.EJECUTANDO) {throw new GestionHuertosException("El plan no se encuentra en estado “en ejecución”");}
-        Cosechador cos = C.get();
+
+        Optional<Cosechador> optC = findCosechadorByRut(rutCosechador);
+        if (optC.isEmpty()) {
+            throw new GestionHuertosException("No existe un cosechador con el rut indicado");
+        }
+        Cosechador cos = optC.get();
+
+        Optional<PlanCosecha> optPlan = findPlanCosechaById(idPlan);
+        if (optPlan.isEmpty()) {
+            throw new GestionHuertosException("No existe un plan con el id indicado");
+        }
+        PlanCosecha pC = optPlan.get();
+
+        if (pC.getEstado() != EstadoPlan.EJECUTANDO) {
+            throw new GestionHuertosException("El plan no se encuentra en estado \"en ejecución\"");
+        }
+
         Cuadrilla[] cuad = cos.getCuadrillas();
         Cuadrilla cuadsel = null;
-        boolean verif = false;
-
         for (Cuadrilla c : cuad) {
             if (c.getId() == idCuadrilla) {
                 cuadsel = c;
-                verif = true;
+                break;
             }
         }
 
-        if (!verif || cuadsel.getPlanCosecha() != pC) {
+        if (cuadsel == null || cuadsel.getPlanCosecha() != pC) {
             throw new GestionHuertosException(
-                    "El cosechador no tiene una asignación a una cuadrilla con el id indicado en el plan con el id señalado”"
+                    "El cosechador no tiene una asignación a una cuadrilla con el id indicado en el plan con el id señalado"
             );
         }
-        /// añadir aqui penultima excepcion faltante
+
         java.time.LocalDate hoy = java.time.LocalDate.now();
 
-       CosechadorAsignado asig = C.get().getAsignacion(idCuadrilla, idPlan).get();
+        Optional<CosechadorAsignado> optAsig = cos.getAsignacion(idPlan, idCuadrilla);
+        if (optAsig.isEmpty()) {
+            throw new GestionHuertosException(
+                    "El cosechador no tiene una asignación a una cuadrilla con el id indicado en el plan con el id señalado"
+            );
+        }
 
+        CosechadorAsignado asig = optAsig.get();
         java.time.LocalDate inicio  = asig.getDesde();
         java.time.LocalDate termino = asig.getHasta();
 
@@ -594,10 +608,18 @@ public class ControladorProduccion {
                     "La fecha no está en el rango de la asignación del cosechador a la cuadrilla"
             );
         }
-
-        ///
         Cuartel cuart = pC.getCuartel();
-        if (cuart.getEstado()!=EstadoFenologico.COSECHA) {throw new GestionHuertosException("El cuartel no se encuentra en estado fenológico cosecha");}
+        if (cuart.getEstado() != EstadoFenologico.COSECHA) {
+            throw new GestionHuertosException("El cuartel no se encuentra en estado fenológico cosecha");
+        }
+        Pesaje nuevo = new Pesaje(
+                id,
+                cantidadKg,
+                calidad,
+                java.time.LocalDateTime.now(),
+                asig
+        );
+        pesajes.add(nuevo);
     }
 
     public void changeEstadoPlan (int idPlan, EstadoPlan estado) {
@@ -645,8 +667,12 @@ public class ControladorProduccion {
         return Optional.empty();
     }
     public Optional<Cosechador> findCosechadorByRut(Rut rut) {
+        if (rut == null) {
+            return Optional.empty();
+        }
         for (Cosechador p : cosechadores) {
-            if (p.getRut().equals(rut)) {
+            Rut rutCosechador = Rut.of(p.getRut());
+            if (rutCosechador.equals(rut)) {
                 return Optional.of(p);
             }
         }
@@ -817,11 +843,11 @@ public class ControladorProduccion {
                                 break;
 
                             case "changeEstadoCuartel":
-                                changeEstadoCuartel(
-                                        data[0].trim(),
-                                        Integer.parseInt(data[1].trim()),
-                                        EstadoFenologico.valueOf(data[2].trim().toUpperCase())
-                                );
+                                int idCuartel = Integer.parseInt(data[0].trim());
+                                String nombreHuerto = data[1].trim();
+                                EstadoFenologico estado = EstadoFenologico.valueOf(data[2].trim().toUpperCase());
+
+                                changeEstadoCuartel(nombreHuerto, idCuartel, estado);
                                 break;
 
                             case "addPesaje":

@@ -42,11 +42,16 @@ public class Pesaje {
     }
 
     public double getPrecioKg() {
-        return precioKg;
+        if (cosAsign != null &&
+                cosAsign.getCuadrilla() != null &&
+                cosAsign.getCuadrilla().getPlanCosecha() != null) {
+            return cosAsign.getCuadrilla().getPlanCosecha().getPrecioBaseKilo();
+        }
+        return 0.0;
     }
 
     public double getMonto() {
-        return cantidadKg * precioKg;
+        return cantidadKg * getPrecioKg();
     }
 
     public CosechadorAsignado getCosechadorAsignado() {

@@ -11,10 +11,11 @@ import java.time.format.DateTimeFormatter;
 
 public class GestionHuertosUI {
     private Scanner sc = new Scanner(System.in);
-    private ControladorProduccion control = new ControladorProduccion();
+    private ControladorProduccion control = ControladorProduccion.getInstance();
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     public void menu() {
+        control.readDataFromTextFile("InputDataGestionHuertos.txt");
         int opcion;
         do {
             System.out.println("..::MENÚ DE OPCIONES::..");
@@ -37,10 +38,13 @@ public class GestionHuertosUI {
                     subMenuPlanes();
                     break;
                 case 4:
-                    creaPlanDeCosecha();
+                    subMenuListados();
                     break;
                 case 5:
                     System.out.println("Adios...");
+                default :
+                    System.out.println("Opción inválida. Intente nuevamente.");
+                    break;
             }
         } while (opcion != 5);
     }
@@ -552,6 +556,97 @@ public class GestionHuertosUI {
         String[] planes = control.listPlanesCosecha();
         for (int i = 0; i < planes.length; i++) {
             System.out.println(planes[i]);
+        }
+    }
+
+    private void subMenuListados() {
+        int op;
+        do {
+            System.out.println(">>> MENÚ LISTADOS <<<");
+            System.out.println("""
+                1) Listar Cultivos
+                2) Listar Huertos
+                3) Listar Personas (Propietarios / Supervisores / Cosechadores)
+                4) Listar Planes de Cosecha
+                5) Listar Pesajes
+                6) Listar Pesajes de un Cosechador
+                7) Listar Pagos de Pesajes
+                8) Volver
+                """);
+            System.out.print("Ingrese opción: ");
+            op = sc.nextInt();
+            sc.nextLine();
+
+            switch (op) {
+                case 1 -> listaCultivos();
+                case 2 -> listaHuertos();
+                case 3 -> listaPersonas();
+                case 4 -> listaPlanesCosecha();
+                case 5 -> listaPesajes();
+                case 6 -> listaPesajesCosechador();
+                case 7 -> listaPagoPesajes();
+                case 8 -> System.out.println("Volviendo al menú principal...");
+                default -> System.out.println("Opción inválida. Intente nuevamente.");
+            }
+        } while (op != 8);
+    }
+
+    private void listaPesajes() {
+        System.out.println("---LISTADO DE PESAjes---");
+        System.out.printf("%-4s %-10s %-13s %-10s %10s %10s %10s %-10s%n",
+                "ID", "Fecha", "RutCosech", "Calidad", "Kg", "Precio", "Monto", "Pagado");
+
+        String[] pesajes = control.listPesajes();
+        if (pesajes.length == 0) {
+            System.out.println("(sin elementos)");
+            return;
+        }
+
+        for (String linea : pesajes) {
+            System.out.println(linea);
+        }
+    }
+
+    private void listaPesajesCosechador() {
+        System.out.println("---LISTADO DE PESAjes POR COSECHADOR---");
+        System.out.print("Ingrese rut del cosechador: ");
+        String rutStr = sc.nextLine();
+
+        try {
+            Rut rut = Rut.of(rutStr);
+
+            System.out.printf("%-4s %-10s %-10s %10s %10s %10s %-10s%n",
+                    "ID", "Fecha", "Calidad", "Kg", "Precio", "Monto", "Pagado");
+
+            String[] pesajes = control.listPesajesCosechador(rut);
+            if (pesajes.length == 0) {
+                System.out.println("(sin elementos)");
+                return;
+            }
+
+            for (String linea : pesajes) {
+                System.out.println(linea);
+            }
+        } catch (GestionHuertosException e) {
+            System.out.println("Error: " + e.getMessage());
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error: RUT inválido");
+        }
+    }
+
+    private void listaPagoPesajes() {
+        System.out.println("---LISTADO DE PAGOS DE PESAJE---");
+        System.out.printf("%-4s %-10s %10s %10s %-13s%n",
+                "ID", "Fecha", "Monto", "NroPesajes", "RutCosech");
+
+        String[] pagos = control.listPagoPesajes();
+        if (pagos.length == 0) {
+            System.out.println("(sin elementos)");
+            return;
+        }
+
+        for (String linea : pagos) {
+            System.out.println(linea);
         }
     }
 }
