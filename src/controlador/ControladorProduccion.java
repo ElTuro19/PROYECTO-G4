@@ -32,22 +32,22 @@ import excepciones.GestionHuertosException;
 
 public class ControladorProduccion {
 
-    private ArrayList<Cultivo> cultivos = new ArrayList<>();
-    private ArrayList<Supervisor> supervisores = new ArrayList<>();
-    private ArrayList<EstadoFenologico> estados = new ArrayList<>();
-    private ArrayList<PlanCosecha> planesDeCosecha = new ArrayList<>();
-    private ArrayList<Propietario> propietarios = new ArrayList<>();
-    private ArrayList<Persona> personas = new ArrayList<>();
-    private ArrayList<Cosechador> cosechadores = new ArrayList<>();
-    private ArrayList<Huerto> huertos = new ArrayList<>();
-    private ArrayList<Pesaje> pesajes = new ArrayList<>();
-    private ArrayList<PagoPesaje> Ppesajes = new ArrayList<>();
+    private final ArrayList<Cultivo> cultivos = new ArrayList<>();
+    private final ArrayList<Supervisor> supervisores = new ArrayList<>();
+    private final ArrayList<EstadoFenologico> estados = new ArrayList<>();
+    private final ArrayList<PlanCosecha> planesDeCosecha = new ArrayList<>();
+    private final ArrayList<Propietario> propietarios = new ArrayList<>();
+    private final ArrayList<Persona> personas = new ArrayList<>();
+    private final ArrayList<Cosechador> cosechadores = new ArrayList<>();
+    private final ArrayList<Huerto> huertos = new ArrayList<>();
+    private final ArrayList<Pesaje> pesajes = new ArrayList<>();
+    private final ArrayList<PagoPesaje> Ppesajes = new ArrayList<>();
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     private static ControladorProduccion instance = null;
 
-    // Constructor privado para singleton
+    // Constructor privado
     private ControladorProduccion() {}
 
     public static ControladorProduccion getInstance() {
