@@ -1,4 +1,4 @@
-package utilidades;
+package excepciones;
 
 public class GestionHuertosException extends Exception {
     public GestionHuertosException(String mensaje) {
