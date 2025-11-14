@@ -388,7 +388,35 @@ public class GestionHuertosUI {
     }
 
     private void agregarPesajeACosechador(){
-        System.out.println();
+        Cuadrilla cuadrilla = null;
+        System.out.println("Ingrese ID del Pesaje: ");
+        int id = sc.nextInt();
+        sc.nextLine();
+        System.out.println("Ingrese rut del Cosechador: ");
+        String rut = sc.nextLine();
+        System.out.println("Ingrese ID del Plan: ");
+        int idPlan = sc.nextInt();
+        System.out.println("Ingrese ID de Cuadrilla: ");
+        int idCuad = sc.nextInt();
+        sc.nextLine();
+        System.out.println("Ingrese Cantidad de Kilos: ");
+        float cantKilos = sc.nextFloat();
+        System.out.println("Calidad (1= Excelente 2=Suficiente 3=Deficiente)");
+        int cal = sc.nextInt();
+        Calidad calidad = Calidad.values()[cal - 1];
+        Rut run = Rut.of(rut);
+        control.addPesaje(id, run, idPlan, idCuad, cantKilos, calidad );
+    }
+
+    private void pagarPesajesImpagosCosechador(){
+        System.out.println("Pagando pesajes pendientes de un cosechador: ");
+        System.out.println("ID del Pago Pesaje: ");
+        int id = sc.nextInt();
+        sc.nextLine();
+        System.out.println("Rut cosechador: ");
+        String rut = sc.nextLine();
+        Rut run = Rut.of(rut);
+        control.addPagoPesaje(id, run);
     }
 
     private void creaPlanDeCosecha() {

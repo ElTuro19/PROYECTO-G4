@@ -22,6 +22,7 @@ import modelo.Propietario;
 import modelo.Supervisor;
 /// utilidades
 import utilidades.*;
+import vista.GestionHuertosUI;
 
 public class ControladorProduccion {
     private ArrayList<Cultivo> cultivos = new ArrayList<>();
@@ -519,18 +520,35 @@ public class ControladorProduccion {
         return resultados.toArray(new String[0]);
     }
 
-    public double addPagoPesaje (int id, Rut rutCosechador) {
+    public double addPagoPesaje (int id, Rut rutCosechador) throws GestionHuertosException {
+        Cosechador cosechador = null;
+        Pesaje pesaje = null;
         for (PagoPesaje p : this.Ppesajes ) {
             if (p.getId() == id) {throw new GestionHuertosException("Ya existe un pago de pesaje con el id indicado");}
         }
+        for(Pesaje p : pesajes){
+            if(p.getId() == id){
+                pesaje = p;
+                break;
+            }
+        }
+
+        if(pesaje == null){
+            throw new GestionHuertosException(
+                    "No se ha encontrado el Pesaje con el id Indicado"
+            );
+        }
+
         boolean verif = false;
         for (Cosechador c : this.cosechadores) {
-            if (c.getRut().equals(rutCosechador.getNumero()) ) {verif=true; break;}
+            if (c.getRut().equals(rutCosechador.getNumero()) ) {
+                verif=true;
+                cosechador = c;
+                break;}
         }
         if (verif==false) {throw new GestionHuertosException(
                 "No existe un cosechador con el rut indicado");}
 
-        /// por terminar
         return 0;
     }
 
@@ -618,7 +636,7 @@ public class ControladorProduccion {
         }
         return Optional.empty();
     }
-    private Optional<Supervisor> findSupervisorByRut (Rut rut) {
+    public Optional<Supervisor> findSupervisorByRut(Rut rut) {
         for (Supervisor p : supervisores) {
             if (p.getRut().equals(rut)) {
                 return Optional.of(p);
@@ -626,7 +644,7 @@ public class ControladorProduccion {
         }
         return Optional.empty();
     }
-    private Optional<Cosechador> findCosechadorByRut (Rut rut) {
+    public Optional<Cosechador> findCosechadorByRut(Rut rut) {
         for (Cosechador p : cosechadores) {
             if (p.getRut().equals(rut)) {
                 return Optional.of(p);
@@ -642,7 +660,7 @@ public class ControladorProduccion {
         }
         return Optional.empty();
     }
-    private Optional<Huerto> findHuertoByNombre(String nombre) {
+    public Optional<Huerto> findHuertoByNombre(String nombre) {
         for (Huerto p : huertos) {
             if (p.getNombre().equals(nombre)) {
                 return Optional.of(p);
@@ -650,7 +668,7 @@ public class ControladorProduccion {
         }
         return Optional.empty();
     }
-    private Optional<PlanCosecha> findPlanCosechaById (long id) {
+    public Optional<PlanCosecha> findPlanCosechaById(long id) {
         for (PlanCosecha p : planesDeCosecha) {
             if (p.getId()==id) {
                 return Optional.of(p);
