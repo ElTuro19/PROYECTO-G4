@@ -48,6 +48,16 @@ public class ControladorProduccion {
     }
 
     public boolean createPropietario(String rut, String nombre, String email, String dirParticular, String dirComercial) {
+        if (rut == null || nombre == null || email == null ||
+                dirParticular == null || dirComercial == null) {
+            return false;
+        }
+
+        if (rut.isEmpty() || nombre.isEmpty() || email.isEmpty() ||
+                dirParticular.isEmpty() || dirComercial.isEmpty()) {
+            return false;
+        }
+
         for (Propietario p : propietarios) {
             if (p.getRut().equals(rut)) {
                 return false;
