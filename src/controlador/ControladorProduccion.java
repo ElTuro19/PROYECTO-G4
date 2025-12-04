@@ -181,7 +181,7 @@ public class ControladorProduccion {
         return true;
     }
 
-    public boolean addCuadrillatoPlan(int idPlan, int idCuad, String nomCuad, String rutSup) {
+    public boolean addCuadrillatoPlan(int idPlan, int idCuad, String nomCuad, Rut rutSup) {
 
         PlanCosecha plan = null;
         for (PlanCosecha pc : planesDeCosecha) {
@@ -632,7 +632,7 @@ public class ControladorProduccion {
         pesajes.add(nuevo);
     }
 
-    public void changeEstadoPlan (int idPlan, EstadoPlan estado) {
+    public void changeEstadoPlan (int idPlan, EstadoPlan estado) throws GestionHuertosException {
         PlanCosecha pp = null;
         for (PlanCosecha p : planesDeCosecha) {if (p.getId()==idPlan) {pp=p; break;}}
         if (pp==null) {throw new GestionHuertosException("No existe un plan con el id indicado");}
@@ -668,7 +668,7 @@ public class ControladorProduccion {
         }
         return Optional.empty();
     }
-    public Optional<Supervisor> findSupervisorByRut(Rut rut) {
+    private Optional<Supervisor> findSupervisorByRut(Rut rut) {
         for (Supervisor p : supervisores) {
             if (p.getRut().equals(rut)) {
                 return Optional.of(p);
@@ -676,7 +676,7 @@ public class ControladorProduccion {
         }
         return Optional.empty();
     }
-    public Optional<Cosechador> findCosechadorByRut(Rut rut) {
+    private Optional<Cosechador> findCosechadorByRut(Rut rut) {
         if (rut == null) {
             return Optional.empty();
         }
@@ -696,7 +696,7 @@ public class ControladorProduccion {
         }
         return Optional.empty();
     }
-    public Optional<Huerto> findHuertoByNombre(String nombre) {
+    private Optional<Huerto> findHuertoByNombre(String nombre) {
         for (Huerto p : huertos) {
             if (p.getNombre().equals(nombre)) {
                 return Optional.of(p);
@@ -704,7 +704,7 @@ public class ControladorProduccion {
         }
         return Optional.empty();
     }
-    public Optional<PlanCosecha> findPlanCosechaById(long id) {
+    private Optional<PlanCosecha> findPlanCosechaById(long id) {
         for (PlanCosecha p : planesDeCosecha) {
             if (p.getId()==id) {
                 return Optional.of(p);
@@ -830,7 +830,7 @@ public class ControladorProduccion {
                                         Integer.parseInt(data[0].trim()),
                                         Integer.parseInt(data[1].trim()),
                                         data[2].trim(),
-                                        data[3].trim()
+                                        Rut.of(data[3].trim())
                                 );
                                 break;
 
