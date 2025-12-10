@@ -668,7 +668,7 @@ public class ControladorProduccion {
         }
         return Optional.empty();
     }
-    public Optional<Supervisor> findSupervisorByRut(Rut rut) {
+    private Optional<Supervisor> findSupervisorByRut(Rut rut) {
         for (Supervisor p : supervisores) {
             if (p.getRut().equals(rut)) {
                 return Optional.of(p);
@@ -676,7 +676,7 @@ public class ControladorProduccion {
         }
         return Optional.empty();
     }
-    public Optional<Cosechador> findCosechadorByRut(Rut rut) {
+    private Optional<Cosechador> findCosechadorByRut(Rut rut) {
         if (rut == null) {
             return Optional.empty();
         }
@@ -696,7 +696,7 @@ public class ControladorProduccion {
         }
         return Optional.empty();
     }
-    public Optional<Huerto> findHuertoByNombre(String nombre) {
+    private Optional<Huerto> findHuertoByNombre(String nombre) {
         for (Huerto p : huertos) {
             if (p.getNombre().equals(nombre)) {
                 return Optional.of(p);
@@ -704,7 +704,7 @@ public class ControladorProduccion {
         }
         return Optional.empty();
     }
-    public Optional<PlanCosecha> findPlanCosechaById(long id) {
+    private Optional<PlanCosecha> findPlanCosechaById(long id) {
         for (PlanCosecha p : planesDeCosecha) {
             if (p.getId()==id) {
                 return Optional.of(p);

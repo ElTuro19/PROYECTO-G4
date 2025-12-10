@@ -139,79 +139,67 @@ public class GestionHuertosUI {
 
     private void agregaCuartelesAHuerto() {
         System.out.println("Ingrese el nombre del Huerto: ");
+        sc.nextLine(); // limpiar posible \n que quedó del menú
         String nombreHuerto = sc.nextLine();
-        System.out.println("Buscando Huerto...");
-        try{
-            Optional<Huerto> h = control.findHuertoByNombre(nombreHuerto);
-            System.out.println("¡Huerto encontrado!");
-            System.out.print("Ingrese la cantidad de cuarteles: ");
-            int cantCuarteles = sc.nextInt();
-            sc.nextLine();
-            for(int i=0; i<cantCuarteles;i++){
-                System.out.println("Cuartel #" + i);
-                System.out.print("Ingrese el ID del Cuartel: ");
-                int id = sc.nextInt();
-                System.out.print("Ingrese la superficie del Cuartel: ");
-                float sup = sc.nextFloat();
-                System.out.print("Ingrese la id del Cultivo del Cuartel: ");
-                int idCult = sc.nextInt();
-                sc.nextLine();
 
-                try{
-                    boolean c = control.addCuartelToHuerto(nombreHuerto, id, sup, idCult);
-                    System.out.println("Cuartel #" + i + " agregado exitosamente");
-                }catch(GestionHuertosException e){
-                    System.out.println("Error: " + e.getMessage());
-                }
+        System.out.print("Ingrese la cantidad de cuarteles: ");
+        int cantCuarteles = sc.nextInt();
+        sc.nextLine();
+
+        for (int i = 0; i < cantCuarteles; i++) {
+            System.out.println("Cuartel N. " + (i + 1));
+            System.out.print("Ingrese el ID del Cuartel: ");
+            int id = sc.nextInt();
+            System.out.print("Ingrese la superficie del Cuartel: ");
+            float sup = sc.nextFloat();
+            System.out.print("Ingrese la id del Cultivo del Cuartel: ");
+            int idCult = sc.nextInt();
+            sc.nextLine();
+
+            boolean ok = control.addCuartelToHuerto(nombreHuerto, id, sup, idCult);
+            if (ok) {
+                System.out.println("Cuartel N. " + (i + 1) + " agregado exitosamente");
+            } else {
+                System.out.println("No se pudo agregar el Cuartel N. " + (i + 1));
             }
-        }catch(GestionHuertosException e){
-            System.out.println("Error: " + e.getMessage());
         }
     }
 
     private void cambiarEstadoDeCuartel() {
+        sc.nextLine();
         System.out.println("Ingrese el nombre del Huerto:");
         String nombreHuerto = sc.nextLine();
 
+        System.out.println("Ingrese el ID del cuartel:");
+        int idCuartel = sc.nextInt();
+        sc.nextLine();
+
+        System.out.println("Ingrese el estado al que quiere cambiar:");
+        System.out.println("""
+            1) Reposo Invernal
+            2) Floracion
+            3) Cuaja
+            4) Fructificacion
+            5) Maduracion
+            6) Cosecha
+            7) Post Cosecha
+            """);
+
+        int cambio = sc.nextInt();
+        sc.nextLine();
+
+        if (cambio < 1 || cambio > EstadoFenologico.values().length) {
+            System.out.println("Error: opción inválida. Debe ser un número entre 1 y 7.");
+            return;
+        }
+
+        EstadoFenologico nuevoEstado = EstadoFenologico.values()[cambio - 1];
+
         try {
-            Optional<Huerto> h = control.findHuertoByNombre(nombreHuerto);
-            System.out.println("¡Huerto encontrado!");
-
-            System.out.println("Ingrese el ID del cuartel:");
-            int idCuartel = sc.nextInt();
-            sc.nextLine(); //Diossss odio limpiar el buffer, se me olvida ):(
-
-            Cuartel c = h.get().getCuartel(idCuartel);
-            System.out.println("Ingrese el estado al que quiere cambiar (ESTADO ACTUAL = " +
-                    c.getEstado().toString() + "):");
-            System.out.println("""
-                1) Reposo Invernal
-                2) Floracion
-                3) Cuaja
-                4) Fructificacion
-                5) Maduracion
-                6) Cosecha
-                7) Post Cosecha
-                """);
-
-            int cambio = sc.nextInt();
-            sc.nextLine();
-
-            if (cambio < 1 || cambio > EstadoFenologico.values().length) {
-                System.out.println("Error: opción inválida. Debe ser un número entre 1 y 7.");
-                return;
-            }
-
-            EstadoFenologico nuevoEstado = EstadoFenologico.values()[cambio - 1];
-            c.setEstado(nuevoEstado);
-
+            control.changeEstadoCuartel(nombreHuerto, idCuartel, nuevoEstado);
             System.out.println("El estado ha sido cambiado exitosamente a " + nuevoEstado);
-
         } catch (GestionHuertosException e) {
             System.out.println("Error: " + e.getMessage());
-        } catch (InputMismatchException e) {
-            System.out.println("Error: debe ingresar un número válido.");
-            sc.nextLine();
         }
     }
 
@@ -292,28 +280,25 @@ public class GestionHuertosUI {
         System.out.println("Cambiando estado de Plan...");
         System.out.println("Ingrese ID del Plan");
         int id = sc.nextInt();
+        sc.nextLine();
 
-        try{
-            Optional<PlanCosecha> p = control.findPlanCosechaById(id);
-            System.out.println("Plan Ecnontrado!!");
-            System.out.println("Estado Actual: " + p.get().getEstado().toString());
-            System.out.println("Ingrese el estado que desea " +
-                    "(1=Planificado 2=Ejecutando 3=Cerrado 4=Cancelado)");
-            int op = sc.nextInt();
+        System.out.println("Ingrese el estado que desea " +
+                "(1=PLANIFICADO 2=EJECUTANDO 3=CERRADO 4=CANCELADO)");
+        int op = sc.nextInt();
+        sc.nextLine();
 
-            if(op < 1 || op > EstadoFenologico.values().length){
-                System.out.println("Error: Opción no válida, debe ser un valor entre 1 y 4");
-                return;
-            }
+        if (op < 1 || op > EstadoPlan.values().length) {
+            System.out.println("Error: Opción no válida, debe ser un valor entre 1 y 4");
+            return;
+        }
 
-            EstadoPlan nuevoEstado = EstadoPlan.values()[op-1];
-            p.get().setEstado(nuevoEstado);
+        EstadoPlan nuevoEstado = EstadoPlan.values()[op - 1];
 
+        try {
+            control.changeEstadoPlan(id, nuevoEstado);
             System.out.println("Estado del plan cambiado exitosamente!");
-        }catch(GestionHuertosException e){
+        } catch (GestionHuertosException e) {
             System.out.println("Error: " + e.getMessage());
-        }catch(InputMismatchException e){
-            System.out.println("Error: Debe ser un número válido");
         }
     }
 
@@ -323,29 +308,23 @@ public class GestionHuertosUI {
         int id = sc.nextInt();
         System.out.println("Ingrese Nro De Cuadrillas: ");
         int nCuadrillas = sc.nextInt();
+        sc.nextLine();
 
-        try{
-            Optional<PlanCosecha> p = control.findPlanCosechaById(id);
-            for(int i=0; i<nCuadrillas; i++){
-                System.out.println("ID Cuadrilla: ");
-                int idCuad = sc.nextInt();
-                sc.nextLine();
-                System.out.println("Nombre Cuadrilla: ");
-                String nombre = sc.nextLine();
-                System.out.println("Rut Supervisor: ");
-                String rut = sc.nextLine();
-                Rut run = Rut.of(rut);
+        for (int i = 0; i < nCuadrillas; i++) {
+            System.out.println("ID Cuadrilla: ");
+            int idCuad = sc.nextInt();
+            sc.nextLine();
+            System.out.println("Nombre Cuadrilla: ");
+            String nombre = sc.nextLine();
+            System.out.println("Rut Supervisor: ");
+            String rut = sc.nextLine();
 
-                try{
-                    Optional<Supervisor> s = control.findSupervisorByRut(run);
-                    p.get().addCuadrilla(idCuad, nombre, s.get());
-                    System.out.println("Cuadrilla agregada exitosamente!");
-                }catch (GestionHuertosException e){
-                    System.out.println("Error: " + e.getMessage());
-                }
+            boolean ok = control.addCuadrillatoPlan(id, idCuad, nombre, rut);
+            if (ok) {
+                System.out.println("Cuadrilla agregada exitosamente!");
+            } else {
+                System.out.println("No se pudo agregar la cuadrilla (revise id plan / supervisor / duplicados)");
             }
-        }catch(GestionHuertosException e){
-            System.out.println("Error: " + e.getMessage());
         }
     }
 
@@ -359,35 +338,30 @@ public class GestionHuertosUI {
         int cantidad = sc.nextInt();
         sc.nextLine();
 
-        try{
-            Optional<PlanCosecha> p = control.findPlanCosechaById(id);
-            Cuadrilla cua = null;
-            for(Cuadrilla c : p.get().getCuadrillas()){
-                if(c.getId() == idCuad){
-                   cua = c;
-                   break;
-                }
-            }
-            System.out.println("Fecha de Inicio Asignación (dd/mm/yyy): ");
+        for (int i = 0; i < cantidad; i++) {
+            System.out.println("Fecha de Inicio Asignación (dd/MM/yyyy): ");
             String fechaInicio = sc.nextLine();
-            System.out.println("Fecha de Termindo Asignación (dd/mm/yyy): ");
+            System.out.println("Fecha de Termindo Asignación (dd/MM/yyyy): ");
             String fechaTermino = sc.nextLine();
             System.out.println("Rut cosechador: ");
             String rut = sc.nextLine();
             System.out.println("Meta(Kilos): ");
             double kilos = sc.nextDouble();
+            sc.nextLine();
 
-            Rut run = Rut.of(rut);
-            Optional<Cosechador> cos = control.findCosechadorByRut(run);
             LocalDate fechaI = LocalDate.parse(fechaInicio, formatter);
             LocalDate fechaT = LocalDate.parse(fechaTermino, formatter);
 
-            CosechadorAsignado cosA = new CosechadorAsignado(fechaI, fechaT, kilos, cua, cos.get());
-            cos.get().addCuadrilla(cosA);
-
-            System.out.println("Cosechador agregado exitosamente!");
-        }catch(GestionHuertosException e){
-            System.out.println("Error: " + e.getMessage());
+            try {
+                boolean ok = control.addCosechadorToCuadrilla(id, idCuad, fechaI, fechaT, kilos, rut);
+                if (ok) {
+                    System.out.println("Cosechador agregado exitosamente!");
+                } else {
+                    System.out.println("No se pudo agregar el cosechador (revise cuadrilla / máximo / duplicado)");
+                }
+            } catch (GestionHuertosException e) {
+                System.out.println("Error: " + e.getMessage());
+            }
         }
     }
 
