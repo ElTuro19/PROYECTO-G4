@@ -96,14 +96,54 @@ public class GUIcreaPersona extends JDialog {
                         JOptionPane.ERROR_MESSAGE);
             }
         }else if(supervisorRadioButton.isSelected()){
+            String profesion = cajonDComercial.getText();
+            if (rut.isEmpty() || nombre.isEmpty() || email.isEmpty() || direccion.isEmpty() || profesion.isEmpty()) {
+                JOptionPane.showMessageDialog(this,
+                        "Debe completar todos los campos del Supervisor",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
 
+            boolean okSupervisor = control.createSupervisor(rut, nombre, email, direccion, profesion);
+            if (okSupervisor) {
+                JOptionPane.showMessageDialog(this,
+                        "Supervisor creado exitosamente",
+                        "Proceso finalizado",
+                        JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        "Error al crear Supervisor (puede que el RUT ya exista)",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
         }else if(cosechadorRadioButton.isSelected()){
-
+            DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            if (rut.isEmpty() || nombre.isEmpty() || email.isEmpty() || direccion.isEmpty() || cajonDComercial.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(this,
+                        "Debe completar todos los campos del Cosechador",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            LocalDate fechaN = LocalDate.parse(cajonDComercial.getText(), formato);
+            boolean okCosechador = control.createCosechador(rut, nombre, email, direccion, fechaN);
+            if (okCosechador) {
+                JOptionPane.showMessageDialog(this,
+                        "Cosechador creado exitosamente",
+                        "Proceso finalizado",
+                        JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        "Error al crear Cosechador (puede que el RUT ya exista o la fecha no es válida)",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
         }else{
             JOptionPane.showMessageDialog(this, "No se ha seleccionado ningún rol", "ERROR EN LA SELECCIÓN", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        // add your code here
+
         dispose();
     }
 

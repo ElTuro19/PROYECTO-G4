@@ -13,6 +13,7 @@ public class GestionHuertosUI {
     private Scanner sc = new Scanner(System.in);
     private ControladorProduccion control = ControladorProduccion.getInstance();
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private GUIcreaPersona gui1 = new GUIcreaPersona();
 
     public void menu() {
         control.readDataFromTextFile("InputDataGestionHuertos.txt");
@@ -29,7 +30,7 @@ public class GestionHuertosUI {
             sc.nextLine();
             switch (opcion) {
                 case 1:
-                    creaPersona();
+                    gui1.setVisible(true);
                     break;
                 case 2:
                     subMenuHuertos();

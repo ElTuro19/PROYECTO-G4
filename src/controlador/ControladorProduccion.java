@@ -69,6 +69,16 @@ public class ControladorProduccion {
     }
 
     public boolean createSupervisor(String rut, String nombre, String email, String direccion, String profesion) {
+        if (rut == null || nombre == null || email == null ||
+                direccion == null || profesion == null) {
+            return false;
+        }
+
+        if (rut.isEmpty() || nombre.isEmpty() || email.isEmpty() ||
+                direccion.isEmpty() || profesion.isEmpty()) {
+            return false;
+        }
+
         for (Supervisor s : supervisores) {
             if (s.getRut().equals(rut)) {
                 return false;
@@ -80,6 +90,16 @@ public class ControladorProduccion {
     }
 
     public boolean createCosechador(String rut, String nombre, String email, String direccion, LocalDate fechaNacimiento) {
+        if (rut == null || nombre == null || email == null ||
+                direccion == null || fechaNacimiento == null) {
+            return false;
+        }
+
+        if (rut.isEmpty() || nombre.isEmpty() || email.isEmpty() ||
+                direccion.isEmpty()) {
+            return false;
+        }
+
         for (Cosechador c : cosechadores) {
             if (c.getRut().equals(rut)) {
                 return false;
@@ -748,8 +768,9 @@ public class ControladorProduccion {
                 int n = Integer.parseInt(parts[1].trim());
 
                 for (int i = 0; i < n; i++) {
-                    String dataLine = br.readLine().trim();
+                    String dataLine = br.readLine();
                     if (dataLine == null) continue;
+                    dataLine = dataLine.trim();
 
                     String[] data = dataLine.split(";");
 
