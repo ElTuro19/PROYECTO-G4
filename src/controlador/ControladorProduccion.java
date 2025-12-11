@@ -47,107 +47,114 @@ public class ControladorProduccion {
         return instance;
     }
 
-    public boolean createPropietario(String rut, String nombre, String email, String dirParticular, String dirComercial) {
-        if (rut == null || nombre == null || email == null ||
-                dirParticular == null || dirComercial == null) {
-            return false;
-        }
+    ///preguntar sobre excepciones
+    public boolean createPropietario(String rut, String nombre, String email, String dirParticular, String dirComercial) throws GestionHuertosException {
+        Optional<Persona> verif = findPropietarioByRut(Rut.of(rut));
+        if (verif.isPresent()) {
 
-        if (rut.isEmpty() || nombre.isEmpty() || email.isEmpty() ||
-                dirParticular.isEmpty() || dirComercial.isEmpty()) {
-            return false;
-        }
-
-        for (Propietario p : propietarios) {
-            if (p.getRut().equals(rut)) {
+            if (rut == null || nombre == null || email == null ||
+                    dirParticular == null || dirComercial == null) {
                 return false;
             }
+
+            if (rut.isEmpty() || nombre.isEmpty() || email.isEmpty() ||
+                    dirParticular.isEmpty() || dirComercial.isEmpty()) {
+                return false;
+            }
+
+            for (Propietario p : propietarios) {
+                if (p.getRut().equals(rut)) {
+                    return false;
+                }
+            }
+            Propietario nuevo = new Propietario(rut, nombre, email, dirParticular, dirComercial);
+            propietarios.add(nuevo);
+            return true;
         }
-        Propietario nuevo = new Propietario(rut, nombre, email, dirParticular, dirComercial);
-        propietarios.add(nuevo);
-        return true;
+        else {throw new GestionHuertosException("Ya existe un propietario con el rut indicado");}
     }
 
-    public boolean createSupervisor(String rut, String nombre, String email, String direccion, String profesion) {
-        if (rut == null || nombre == null || email == null ||
-                direccion == null || profesion == null) {
-            return false;
-        }
-
-        if (rut.isEmpty() || nombre.isEmpty() || email.isEmpty() ||
-                direccion.isEmpty() || profesion.isEmpty()) {
-            return false;
-        }
-
-        for (Supervisor s : supervisores) {
-            if (s.getRut().equals(rut)) {
-                return false;
+    public boolean createSupervisor(String rut, String nombre, String email, String direccion, String profesion) throws GestionHuertosException {
+        Optional<Supervisor> verif = findSupervisorByRut(Rut.of(rut));
+        if (verif.isPresent()) {
+            for (Supervisor s : supervisores) {
+                if (s.getRut().equals(rut)) {
+                    return false;
+                }
             }
-        }
-        Supervisor nuevo = new Supervisor(rut, nombre, email, direccion, profesion);
-        supervisores.add(nuevo);
-        return true;
+            Supervisor nuevo = new Supervisor(rut, nombre, email, direccion, profesion);
+            supervisores.add(nuevo);
+            return true;
+        } else {throw new GestionHuertosException("Ya existe un supervisor con el rut indicado");}
     }
 
-    public boolean createCosechador(String rut, String nombre, String email, String direccion, LocalDate fechaNacimiento) {
-        if (rut == null || nombre == null || email == null ||
-                direccion == null || fechaNacimiento == null) {
-            return false;
-        }
-
-        if (rut.isEmpty() || nombre.isEmpty() || email.isEmpty() ||
-                direccion.isEmpty()) {
-            return false;
-        }
-
-        for (Cosechador c : cosechadores) {
-            if (c.getRut().equals(rut)) {
-                return false;
+    public boolean createCosechador(String rut, String nombre, String email, String direccion, LocalDate fechaNacimiento) throws GestionHuertosException {
+        Optional<Cosechador> verif = findCosechadorByRut(Rut.of(rut));
+        if (verif.isPresent()) {
+            for (Cosechador c : cosechadores) {
+                if (c.getRut().equals(rut)) {
+                    return false;
+                }
             }
+            Cosechador nuevo = new Cosechador(rut, nombre, email, direccion, fechaNacimiento);
+            cosechadores.add(nuevo);
+            return true;
         }
-        Cosechador nuevo = new Cosechador(rut, nombre, email, direccion, fechaNacimiento);
-        cosechadores.add(nuevo);
-        return true;
+        else {throw new GestionHuertosException("Ya existe un cosechador con el rut indicado");}
     }
 
-    public boolean createCultivo(int id, String especie, String variedad, double rendimiento) {
-        for (Cultivo c : cultivos) {
-            if (c.getId() == id) {
-                return false;
+    public boolean createCultivo(int id, String especie, String variedad, double rendimiento) throws GestionHuertosException{
+        Optional<Cultivo> verif = findCultivoById(id);
+        if (verif.isPresent()) {
+            for (Cultivo c : cultivos) {
+                if (c.getId() == id) {
+                    return false;
+                }
             }
-        }
-        Cultivo nuevo = new Cultivo(id, especie, variedad, rendimiento);
-        cultivos.add(nuevo);
-        return true;
+            Cultivo nuevo = new Cultivo(id, especie, variedad, rendimiento);
+            cultivos.add(nuevo);
+            return true;
+        } else {throw new GestionHuertosException("Ya existe un cultivo con el id indicado");}
     }
 
-    public boolean createHuerto(String nombre, float superficie, String ubicacion, String rutPropietario) {
-        Propietario propietario = null;
-        for (Huerto h : huertos) {
-            if (h.getNombre().equals(nombre)) {
+    public boolean createHuerto(String nombre, float superficie, String ubicacion, String rutPropietario) throws GestionHuertosException {
+        Optional<Huerto> verif = findHuertoByNombre(nombre);
+        Optional<Persona> verif2 = findPropietarioByRut(Rut.of(rutPropietario));
+        if (verif2.isPresent()) {
+        if (verif.isPresent()) {
+            Propietario propietario = null;
+            for (Huerto h : huertos) {
+                if (h.getNombre().equals(nombre)) {
+                    return false;
+                }
+            }
+
+            for (Propietario p : propietarios) {
+                if (p.getRut().equals(rutPropietario)) {
+                    propietario = p;
+                }
+            }
+
+            if (propietario == null) {
                 return false;
             }
-        }
 
-        for(Propietario p : propietarios){
-            if(p.getRut().equals(rutPropietario)){
-                propietario = p;
-            }
-        }
+            Huerto nuevo = new Huerto(nombre, superficie, ubicacion, propietario);
+            huertos.add(nuevo);
+            propietario.addHuerto(nuevo);
+            return true;
+        } else {throw new GestionHuertosException("Ya existe un huerto con el nombre indicado ");}}
+        else {throw new GestionHuertosException("No existe un propietario con el rut indicado");}
 
-        if(propietario == null){
-            return false;
-        }
-
-        Huerto nuevo = new Huerto(nombre, superficie, ubicacion, propietario);
-        huertos.add(nuevo);
-        propietario.addHuerto(nuevo);
-        return true;
     }
 
     public boolean addCuartelToHuerto(String nombreHuerto, int idCuartel, float superficie, int idCultivo) {
         Huerto huerto;
         Cultivo cultivo;
+        Optional<Huerto> verif = findHuertoByNombre(nombreHuerto);
+        Optional<Cultivo> verif2 = findCultivoById(idCuartel);
+        if (verif.isEmpty()) {throw new GestionHuertosException("No existe un huerto con el nombre indicado");}
+        if (verif2.isEmpty()) {throw new GestionHuertosException("No existe un cultivo con el id indicado");}
         for (Huerto h : huertos){
             if(h.getNombre().equals(nombreHuerto)){
                 huerto = h;
@@ -171,8 +178,15 @@ public class ControladorProduccion {
         return false;
     }
 
-    public boolean createPlanCosecha(int idPlan, String nom, LocalDate inicio, LocalDate finEstim, double meta, float precioBase, String nomHuerto, int idCuartel) {
+    public boolean createPlanCosecha(int idPlan, String nom, LocalDate inicio, LocalDate finEstim, double meta, float precioBase, String nomHuerto, int idCuartel) throws GestionHuertosException {
         Huerto huerto = null;
+        Optional<PlanCosecha> verif = findPlanCosechaById(idPlan);
+        if (verif.isPresent()) {throw new GestionHuertosException("Ya existe un plan con el id indicado");}
+        Optional<Huerto> verif2 = findHuertoByNombre(nom);
+        if (verif2.isEmpty()) {throw new GestionHuertosException("No existe un huerto con el nombre indicado");}
+        Huerto HH = verif2.get();
+        Cuartel verif3 = HH.getCuartel(idCuartel);
+        if (verif3 == null) {throw new GestionHuertosException("No existe en el huerto un cuartel con el id indicado");}
         for (Huerto h : huertos) {
             if (h.getNombre().equalsIgnoreCase(nomHuerto)) {
                 huerto = h;
@@ -202,7 +216,13 @@ public class ControladorProduccion {
     }
 
     public boolean addCuadrillatoPlan(int idPlan, int idCuad, String nomCuad, String rutSup) {
-
+        Optional<PlanCosecha> verif = findPlanCosechaById(idPlan);
+        if (verif.isEmpty()) {throw new GestionHuertosException("No existe un plan con el id indicado");}
+        Optional<Supervisor> verif2 = findSupervisorByRut(Rut.of(rutSup));
+        if(verif2.isEmpty()) {throw new GestionHuertosException("No existe Supervisor con el rut Indicado");}
+        Supervisor supp = verif2.get();
+        Cuadrilla Cuadss = supp.getCuadrilla();
+        if (Cuadss!=null) {throw new GestionHuertosException("El supervisor ya tiene asignada una cuadrilla a su cargo ");}
         PlanCosecha plan = null;
         for (PlanCosecha pc : planesDeCosecha) {
             if (pc.getId() == idPlan) {
@@ -235,8 +255,27 @@ public class ControladorProduccion {
 
         return true;
     }
-    public boolean addCosechadorToCuadrilla(int idPlan, int idCuadrilla, LocalDate fInicio, LocalDate fFin, double meta, String rutCosechador) {
+    public boolean addCosechadorToCuadrilla(int idPlan, int idCuadrilla, LocalDate fInicio, LocalDate fFin, double meta, String rutCosechador) throws GestionHuertosException {
         PlanCosecha plan = null;
+        Optional<PlanCosecha> verif = findPlanCosechaById(idPlan);
+        if (verif.isEmpty()) {throw new GestionHuertosException("No existe un plan con el id indicado");}
+        Optional<Cosechador> verif2 = findCosechadorByRut(Rut.of(rutCosechador));
+        if (verif2.isEmpty()) {throw new GestionHuertosException("No existe un cosechador con el rut indicado");}
+        ///añadir excepcion faltante
+
+        PlanCosecha plan2 = verif.get();
+        Cuadrilla[] cuads;
+        cuads = plan2.getCuadrillas();
+        Cuadrilla thecuad = null;
+        for (Cuadrilla cuad : cuads) {
+            if (cuad.getId() == idCuadrilla) {
+                thecuad = cuad;
+            }
+        }
+        if (thecuad.getMaximoCosechadores()==thecuad.getCosechadores().length) {
+            throw new GestionHuertosException("El número de cosechadores ya alcanzó el máximo permitido");
+        }
+
         for (PlanCosecha pc : planesDeCosecha) {
             if (pc.getId() == idPlan) {
                 plan = pc;
@@ -657,7 +696,7 @@ public class ControladorProduccion {
         for (PlanCosecha p : planesDeCosecha) {if (p.getId()==idPlan) {pp=p; break;}}
         if (pp==null) {throw new GestionHuertosException("No existe un plan con el id indicado");}
 
-
+        ///  preguntar x excepcion faltanteNo está permitido el cambio de estado solicitado
         pp.setEstado(estado);
     }
 
@@ -688,7 +727,7 @@ public class ControladorProduccion {
         }
         return Optional.empty();
     }
-    public Optional<Supervisor> findSupervisorByRut(Rut rut) {
+    private Optional<Supervisor> findSupervisorByRut(Rut rut) {
         for (Supervisor p : supervisores) {
             if (p.getRut().equals(rut)) {
                 return Optional.of(p);
@@ -696,7 +735,7 @@ public class ControladorProduccion {
         }
         return Optional.empty();
     }
-    public Optional<Cosechador> findCosechadorByRut(Rut rut) {
+    private Optional<Cosechador> findCosechadorByRut(Rut rut) {
         if (rut == null) {
             return Optional.empty();
         }
@@ -716,7 +755,7 @@ public class ControladorProduccion {
         }
         return Optional.empty();
     }
-    public Optional<Huerto> findHuertoByNombre(String nombre) {
+    private Optional<Huerto> findHuertoByNombre(String nombre) {
         for (Huerto p : huertos) {
             if (p.getNombre().equals(nombre)) {
                 return Optional.of(p);
@@ -724,7 +763,7 @@ public class ControladorProduccion {
         }
         return Optional.empty();
     }
-    public Optional<PlanCosecha> findPlanCosechaById(long id) {
+    private Optional<PlanCosecha> findPlanCosechaById(long id) {
         for (PlanCosecha p : planesDeCosecha) {
             if (p.getId()==id) {
                 return Optional.of(p);
@@ -768,9 +807,8 @@ public class ControladorProduccion {
                 int n = Integer.parseInt(parts[1].trim());
 
                 for (int i = 0; i < n; i++) {
-                    String dataLine = br.readLine();
+                    String dataLine = br.readLine().trim();
                     if (dataLine == null) continue;
-                    dataLine = dataLine.trim();
 
                     String[] data = dataLine.split(";");
 
