@@ -271,8 +271,8 @@ public class GestionHuertosUI {
             case 3 -> agregarCuadrillaToPlan();
             case 4 -> agregarCosechador();
             case 5 -> agregarPesajeACosechador();
-            case 7 -> pagarPesajesImpagosCosechador();
-            case 8 -> System.out.println(" ");
+            case 6 -> pagarPesajesImpagosCosechador();
+            case 7 -> System.out.println(" ");
         }
     }
 
@@ -503,26 +503,52 @@ public class GestionHuertosUI {
         }
     }
 
-    private void listaPersonas() {
+    private void listaPropietarios() {
         System.out.println("---LISTADO DE PROPIETARIOS---");
         System.out.printf("%-15s %-15s %-20s %-25s %-15s %15s%n", "Rut", "Nombre", "Dirección", "email", "Dirección Comercial", "Nro Huertos");
         String[] propietarios = control.listPropietarios();
         for (int i = 0; i < propietarios.length; i++) {
             System.out.println(propietarios[i]);
         }
+    }
+
+    private void listaSupervisores() {
         System.out.println("---LISTADO DE SUPERVISORES---");
         System.out.printf("%-15s %-15s %-20s %-25s %-15s %-5s%n", "Rut", "Nombre", "Dirección", "email", "Profesion", "Nombre cuadrilla");
         String[] supervisores = control.listSupervisores();
         for (int i = 0; i < supervisores.length; i++) {
             System.out.println(supervisores[i]);
         }
+    }
+
+    private void listaCosechadores() {
         System.out.println("---LISTADO DE COSECHADORES---");
         System.out.printf("%-15s %-15s %-20s %-25s %-15s %-5s%n", "Rut", "Nombre", "Dirección", "email", "Fecha Nacimiento", "Nro Cuadrillas");
         String[] cosechadores = control.listCosechadores();
         for (int i = 0; i < cosechadores.length; i++) {
-            System.out.println(cosechadores[i]);
+           System.out.println(cosechadores[i]);
         }
     }
+    ///private void listaPersonas() {
+    ///    System.out.println("---LISTADO DE PROPIETARIOS---");
+    ///   System.out.printf("%-15s %-15s %-20s %-25s %-15s %15s%n", "Rut", "Nombre", "Dirección", "email", "Dirección Comercial", "Nro Huertos");
+    ///    String[] propietarios = control.listPropietarios();
+    ///    for (int i = 0; i < propietarios.length; i++) {
+    ///        System.out.println(propietarios[i]);
+    ///    }
+    ///    System.out.println("---LISTADO DE SUPERVISORES---");
+    ///    System.out.printf("%-15s %-15s %-20s %-25s %-15s %-5s%n", "Rut", "Nombre", "Dirección", "email", "Profesion", "Nombre cuadrilla");
+    ///    String[] supervisores = control.listSupervisores();
+    ///    for (int i = 0; i < supervisores.length; i++) {
+    ///        System.out.println(supervisores[i]);
+    ///    }
+    ///    System.out.println("---LISTADO DE COSECHADORES---");
+    ///    System.out.printf("%-15s %-15s %-20s %-25s %-15s %-5s%n", "Rut", "Nombre", "Dirección", "email", "Fecha Nacimiento", "Nro Cuadrillas");
+    ///    String[] cosechadores = control.listCosechadores();
+    ///    for (int i = 0; i < cosechadores.length; i++) {
+    ///        System.out.println(cosechadores[i]);
+    ///     }
+    ///}
 
     private void listaPlanesCosecha() {
         System.out.println("---LISTADO DE PLANES DE COSECHA---");
@@ -538,31 +564,35 @@ public class GestionHuertosUI {
         do {
             System.out.println(">>> MENÚ LISTADOS <<<");
             System.out.println("""
-                1) Listar Cultivos
-                2) Listar Huertos
-                3) Listar Personas (Propietarios / Supervisores / Cosechadores)
-                4) Listar Planes de Cosecha
-                5) Listar Pesajes
-                6) Listar Pesajes de un Cosechador
-                7) Listar Pagos de Pesajes
-                8) Volver
+                1) Listar Personas Propietarios
+                2) Listar Personas Supervisores
+                3) Listar Personas Cosechadores
+                4) Listar Cultivos
+                5) Listar Huertos
+                6) Listar Planes de Cosecha
+                7) Listar Pesajes
+                8) Listar Pesajes de un Cosechador
+                9) Listar Pagos de Pesajes
+                10) Volver
                 """);
             System.out.print("Ingrese opción: ");
             op = sc.nextInt();
             sc.nextLine();
 
             switch (op) {
-                case 1 -> listaCultivos();
-                case 2 -> listaHuertos();
-                case 3 -> listaPersonas();
-                case 4 -> listaPlanesCosecha();
-                case 5 -> listaPesajes();
-                case 6 -> listaPesajesCosechador();
-                case 7 -> listaPagoPesajes();
-                case 8 -> System.out.println("Volviendo al menú principal...");
+                case 1 -> listaPropietarios();
+                case 2 -> listaSupervisores();
+                case 3 -> listaCosechadores();
+                case 4 -> listaCultivos();
+                case 5 -> listaHuertos();
+                case 6 -> listaPlanesCosecha();
+                case 7 -> listaPesajes();
+                case 8 -> listaPesajesCosechador();
+                case 9 -> listaPagoPesajes();
+                case 10 -> System.out.println("Volviendo al menú principal...");
                 default -> System.out.println("Opción inválida. Intente nuevamente.");
             }
-        } while (op != 8);
+        } while (op != 10);
     }
 
     private void listaPesajes() {
