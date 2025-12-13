@@ -129,7 +129,7 @@ public class GestionHuertosUI {
         opcion = sc.nextInt();
 
         switch (opcion) {
-            case 1 -> creaCultivo();
+            case 1 -> new GUIcreaCultivo();
             case 2 -> creaHuerto();
             case 3 -> agregaCuartelesAHuerto();
             case 4 -> cambiarEstadoDeCuartel();

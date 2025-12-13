@@ -16,6 +16,9 @@ public class GUIcreaCultivo extends JDialog {
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
+        setSize(400, 500);
+        setLocationRelativeTo(null);
+        setVisible(true);
 
         buttonOK.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -64,5 +67,6 @@ public class GUIcreaCultivo extends JDialog {
 
     private void createUIComponents() {
         // TODO: place custom component creation code here
+
     }
 }
