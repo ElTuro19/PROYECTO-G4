@@ -1,27 +1,29 @@
 package modelo;
 
 import utilidades.EstadoFenologico;
+import java.util.ArrayList;
 
 public class Cuartel {
-    private final int idCuartel;
-    private final float superficie;
-    private float densidad;
-    private EstadoFenologico estado;
-    private final Cultivo cultivo;
-    private final Huerto huerto;
 
-    public Cuartel(int idCuartel, float superficie, float densidad, Cultivo cultivo, Huerto huerto){
-        this.idCuartel = idCuartel; this.superficie = superficie; this.densidad = densidad;
-        this.estado = EstadoFenologico.REPOSO_INVERNAL;
-        this.cultivo = cultivo; this.huerto = huerto;
+    private int id;
+    private float superficie;
+    private EstadoFenologico estado = EstadoFenologico.REPOSO_INVERNAL;
+    private Cultivo cultivo;
+    private Huerto huerto;
+    private ArrayList<PlanCosecha> planes = new ArrayList<>();
+
+    public Cuartel(int id, float sup, Cultivo c, Huerto h) {
+        this.id = id;
+        superficie = sup;
+        cultivo = c;
+        huerto = h;
     }
-    public int getIdCuartel(){ return idCuartel; }
-    public float getSuperficie(){ return superficie; }
-    public float getDensidad(){ return densidad; }
-    public EstadoFenologico getEstado(){ return estado; }
-    public Cultivo getCultivo(){ return cultivo; }
-    public Huerto getHuerto(){ return huerto; }
 
-    public void setEstado(EstadoFenologico nuevo){ this.estado = nuevo; }
-    public void setDensidad(float d){ this.densidad = d; }
+    public int getId() { return id; }
+    public float getSuperficie() { return superficie; }
+    public EstadoFenologico getEstado() { return estado; }
+    public void setEstado(EstadoFenologico e) { estado = e; }
+    public Huerto getHuerto() { return huerto; }
+
+    public void addPlanCosecha(PlanCosecha p) { planes.add(p); }
 }

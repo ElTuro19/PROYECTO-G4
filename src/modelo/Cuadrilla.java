@@ -1,34 +1,33 @@
 package modelo;
 
-import utilidades.Calidad;
-import utilidades.EstadoPlan;
-import java.time.*;
-import java.util.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
 
 public class Cuadrilla {
-    private final int id;
-    private final String nombre;
-    private final LocalDate fecha;
-    private final String descripcion;
-    private EstadoPlan estado = EstadoPlan.PLANIFICADO;
-    private Supervisor supervisor;
-    private PlanCosecha plan;
-    private final List<CosechadorAsignado> cosechadores = new ArrayList<>();
 
-    public Cuadrilla(int id, String nombre, LocalDate fecha, String descripcion, Supervisor supervisor, PlanCosecha plan){
-        this.id = id; this.nombre = nombre; this.fecha = fecha; this.descripcion = descripcion;
-        this.supervisor = supervisor; this.plan = plan;
+    private int id;
+    private String nombre;
+    private Supervisor supervisor;
+    private PlanCosecha planCosecha;
+    private ArrayList<Cosechador> cosechadores = new ArrayList<>();
+
+    public Cuadrilla(int id, String nom, Supervisor sup, PlanCosecha plan) {
+        this.id = id;
+        this.nombre = nom;
+        supervisor = sup;
+        planCosecha = plan;
     }
 
-    public int getId(){ return id; }
-    public String getNombre(){ return nombre; }
-    public LocalDate getFecha(){ return fecha; }
-    public String getDescripcion(){ return descripcion; }
-    public EstadoPlan getEstado(){ return estado; }
-    public Supervisor getSupervisor(){ return supervisor; }
-    public PlanCosecha getPlan(){ return plan; }
-    public List<CosechadorAsignado> getCosechadores(){ return cosechadores; }
+    public int getId() { return id; }
+    public String getNombre() { return nombre; }
+    public Supervisor getSupervisor() { return supervisor; }
+    public PlanCosecha getPlanCosecha() { return planCosecha; }
 
-    public void setEstado(EstadoPlan estado){ this.estado = estado; }
-    public void addCosechador(CosechadorAsignado ca){ this.cosechadores.add(ca); }
+    public boolean addCosechador(LocalDate i, LocalDate f, double m, Cosechador c) {
+        return cosechadores.add(c);
+    }
+
+    public Cosechador[] getCosechadores() {
+        return cosechadores.toArray(new Cosechador[0]);
+    }
 }

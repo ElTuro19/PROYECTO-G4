@@ -1,27 +1,25 @@
 package modelo;
 
-import utilidades.Calidad;
-import java.time.*;
+import java.time.LocalDate;
 
 public class CosechadorAsignado {
-    private final LocalDate desde;
+
+    private LocalDate desde;
     private LocalDate hasta;
     private double metaKilos;
-    private Cosechador cosechador;
-    private Cuartel cuartel;
     private Cuadrilla cuadrilla;
+    private Cosechador cosechador;
 
-    public CosechadorAsignado(LocalDate desde, LocalDate hasta, double metaKilos, Cuartel cuartel, Cuadrilla cuadrilla, Cosechador cosechador){
-        this.desde = desde; this.hasta = hasta; this.metaKilos = metaKilos;
-        this.cuartel = cuartel; this.cuadrilla = cuadrilla; this.cosechador = cosechador;
+    public CosechadorAsignado(LocalDate d, LocalDate h, double meta, Cuadrilla c, Cosechador cos) {
+        desde = d;
+        hasta = h;
+        metaKilos = meta;
+        cuadrilla = c;
+        cosechador = cos;
     }
 
-    public LocalDate getDesde(){ return desde; }
-    public LocalDate getHasta(){ return hasta; }
-    public double getMetaKilos(){ return metaKilos; }
-    public Cosechador getCosechador(){ return cosechador; }
-    public Cuartel getCuartel(){ return cuartel; }
-    public Cuadrilla getCuadrilla(){ return cuadrilla; }
-
-    public void setHasta(LocalDate h){ this.hasta = h; }
+    public LocalDate getDesde() { return desde; }
+    public LocalDate getHasta() { return hasta; }
+    public Cuadrilla getCuadrilla() { return cuadrilla; }
+    public Cosechador getCosechador() { return cosechador; }
 }

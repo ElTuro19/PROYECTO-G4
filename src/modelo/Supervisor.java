@@ -1,26 +1,16 @@
 package modelo;
-/// utilidades
-import utilidades.Calidad;
-import utilidades.EstadoFenologico;
-import utilidades.EstadoPlan;
-import utilidades.GestionHuertosException;
-import utilidades.Rut;
 
 public class Supervisor extends Persona {
-    private Cuadrilla cuadrilla;
+
     private String profesion;
-    //
+    private Cuadrilla cuadrilla;
+
     public Supervisor(String rut, String nombre, String email, String direccion, String profesion) {
         super(rut, nombre, email, direccion);
         this.profesion = profesion;
-        this.cuadrilla = null;
     }
+
     public String getProfesion() { return profesion; }
-
-    public void setProfesion(String profesion){ this.profesion=profesion; }
-
-    public void setCuadrilla(Cuadrilla cuad) { this.cuadrilla=cuad; }
-
     public Cuadrilla getCuadrilla() { return cuadrilla; }
-
+    public void setCuadrilla(Cuadrilla c) { this.cuadrilla = c; }
 }
