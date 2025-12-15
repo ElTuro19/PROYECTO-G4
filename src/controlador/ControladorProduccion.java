@@ -50,7 +50,7 @@ public class ControladorProduccion {
     ///preguntar sobre excepciones
     public boolean createPropietario(String rut, String nombre, String email, String dirParticular, String dirComercial) throws GestionHuertosException {
         Optional<Persona> verif = findPropietarioByRut(Rut.of(rut));
-        if (verif.isPresent()) {
+        if (verif.isPresent()) {throw new GestionHuertosException("Ya existe un propietario con el rut indicado");}
 
             if (rut == null || nombre == null || email == null ||
                     dirParticular == null || dirComercial == null) {
@@ -70,13 +70,12 @@ public class ControladorProduccion {
             Propietario nuevo = new Propietario(rut, nombre, email, dirParticular, dirComercial);
             propietarios.add(nuevo);
             return true;
-        }
-        else {throw new GestionHuertosException("Ya existe un propietario con el rut indicado");}
+
     }
 
     public boolean createSupervisor(String rut, String nombre, String email, String direccion, String profesion) throws GestionHuertosException {
         Optional<Supervisor> verif = findSupervisorByRut(Rut.of(rut));
-        if (verif.isPresent()) {
+        if (verif.isPresent()) {throw new GestionHuertosException("Ya existe un supervisor con el rut indicado");}
             for (Supervisor s : supervisores) {
                 if (s.getRut().equals(rut)) {
                     return false;
@@ -85,12 +84,12 @@ public class ControladorProduccion {
             Supervisor nuevo = new Supervisor(rut, nombre, email, direccion, profesion);
             supervisores.add(nuevo);
             return true;
-        } else {throw new GestionHuertosException("Ya existe un supervisor con el rut indicado");}
+
     }
 
     public boolean createCosechador(String rut, String nombre, String email, String direccion, LocalDate fechaNacimiento) throws GestionHuertosException {
         Optional<Cosechador> verif = findCosechadorByRut(Rut.of(rut));
-        if (verif.isPresent()) {
+        if (!verif.isEmpty()) {throw new GestionHuertosException("Ya existe un cosechador con el rut indicado");}
             for (Cosechador c : cosechadores) {
                 if (c.getRut().equals(rut)) {
                     return false;
@@ -99,13 +98,11 @@ public class ControladorProduccion {
             Cosechador nuevo = new Cosechador(rut, nombre, email, direccion, fechaNacimiento);
             cosechadores.add(nuevo);
             return true;
-        }
-        else {throw new GestionHuertosException("Ya existe un cosechador con el rut indicado");}
     }
 
     public boolean createCultivo(int id, String especie, String variedad, double rendimiento) throws GestionHuertosException{
         Optional<Cultivo> verif = findCultivoById(id);
-        if (verif.isPresent()) {
+        if (verif.isPresent()) {throw new GestionHuertosException("Ya existe un cultivo con el id indicado");}
             for (Cultivo c : cultivos) {
                 if (c.getId() == id) {
                     return false;
@@ -114,14 +111,13 @@ public class ControladorProduccion {
             Cultivo nuevo = new Cultivo(id, especie, variedad, rendimiento);
             cultivos.add(nuevo);
             return true;
-        } else {throw new GestionHuertosException("Ya existe un cultivo con el id indicado");}
     }
 
     public boolean createHuerto(String nombre, float superficie, String ubicacion, String rutPropietario) throws GestionHuertosException {
         Optional<Huerto> verif = findHuertoByNombre(nombre);
         Optional<Persona> verif2 = findPropietarioByRut(Rut.of(rutPropietario));
-        if (verif2.isPresent()) {
-        if (verif.isPresent()) {
+        if (verif2.isPresent()) {throw new GestionHuertosException("No existe un propietario con el rut indicado");}
+        if (verif.isPresent()) {throw new GestionHuertosException("Ya existe un huerto con el nombre indicado ");}
             Propietario propietario = null;
             for (Huerto h : huertos) {
                 if (h.getNombre().equals(nombre)) {
@@ -143,8 +139,7 @@ public class ControladorProduccion {
             huertos.add(nuevo);
             propietario.addHuerto(nuevo);
             return true;
-        } else {throw new GestionHuertosException("Ya existe un huerto con el nombre indicado ");}}
-        else {throw new GestionHuertosException("No existe un propietario con el rut indicado");}
+
 
     }
 
@@ -152,7 +147,7 @@ public class ControladorProduccion {
         Huerto huerto;
         Cultivo cultivo;
         Optional<Huerto> verif = findHuertoByNombre(nombreHuerto);
-        Optional<Cultivo> verif2 = findCultivoById(idCuartel);
+        Optional<Cultivo> verif2 = findCultivoById(idCultivo);
         if (verif.isEmpty()) {throw new GestionHuertosException("No existe un huerto con el nombre indicado");}
         if (verif2.isEmpty()) {throw new GestionHuertosException("No existe un cultivo con el id indicado");}
         for (Huerto h : huertos){
@@ -182,7 +177,7 @@ public class ControladorProduccion {
         Huerto huerto = null;
         Optional<PlanCosecha> verif = findPlanCosechaById(idPlan);
         if (verif.isPresent()) {throw new GestionHuertosException("Ya existe un plan con el id indicado");}
-        Optional<Huerto> verif2 = findHuertoByNombre(nom);
+        Optional<Huerto> verif2 = findHuertoByNombre(nomHuerto);
         if (verif2.isEmpty()) {throw new GestionHuertosException("No existe un huerto con el nombre indicado");}
         Huerto HH = verif2.get();
         Cuartel verif3 = HH.getCuartel(idCuartel);
@@ -728,9 +723,13 @@ public class ControladorProduccion {
         return Optional.empty();
     }
     private Optional<Supervisor> findSupervisorByRut(Rut rut) {
-        for (Supervisor p : supervisores) {
-            if (p.getRut().equals(rut)) {
-                return Optional.of(p);
+        if (rut == null) {
+            return Optional.empty();
+        }
+        for (Supervisor s : supervisores) {
+            Rut rutSup = Rut.of(s.getRut());
+            if (rutSup.equals(rut)) {
+                return Optional.of(s);
             }
         }
         return Optional.empty();
@@ -792,6 +791,9 @@ public class ControladorProduccion {
     }
 
     public void readDataFromTextFile(String filename) throws GestionHuertosException {
+        if (!propietarios.isEmpty() || !supervisores.isEmpty() || !cosechadores.isEmpty()) {
+            return;
+        }
         try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
             String line;
             DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
