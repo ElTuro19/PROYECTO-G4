@@ -45,7 +45,7 @@ public class GestionHuertosUI {
                     subMenuListados();
                     break;
                 case 5:
-                    System.out.println("Adios...");
+                    control.;
                 default :
                     System.out.println("Opción inválida. Intente nuevamente.");
                     break;

@@ -1,16 +1,19 @@
 package vista;
 
+import controlador.ControladorProduccion;
+
 import javax.swing.*;
 import java.awt.event.*;
 
 public class GUIcreaCultivo extends JDialog {
+    ControladorProduccion control = ControladorProduccion.getInstance();
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
-    private JTextField textField1;
-    private JTextField textField2;
-    private JTextField textField3;
-    private JTextField textField4;
+    private JTextField CajonRe;
+    private JTextField CajonVa;
+    private JTextField CajonEsp;
+    private JTextField CajonID;
 
     public GUIcreaCultivo() {
         setContentPane(contentPane);
@@ -49,6 +52,53 @@ public class GUIcreaCultivo extends JDialog {
     }
 
     private void onOK() {
+        int id;
+        double rendimiento;
+
+        try {
+            id = Integer.parseInt(CajonID.getText().trim());
+            rendimiento = Double.parseDouble(CajonRe.getText().trim());
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "ID y Rendimiento deben ser valores numéricos válidos",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
+
+        String especie = CajonEsp.getText().trim();
+        String variedad = CajonVa.getText().trim();
+
+        if (id <= 0 || especie.isEmpty() || variedad.isEmpty() || rendimiento <= 0) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Debe completar todos los campos correctamente",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
+
+        boolean ok = control.createCultivo(id, especie, variedad, rendimiento);
+
+        if (ok) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Cultivo creado exitosamente",
+                    "Éxito",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+            dispose();
+        } else {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "El cultivo ya existe o no pudo crearse",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
         // add your code here
         dispose();
     }
