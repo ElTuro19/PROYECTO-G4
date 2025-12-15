@@ -3,6 +3,7 @@ package vista;
 import javax.swing.*;
 import controlador.ControladorProduccion;
 import java.awt.event.*;
+import java.lang.ref.Cleaner;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -23,9 +24,12 @@ public class GUIcreaPersona extends JDialog {
     ButtonGroup grupo = new ButtonGroup();
 
     public GUIcreaPersona() {
+
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
+        setSize(500, 400);
+        setLocationRelativeTo(null);
 
         buttonOK.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -145,6 +149,7 @@ public class GUIcreaPersona extends JDialog {
         }
 
         dispose();
+
     }
 
     private void onCancel() {

@@ -14,17 +14,20 @@ public class GestionHuertosUI {
     private ControladorProduccion control = ControladorProduccion.getInstance();
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private GUIcreaPersona gui1 = new GUIcreaPersona();
+    private GUIcreaCultivo gui2 = new GUIcreaCultivo();
 
     public void menu() {
         control.readDataFromTextFile("InputDataGestionHuertos.txt");
         int opcion;
         do {
-            System.out.println("..::MENÚ DE OPCIONES::..");
+            System.out.println("..::MENÚ PRINCIPAL::..");
             System.out.println("1. Crear Personas");
             System.out.println("2. Menu Huertos");
             System.out.println("3. Menú Planes De Cosecha");
             System.out.println("4. Menú Listados");
-            System.out.println("5.Salir");
+            System.out.println("5.Leer Datos del Sistema");
+            System.out.println("6.Guardar Datos del Sistema");
+            System.out.println("7.Salir");
             System.out.print("Ingrese opción: ");
             opcion = sc.nextInt();
             sc.nextLine();
@@ -50,74 +53,6 @@ public class GestionHuertosUI {
         } while (opcion != 5);
     }
 
-    private void creaPersona() {
-        String rut, nombre, email, dirp, dirc, profesion, fechaNa;
-        int op;
-        System.out.println("Creando Persona...");
-        System.out.println("Rol persona (1=Propietario, 2=Supervisor, 3=Cosechador)");
-        op = sc.nextInt();
-        sc.nextLine();
-        switch (op) {
-            case 1:
-                System.out.println("Ingrese el rut del propietario");
-                rut = sc.nextLine();
-                System.out.println("Ingrese el nombre del propietario");
-                nombre = sc.nextLine();
-                System.out.println("Ingrese el email del propietario");
-                email = sc.nextLine();
-                System.out.println("Ingrese la dirección  del propietario");
-                dirp = sc.nextLine();
-                System.out.println("Ingrese la dirección comercial del propietario");
-                dirc = sc.nextLine();
-                boolean isOk = control.createPropietario(rut, nombre, email, dirp, dirc);
-                if (isOk) {
-                    System.out.println("El propietario se ha creado correctamente");
-                } else {
-                    System.out.println("El propietario no se ha podido crear");
-                }
-                break;
-            case 2:
-                System.out.println("Ingrese el rut del supervisor");
-                rut = sc.nextLine();
-                System.out.println("Ingrese el nombre del supervisor");
-                nombre = sc.nextLine();
-                System.out.println("Ingrese el email del supervisor");
-                email = sc.nextLine();
-                System.out.println("Ingrese la dirección del supervisor");
-                dirp = sc.nextLine();
-                System.out.println("Ingese la profesión del supervisor");
-                profesion = sc.nextLine();
-
-                boolean isOk1 = control.createSupervisor(rut, nombre, email, dirp, profesion);
-                if (isOk1) {
-                    System.out.println("Supervisor creado exitosamente");
-                } else {
-                    System.out.println("El supervisor no se ha podido crear");
-                }
-                break;
-            case 3:
-                System.out.println("Ingrese el rut de cosechador");
-                rut = sc.next();
-                System.out.println("Ingrese el nombre del cosechador");
-                nombre = sc.nextLine();
-                nombre = sc.nextLine();
-                System.out.println("Ingrese la dirección del cosechador");
-                dirp = sc.nextLine();
-                System.out.println("Ingrese el email del cosechador");
-                email = sc.nextLine();
-                System.out.println("Ingrese la fecha de nacimiento del cosechador");
-                fechaNa = sc.nextLine();
-                LocalDate localDate = LocalDate.parse(fechaNa, formatter);
-                boolean isOk2 = control.createCosechador(rut, nombre, email, dirp, localDate);
-                if (isOk2) {
-                    System.out.println("Cosechador creado exitosamente");
-                } else {
-                    System.out.println("El cosechador no se ha podido crear");
-                }
-                break;
-        }
-    }
-
     private void subMenuHuertos() {
         int opcion;
         System.out.println(">>> SUBMENU HUERTOS <<<");
@@ -130,7 +65,7 @@ public class GestionHuertosUI {
         opcion = sc.nextInt();
 
         switch (opcion) {
-            case 1 -> new GUIcreaCultivo();
+            case 1 -> gui2.setVisible(true);
             case 2 -> creaHuerto();
             case 3 -> agregaCuartelesAHuerto();
             case 4 -> cambiarEstadoDeCuartel();
@@ -530,26 +465,6 @@ public class GestionHuertosUI {
            System.out.println(cosechadores[i]);
         }
     }
-    ///private void listaPersonas() {
-    ///    System.out.println("---LISTADO DE PROPIETARIOS---");
-    ///   System.out.printf("%-15s %-15s %-20s %-25s %-15s %15s%n", "Rut", "Nombre", "Dirección", "email", "Dirección Comercial", "Nro Huertos");
-    ///    String[] propietarios = control.listPropietarios();
-    ///    for (int i = 0; i < propietarios.length; i++) {
-    ///        System.out.println(propietarios[i]);
-    ///    }
-    ///    System.out.println("---LISTADO DE SUPERVISORES---");
-    ///    System.out.printf("%-15s %-15s %-20s %-25s %-15s %-5s%n", "Rut", "Nombre", "Dirección", "email", "Profesion", "Nombre cuadrilla");
-    ///    String[] supervisores = control.listSupervisores();
-    ///    for (int i = 0; i < supervisores.length; i++) {
-    ///        System.out.println(supervisores[i]);
-    ///    }
-    ///    System.out.println("---LISTADO DE COSECHADORES---");
-    ///    System.out.printf("%-15s %-15s %-20s %-25s %-15s %-5s%n", "Rut", "Nombre", "Dirección", "email", "Fecha Nacimiento", "Nro Cuadrillas");
-    ///    String[] cosechadores = control.listCosechadores();
-    ///    for (int i = 0; i < cosechadores.length; i++) {
-    ///        System.out.println(cosechadores[i]);
-    ///     }
-    ///}
 
     private void listaPlanesCosecha() {
         System.out.println("---LISTADO DE PLANES DE COSECHA---");

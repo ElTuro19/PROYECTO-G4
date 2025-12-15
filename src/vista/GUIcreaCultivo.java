@@ -18,7 +18,7 @@ public class GUIcreaCultivo extends JDialog {
         getRootPane().setDefaultButton(buttonOK);
         setSize(400, 500);
         setLocationRelativeTo(null);
-        setVisible(true);
+        setVisible(false);
 
         buttonOK.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
