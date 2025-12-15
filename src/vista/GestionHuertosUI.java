@@ -45,7 +45,7 @@ public class GestionHuertosUI {
                     subMenuListados();
                     break;
                 case 5:
-                    control.;
+                    System.out.println("IMPLEMENTAR");
                 default :
                     System.out.println("Opción inválida. Intente nuevamente.");
                     break;
