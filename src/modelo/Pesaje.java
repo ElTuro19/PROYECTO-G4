@@ -1,34 +1,32 @@
-package modelo;
-
-import utilidades.Calidad;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public class Pesaje {
 
-    private int id;
-    private double cantidadKg;
-    private Calidad calidad;
-    private LocalDateTime fechaHora;
+    private LocalDate fecha;
+    private double kilos;
     private double precioKg;
-    private CosechadorAsignado asignacion;
-    private PagoPesaje pago;
+    private Calidad calidad;
 
-    public Pesaje(int id, double cant, Calidad cal, LocalDateTime f, CosechadorAsignado a) {
-        this.id = id;
-        cantidadKg = cant;
-        calidad = cal;
-        fechaHora = f;
-        asignacion = a;
+    public Pesaje(LocalDate fecha, double kilos, double precioKg, Calidad calidad) {
+        this.fecha = fecha;
+        this.kilos = kilos;
+        this.precioKg = precioKg;
+        this.calidad = calidad;
     }
 
-    public int getId() { return id; }
-    public double getCantidadKg() { return cantidadKg; }
-    public Calidad getCalidad() { return calidad; }
-    public LocalDateTime getFechaHora() { return fechaHora; }
-    public void setPrecioKg(double p) { precioKg = p; }
-    public double getMonto() { return cantidadKg * precioKg; }
-    public boolean isPagado() { return pago != null; }
-    public void setPago(PagoPesaje p) { pago = p; }
-    public PagoPesaje getPagoPesaje() { return pago; }
-    public CosechadorAsignado getCosechadorAsignado() { return asignacion; }
+    public LocalDate getFecha() {
+        return fecha;
+    }
+
+    public double getKilos() {
+        return kilos;
+    }
+
+    public double getPrecioKg() {
+        return precioKg;
+    }
+
+    public Calidad getCalidad() {
+        return calidad;
+    }
 }

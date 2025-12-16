@@ -1,33 +1,22 @@
-package modelo;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class Cuadrilla {
 
-    private int id;
     private String nombre;
-    private Supervisor supervisor;
-    private PlanCosecha planCosecha;
-    private ArrayList<Cosechador> cosechadores = new ArrayList<>();
+    private ArrayList<CosechadorAsignado> cosechadores;
 
-    public Cuadrilla(int id, String nom, Supervisor sup, PlanCosecha plan) {
-        this.id = id;
-        this.nombre = nom;
-        supervisor = sup;
-        planCosecha = plan;
+    public Cuadrilla(String nombre) {
+        this.nombre = nombre;
+        this.cosechadores = new ArrayList<>();
     }
 
-    public int getId() { return id; }
-    public String getNombre() { return nombre; }
-    public Supervisor getSupervisor() { return supervisor; }
-    public PlanCosecha getPlanCosecha() { return planCosecha; }
-
-    public boolean addCosechador(LocalDate i, LocalDate f, double m, Cosechador c) {
-        return cosechadores.add(c);
+    public boolean addCosechador(LocalDate inicio, LocalDate fin, double meta, Cosechador c) {
+        CosechadorAsignado ca = new CosechadorAsignado(c, inicio, fin, meta);
+        return cosechadores.add(ca);
     }
 
-    public Cosechador[] getCosechadores() {
-        return cosechadores.toArray(new Cosechador[0]);
+    public ArrayList<CosechadorAsignado> getCosechadores() {
+        return new ArrayList<>(cosechadores);
     }
 }
