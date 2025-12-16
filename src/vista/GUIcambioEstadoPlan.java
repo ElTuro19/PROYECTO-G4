@@ -113,9 +113,6 @@ public class GUIcambioEstadoPlan extends JDialog {
         buttonOK.setEnabled(true);
     }
 
-    // ===============================
-    // CAMBIO DE ESTADO
-    // ===============================
     private void onOK() {
 
         EstadoPlan estadoNuevo = (EstadoPlan) nuevoEstado.getSelectedItem();
@@ -128,34 +125,35 @@ public class GUIcambioEstadoPlan extends JDialog {
             return;
         }
 
-        int idPlan = Integer.parseInt(txtId.getText().trim());
-        String nombrePlan = txtNombre.getText();
-        int idCuartel = obtenerIdCuartelDesdeListado(idPlan);
-
-        control.changeEstadoPlan(idCuartel, estadoNuevo);
-
-        JOptionPane.showMessageDialog(this,
-                "Estado del plan actualizado correctamente",
-                "Éxito",
-                JOptionPane.INFORMATION_MESSAGE);
-
-        dispose();
-    }
-
-    private int obtenerIdCuartelDesdeListado(int idPlan) {
-
-        for (String p : control.listPlanesCosecha()) {
-            int id = Integer.parseInt(p.substring(0, 15).trim());
-            if (id == idPlan) {
-                return Integer.parseInt(p.substring(120, 140).trim());
-            }
+        int idPlan;
+        try {
+            idPlan = Integer.parseInt(txtId.getText().trim());
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this,
+                    "ID inválido",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
         }
-        throw new IllegalStateException("Plan inconsistente");
+
+        try {
+            control.changeEstadoPlan(idPlan, estadoNuevo);
+
+            JOptionPane.showMessageDialog(this,
+                    "Estado del plan actualizado correctamente",
+                    "Éxito",
+                    JOptionPane.INFORMATION_MESSAGE);
+
+            dispose();
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                    "Error al cambiar el estado: " + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }
 
-    // ===============================
-    // LIMPIEZA DE CAMPOS
-    // ===============================
     private void limpiarCampos() {
         txtNombre.setText("");
         txtMeta.setText("");
