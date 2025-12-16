@@ -324,14 +324,19 @@ public class GestionHuertosUI {
     }
 
     private void pagarPesajesImpagosCosechador(){
-        System.out.println("Pagando pesajes pendientes de un cosechador: ");
-        System.out.println("ID del Pago Pesaje: ");
-        int id = sc.nextInt();
-        sc.nextLine();
-        System.out.println("Rut cosechador: ");
-        String rut = sc.nextLine();
-        Rut run = Rut.of(rut);
-        control.addPagoPesaje(id, run);
+        ///System.out.println("Pagando pesajes pendientes de un cosechador: ");
+        ///System.out.println("ID del Pago Pesaje: ");
+        ///int id = sc.nextInt();
+        ///sc.nextLine();
+       /// System.out.println("Rut cosechador: ");
+       /// String rut = sc.nextLine();
+       /// Rut run = Rut.of(rut);
+       /// control.addPagoPesaje(id, run);]
+        GUIpagoDePesajesPendientes gui4 = new GUIpagoDePesajesPendientes();
+        gui4.setLocationRelativeTo(null);
+        gui4.pack();
+        gui4.setVisible(true);
+
     }
 
     private void creaPlanDeCosecha() {
@@ -459,6 +464,8 @@ public class GestionHuertosUI {
     }
 
     private void listaCosechadores() {
+
+
         System.out.println("---LISTADO DE COSECHADORES---");
         System.out.printf("%-15s %-15s %-20s %-25s %-15s %-5s%n", "Rut", "Nombre", "Dirección", "email", "Fecha Nacimiento", "Nro Cuadrillas");
         String[] cosechadores = control.listCosechadores();
@@ -499,7 +506,13 @@ public class GestionHuertosUI {
             switch (op) {
                 case 1 -> listaPropietarios();
                 case 2 -> listaSupervisores();
-                case 3 -> listaCosechadores();
+                case 3 -> {
+                    listaCosechadores();
+                    GUIlistarCosechadores gui3 = new GUIlistarCosechadores();
+                    gui3.setLocationRelativeTo(null);
+                    gui3.pack();
+                    gui3.setVisible(true);
+                }
                 case 4 -> listaCultivos();
                 case 5 -> listaHuertos();
                 case 6 -> listaPlanesCosecha();

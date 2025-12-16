@@ -382,22 +382,39 @@ public class ControladorProduccion {
     }
 
     public String[] listCosechadores(){
-        if(this.cosechadores.isEmpty()) {
+
+        if (cosechadores.isEmpty()) {
             return new String[0];
         }
-        List<String> resultados = new ArrayList<>();
-        for(Cosechador c : this.cosechadores) {
-            int nroCuadrillas = c.getCuadrillas().length;
-            String lineaCosechadores = String.format("%-15s %-15s %-20s %-20s %15s %15d",
-                    c.getRut(),
-                    c.getNombre(),
-                    c.getDireccion(),
-                    c.getEmail(),
-                    c.getFechaNacimiento(),
-                    nroCuadrillas);
-            resultados.add(lineaCosechadores);
-        }
-        return resultados.toArray(new String[0]);
+
+        String[] resultados = cosechadores.stream()
+                .map(c -> {
+                    double montoPagado = pesajes.stream()
+                            .filter(p -> p.getCosechadorAsignado().getCosechador().equals(c))
+                            .filter(Pesaje::isPagado)
+                            .mapToDouble(Pesaje::getMonto)
+                            .sum();
+
+                    double montoImpago = pesajes.stream()
+                            .filter(p -> p.getCosechadorAsignado().getCosechador().equals(c))
+                            .filter(p -> !p.isPagado())
+                            .mapToDouble(Pesaje::getMonto)
+                            .sum();
+
+                    return String.join(";",
+                            c.getRut(),
+                            c.getNombre(),
+                            c.getDireccion(),
+                            c.getEmail(),
+                            c.getFechaNacimiento().toString(),
+                            String.valueOf(c.getCuadrillas().length),
+                            String.valueOf(montoImpago),
+                            String.valueOf(montoPagado)
+                    );
+                })
+                .toArray(String[]::new);
+
+        return resultados;
     }
 
     public String[] listPlanesCosecha(){
@@ -583,33 +600,40 @@ public class ControladorProduccion {
     }
 
     public double addPagoPesaje(int id, Rut rutCosechador) throws GestionHuertosException {
-        for (PagoPesaje p : this.Ppesajes) {
+        // validar que no exista el pago
+        for (PagoPesaje p : Ppesajes) {
             if (p.getId() == id) {
                 throw new GestionHuertosException("Ya existe un pago de pesaje con el id indicado");
             }
         }
-        Optional<Cosechador> optC = findCosechadorByRut(rutCosechador);
-        if (optC.isEmpty()) {
-            throw new GestionHuertosException("No existe un cosechador con el rut indicado");
-        }
-        Cosechador cosechador = optC.get();
-        java.util.List<Pesaje> pesajesAPagar = new java.util.ArrayList<>();
-        for (Pesaje p : this.pesajes) {
-            Cosechador c = p.getCosechadorAsignado().getCosechador();
-            if (c.getRut().equals(cosechador.getRut()) && !p.isPagado()) {
-                pesajesAPagar.add(p);
+
+        Optional<Cosechador> cos = findCosechadorByRut(rutCosechador);
+        if (cos.isEmpty()) {throw new GestionHuertosException("No existe un cosechador con el rut indicado");}
+        Pesaje pesaje = null;
+        for (Pesaje p : pesajes) {
+            if (p.getId() == id) {
+                pesaje = p;
+                break;
             }
         }
-        if (pesajesAPagar.isEmpty()) {
-            throw new GestionHuertosException("El cosechador no tiene pesajes impagos");
-        }
-        java.util.Date hoy = new java.util.Date();
-        PagoPesaje pago = new PagoPesaje(id, hoy, pesajesAPagar);
-        this.Ppesajes.add(pago);
 
-        for (Pesaje p : pesajesAPagar) {
-            p.setPago(pago);
+        if (pesaje == null) {
+            throw new GestionHuertosException("No existe un pesaje con el id indicado");
         }
+
+        if (pesaje.isPagado()) {
+            throw new GestionHuertosException("El pesaje ya se encuentra pagado");
+        }
+
+        List<Pesaje> lista = new ArrayList<>();
+        lista.add(pesaje);
+
+        Date hoy = new Date();
+        PagoPesaje pago = new PagoPesaje(id, hoy, lista);
+        Ppesajes.add(pago);
+
+        pesaje.setPago(pago);
+
         return pago.getMonto();
     }
 
