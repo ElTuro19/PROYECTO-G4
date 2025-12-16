@@ -15,6 +15,7 @@ public class GestionHuertosUI {
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private GUIcreaPersona gui1 = new GUIcreaPersona();
     private GUIcreaCultivo gui2 = new GUIcreaCultivo();
+    private GUIcambioEstadoPlan gui3 = new GUIcambioEstadoPlan();
 
     public void menu() {
         control.readDataFromTextFile("InputDataGestionHuertos.txt");
@@ -203,7 +204,7 @@ public class GestionHuertosUI {
         }
         switch(menuPlan){
             case 1 -> creaPlanDeCosecha();
-            case 2 -> cambiarEstadoDePlan();
+            case 2 -> gui3.setVisible(true);
             case 3 -> agregarCuadrillaToPlan();
             case 4 -> agregarCosechador();
             case 5 -> agregarPesajeACosechador();

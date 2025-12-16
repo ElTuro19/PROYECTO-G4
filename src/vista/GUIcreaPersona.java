@@ -24,7 +24,6 @@ public class GUIcreaPersona extends JDialog {
     ButtonGroup grupo = new ButtonGroup();
 
     public GUIcreaPersona() {
-
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);

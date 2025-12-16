@@ -96,7 +96,7 @@
                       <text value="ID Plan:"/>
                     </properties>
                   </component>
-                  <component id="85a75" class="javax.swing.JLabel">
+                  <component id="85a75" class="javax.swing.JLabel" binding="txtNombre">
                     <constraints>
                       <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false">
                         <preferred-size width="57" height="40"/>
@@ -107,7 +107,7 @@
                       <text value="Nombre:"/>
                     </properties>
                   </component>
-                  <component id="1ac37" class="javax.swing.JLabel">
+                  <component id="1ac37" class="javax.swing.JLabel" binding="txtMeta">
                     <constraints>
                       <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
@@ -116,7 +116,7 @@
                       <text value="Cumplimiento de Meta:"/>
                     </properties>
                   </component>
-                  <component id="ecd01" class="javax.swing.JLabel">
+                  <component id="ecd01" class="javax.swing.JLabel" binding="txtEstadoActual">
                     <constraints>
                       <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
@@ -134,7 +134,7 @@
                       <text value="Nuevo Estado:"/>
                     </properties>
                   </component>
-                  <component id="9c367" class="javax.swing.JTextField" binding="textField1" default-binding="true">
+                  <component id="9c367" class="javax.swing.JTextField" binding="txtId">
                     <constraints>
                       <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="3" indent="0" use-parent-layout="false">
                         <preferred-size width="20" height="-1"/>
@@ -142,6 +142,7 @@
                     </constraints>
                     <properties>
                       <font size="20"/>
+                      <text value=""/>
                     </properties>
                   </component>
                   <component id="77158" class="javax.swing.JLabel">
@@ -173,7 +174,7 @@
                       <text value="-"/>
                     </properties>
                   </component>
-                  <component id="8ff98" class="javax.swing.JComboBox" binding="comboBox1" default-binding="true">
+                  <component id="8ff98" class="javax.swing.JComboBox" binding="nuevoEstado">
                     <constraints>
                       <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
                     </constraints>
