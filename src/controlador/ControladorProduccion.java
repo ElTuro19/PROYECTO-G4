@@ -1004,8 +1004,25 @@ public class ControladorProduccion{
             Arrays.stream(plancitos)
                     .filter(p -> !planesDeCosecha.contains(p))
                     .forEach(planesDeCosecha::add);
-        }catch(Exception e){
-            throw new GestionHuertosException("Error al leer datos: " + e.getMessage());
+        }catch(GestionHuertosException e){
+            throw new GestionHuertosException(e.getMessage());
+        }
+    }
+
+    public void saveSystemData(){
+        Persona[] arreglo = personas.stream()
+                .toArray(Persona[]::new);
+        Cultivo[] arreglo2 = cultivos.stream()
+                .toArray(Cultivo[]::new);
+        PlanCosecha[] arreglo3 = planesDeCosecha.stream()
+                .toArray(PlanCosecha[]::new);
+
+        try{
+            IO.savePersonas(arreglo);
+            IO.saveCultivos(arreglo2);
+            IO.savePlanesCosecha(arreglo3);
+        }catch(GestionHuertosException e){
+            throw new GestionHuertosException(e.getMessage());
         }
     }
 }

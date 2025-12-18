@@ -12,7 +12,7 @@ import java.util.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-public class GestionHuertosUI implements Serializable {
+public class GestionHuertosUI {
     private Scanner sc = new Scanner(System.in);
     private ControladorProduccion control = ControladorProduccion.getInstance();
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -60,7 +60,11 @@ public class GestionHuertosUI implements Serializable {
                     }
                     break;
                 case 6:
-                    System.out.println("IMPLEMENTAR");
+                    try{
+                        control.saveSystemData();
+                    }catch(GestionHuertosException ex){
+                        System.out.println("ERROR: " + ex.getMessage());
+                    }
                     break;
                 case 7:
                     System.out.println("SALIENDO DEL PROGRAMA...");
