@@ -16,7 +16,6 @@ public class GestionHuertosUI {
     private GUIcreaPersona gui1 = new GUIcreaPersona();
     private GUIcreaCultivo gui2 = new GUIcreaCultivo();
     private GUIcambioEstadoPlan gui3 = new GUIcambioEstadoPlan();
-
     public void menu() {
         control.readDataFromTextFile("InputDataGestionHuertos.txt");
         int opcion;
@@ -47,11 +46,17 @@ public class GestionHuertosUI {
                     break;
                 case 5:
                     System.out.println("IMPLEMENTAR");
+                    break;
+                case 6:
+                    System.out.println("IMPLEMENTAR");
+                    break;
+                case 7:
+                    System.out.println("SALIENDO DEL PROGRAMA...");
                 default :
                     System.out.println("Opción inválida. Intente nuevamente.");
                     break;
             }
-        } while (opcion != 5);
+        } while (opcion != 7);
     }
 
     private void subMenuHuertos() {
