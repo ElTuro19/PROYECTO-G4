@@ -1,8 +1,13 @@
 package modelo;
 
+
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Cultivo {
+public class Cultivo implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
 
     private int id;
     private String especie;

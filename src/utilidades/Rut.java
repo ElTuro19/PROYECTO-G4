@@ -1,5 +1,7 @@
 package utilidades;
 
+
+import java.io.Serializable;
 import java.util.Objects;
 
 public final class Rut implements Comparable<Rut> {

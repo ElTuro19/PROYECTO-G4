@@ -1,6 +1,7 @@
 package modelo;
 
-public class Supervisor extends Persona {
+import java.io.Serializable;
+public class Supervisor implements Serializable extends Persona {
 
     private String profesion;
     private Cuadrilla cuadrilla;

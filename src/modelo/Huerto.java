@@ -1,8 +1,15 @@
 package modelo;
 
+
+
+import java.io.Serializable;
+import java.util.Optional;
 import java.util.ArrayList;
 
-public class Huerto {
+public class Huerto implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
 
     private String nombre;
     private float superficie;
@@ -31,11 +38,12 @@ public class Huerto {
         return true;
     }
 
-    public Cuartel getCuartel(int id) {
-        for (Cuartel c : cuarteles)
-            if (c.getId() == id) return c;
-        return null;
+    public Optional<Cuartel> getCuartel(int id) {
+        for (Cuartel c : cuarteles) {
+            if (c.getId() == id) return Optional.of(c);
+        }
+        return Optional.empty();
     }
 
-    public ArrayList<Cuartel> getCuarteles() { return cuarteles; }
+    public ArrayList<Cuartel> getCuarteles() { return new ArrayList<>(cuarteles); }
 }

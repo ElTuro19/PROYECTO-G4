@@ -1,10 +1,12 @@
 package modelo;
 
+
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Optional;
 
-public class Cosechador extends Persona {
+public class Cosechador implements Serializable extends Persona {
 
     private LocalDate fechaNacimiento;
     private ArrayList<CosechadorAsignado> asignaciones = new ArrayList<>();

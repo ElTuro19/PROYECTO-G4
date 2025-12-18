@@ -19,7 +19,7 @@ public class GUIpagoDePesajesPendientes extends JDialog {
 
         String[] nombreColumnas = {"ID", "Fecha", "Calidad", "Kilos", "Precio Kg", "Monto", "Pagado"};
         String[][] datos = {
-                {"222", "2000 A.c", "de la polla", "-3", "Precio K", "Monto", "Pagado"},
+                {"222", "2000 A.c", "dato de ejemplo", "-3", "Precio K", "Monto", "Pagado"},
                 {"223", "2001 A.c", "otra cosa", "10", "1200", "12000", "No"}
         };
 

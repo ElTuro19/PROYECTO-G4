@@ -15,8 +15,8 @@ public class GUIlistarCosechadores extends JDialog {
 
         String[] nombreColumnas = {"Rut", "Nombre", "Direccion", "email", "Fecha Nac.", "Nro. Cuadrillas", "Monto Impago$, Monto Pagado$"};
         String[][] datos = {
-                {"33.333.333-3", "NEGRO ESCLAVO 1", "CAMPO DE ALGODON", "no tiene", "hace 2 dias", "2 MILLONES", "0", "Trabaja gratis"},
-                {"22.222.222-2", "JUDIO PRISIONERO", "INCENIRADOR", "jewmaster@gmail.com", "0/0/0", "12000", "0", "morira mañana"}
+                {"33.333.333-3", "Cosechador Ejemplo 1", "Dirección de ejemplo", "no tiene", "hace 2 dias", "2 MILLONES", "0", "Trabaja gratis"},
+                {"22.222.222-2", "Cosechador Ejemplo 2", "INCENIRADOR", "cosechador2@test.cl", "0/0/0", "12000", "0", "morira mañana"}
         };
 
         tablaCos.setModel(new DefaultTableModel(datos, nombreColumnas));
