@@ -218,32 +218,6 @@ public class GestionHuertosUI {
         }
     }
 
-    private void cambiarEstadoDePlan(){
-        System.out.println("Cambiando estado de Plan...");
-        System.out.println("Ingrese ID del Plan");
-        int id = sc.nextInt();
-        sc.nextLine();
-
-        System.out.println("Ingrese el estado que desea " +
-                "(1=PLANIFICADO 2=EJECUTANDO 3=CERRADO 4=CANCELADO)");
-        int op = sc.nextInt();
-        sc.nextLine();
-
-        if (op < 1 || op > EstadoPlan.values().length) {
-            System.out.println("Error: Opción no válida, debe ser un valor entre 1 y 4");
-            return;
-        }
-
-        EstadoPlan nuevoEstado = EstadoPlan.values()[op - 1];
-
-        try {
-            control.changeEstadoPlan(id, nuevoEstado);
-            System.out.println("Estado del plan cambiado exitosamente!");
-        } catch (GestionHuertosException e) {
-            System.out.println("Error: " + e.getMessage());
-        }
-    }
-
     private void agregarCuadrillaToPlan(){
         System.out.println("Agregando Cuadrilla a Plan de Cosecha...");
         System.out.println("Ingrese ID del Plan: ");
