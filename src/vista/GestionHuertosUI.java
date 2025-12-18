@@ -5,11 +5,14 @@ import controlador.ControladorProduccion;
 import modelo.*;
 import utilidades.*;
 
+import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-public class GestionHuertosUI {
+public class GestionHuertosUI implements Serializable {
     private Scanner sc = new Scanner(System.in);
     private ControladorProduccion control = ControladorProduccion.getInstance();
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -45,7 +48,16 @@ public class GestionHuertosUI {
                     subMenuListados();
                     break;
                 case 5:
-                    System.out.println("IMPLEMENTAR");
+                    try {
+                        control.readSystemData();
+                    }catch(GestionHuertosException ex){
+                        System.out.println("ERROR: " + ex.getMessage());
+                    }
+                    try{
+                        control.readDataFromTextFile("InputDataGestionHuertos.txt");
+                    }catch(GestionHuertosException ex){
+                        System.out.println("ERROR: " + ex.getMessage());
+                    }
                     break;
                 case 6:
                     System.out.println("IMPLEMENTAR");
@@ -142,27 +154,6 @@ public class GestionHuertosUI {
             System.out.println("El estado ha sido cambiado exitosamente a " + nuevoEstado);
         } catch (GestionHuertosException e) {
             System.out.println("Error: " + e.getMessage());
-        }
-    }
-
-    private void creaCultivo() {
-        String especie, variedad;
-        int id;
-        System.out.println("Creando Cultivo...");
-        double rendimiento;
-        System.out.println("Ingrese el id del cultivo");
-        id = sc.nextInt();
-        System.out.println("Ingrese la especie del cultivo");
-        especie = sc.next();
-        System.out.println("Ingrese la variedad del cultivo");
-        variedad = sc.next();
-        System.out.println("Ingrese el rendimiento del cultivo");
-        rendimiento = sc.nextDouble();
-        boolean isOk = control.createCultivo(id, especie, variedad, rendimiento);
-        if (isOk) {
-            System.out.println("Cultivo creado exitosamente");
-        } else {
-            System.out.println("El cultivo no se ha podido crear");
         }
     }
 
@@ -370,38 +361,6 @@ public class GestionHuertosUI {
                 System.out.println("Cuadrilla agregada exitosamente");
             } else {
                 System.out.println("La cuadrilla no se ha podido crear");
-            }
-        }
-    }
-
-    private void asignaCosechadoresAPlan() {
-        String rut, fini, ffin;
-        int id, idCuadrilla;
-        double meta;
-        int cantCosechadores;
-        System.out.println("Asignando cosechadores a un plan de cosecha ...");
-        System.out.println("Ingrese id del plan");
-        id = sc.nextInt();
-        System.out.println("Ingrese id de la cuadrilla");
-        idCuadrilla = sc.nextInt();
-        System.out.println("Ingrese la cantidad de cosechadores a asignar");
-        cantCosechadores = sc.nextInt();
-        for (int i = 0; i < cantCosechadores; i++) {
-            System.out.println("Fecha inicio asignación dd/mm/aaaa");
-            fini = sc.next();
-            LocalDate fecha = LocalDate.parse(fini, formatter);
-            System.out.println("Fecha fin asignación dd/mm/aaaa");
-            ffin = sc.next();
-            LocalDate fecha2 = LocalDate.parse(ffin, formatter);
-            System.out.println("Meta kilos (kg)");
-            meta = sc.nextDouble();
-            System.out.println("Rut del cosechador: ");
-            rut = sc.next();
-            boolean isOk6 = control.addCosechadorToCuadrilla(id, idCuadrilla, fecha, fecha2, meta, rut);
-            if (isOk6) {
-                System.out.println("Cosechador agregado con éxito a una cuadrilla del plan de cosecha");
-            } else {
-                System.out.println("No se ha podido agregar cosechador al plan...");
             }
         }
     }

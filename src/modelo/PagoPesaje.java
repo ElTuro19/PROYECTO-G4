@@ -6,10 +6,11 @@ import utilidades.EstadoPlan;
 import utilidades.GestionHuertosException;
 import utilidades.Rut;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-public class PagoPesaje {
+public class PagoPesaje implements Serializable {
     private int id;
     private Date fecha;
     private List<Pesaje> pesaje;

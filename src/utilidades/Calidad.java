@@ -1,6 +1,8 @@
 package utilidades;
 
-public enum Calidad {
+import java.io.Serializable;
+
+public enum Calidad implements Serializable {
     EXCELENTE,
     SUFICIENTE,
     DEFICIENTE

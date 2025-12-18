@@ -7,13 +7,14 @@ import utilidades.GestionHuertosException;
 import utilidades.Rut;
 
 import javax.swing.text.html.Option;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class Cosechador extends Persona {
+public class Cosechador extends Persona implements Serializable {
     //Atributo
     private LocalDate fechaNacimiento;
     //Guarda las asignaciones de cosechador en las distintas cuadrillas

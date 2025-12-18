@@ -6,8 +6,9 @@ import utilidades.EstadoPlan;
 import utilidades.GestionHuertosException;
 import utilidades.Rut;
 
+import java.io.Serializable;
 import java.util.ArrayList;
-public class Cultivo {
+public class Cultivo implements Serializable {
     private int id;
     private String especie;
     private String variedad;

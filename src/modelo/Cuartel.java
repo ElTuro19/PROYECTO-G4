@@ -6,9 +6,10 @@ import utilidades.EstadoPlan;
 import utilidades.GestionHuertosException;
 import utilidades.Rut;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Cuartel {
+public class Cuartel implements Serializable {
     private int id;
     private float superficie;
     private EstadoFenologico estado = EstadoFenologico.REPOSO_INVERNAL;

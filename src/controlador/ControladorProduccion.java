@@ -19,10 +19,11 @@ import modelo.PlanCosecha;
 import modelo.Propietario;
 import modelo.Supervisor;
 /// utilidades
+import persistencia.GestionHuertosIO;
 import utilidades.*;
 import vista.GestionHuertosUI;
 
-public class ControladorProduccion {
+public class ControladorProduccion{
     private ArrayList<Cultivo> cultivos = new ArrayList<>();
     private ArrayList<Supervisor> supervisores = new ArrayList<>();
     private ArrayList<EstadoFenologico> estados = new ArrayList<>();
@@ -34,6 +35,7 @@ public class ControladorProduccion {
     private ArrayList<Pesaje> pesajes = new ArrayList<>();
     private ArrayList<PagoPesaje> Ppesajes = new ArrayList<>();
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private static GestionHuertosIO IO;
 
     private static ControladorProduccion instance = null;
 
@@ -985,6 +987,27 @@ public class ControladorProduccion {
         }
     }
 
+    public void readSystemData() throws GestionHuertosException{
+        try{
+            Persona[] gente = IO.readPersonas();
+            Cultivo[] cultivitos = IO.readCultivos();
+            PlanCosecha[] plancitos = IO.readPlanes();
+
+            Arrays.stream(gente)
+                    .filter(p -> !personas.contains(p))
+                    .forEach(personas::add);
+
+            Arrays.stream(cultivitos)
+                    .filter(c -> !cultivos.contains(c))
+                    .forEach(cultivos::add);
+
+            Arrays.stream(plancitos)
+                    .filter(p -> !planesDeCosecha.contains(p))
+                    .forEach(planesDeCosecha::add);
+        }catch(Exception e){
+            throw new GestionHuertosException("Error al leer datos: " + e.getMessage());
+        }
+    }
 }
 
 

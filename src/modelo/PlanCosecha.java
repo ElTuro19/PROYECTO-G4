@@ -6,9 +6,10 @@ import utilidades.EstadoPlan;
 import utilidades.GestionHuertosException;
 import utilidades.Rut;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.time.LocalDate;
-public class PlanCosecha {
+public class PlanCosecha implements Serializable {
 private int id;
 private String nombre;
 private Cuartel cuartel;

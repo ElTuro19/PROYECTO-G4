@@ -6,10 +6,11 @@ import utilidades.EstadoPlan;
 import utilidades.GestionHuertosException;
 import utilidades.Rut;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-public class Cuadrilla {
+public class Cuadrilla implements Serializable {
 
     private int id;
     private String nombre;

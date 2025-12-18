@@ -6,9 +6,10 @@ import utilidades.EstadoPlan;
 import utilidades.GestionHuertosException;
 import utilidades.Rut;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Huerto {
+public class Huerto implements Serializable {
     private String nombre;
     private float superficie;
     private String ubicacion;

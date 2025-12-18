@@ -1,6 +1,8 @@
 package utilidades;
 
-public enum EstadoFenologico {
+import java.io.Serializable;
+
+public enum EstadoFenologico implements Serializable {
     REPOSO_INVERNAL,
     FLORACION,
     CUAJA,

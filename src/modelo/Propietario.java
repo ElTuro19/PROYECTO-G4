@@ -6,9 +6,10 @@ import utilidades.EstadoPlan;
 import utilidades.GestionHuertosException;
 import utilidades.Rut;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Propietario extends Persona {
+public class Propietario extends Persona implements Serializable {
     private String direccionComercial;
     private ArrayList<Huerto> huertos;
     

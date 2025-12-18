@@ -6,9 +6,10 @@ import utilidades.EstadoPlan;
 import utilidades.GestionHuertosException;
 import utilidades.Rut;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class CosechadorAsignado {
+public class CosechadorAsignado implements Serializable {
 
     private LocalDate desde;
     private LocalDate hasta;

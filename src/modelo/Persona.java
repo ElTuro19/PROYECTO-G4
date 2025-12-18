@@ -6,7 +6,9 @@ import utilidades.EstadoPlan;
 import utilidades.GestionHuertosException;
 import utilidades.Rut;
 
-public class Persona {
+import java.io.Serializable;
+
+public class Persona implements Serializable {
     protected String rut;
     protected String nombre;
     protected String email;

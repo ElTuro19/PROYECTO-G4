@@ -6,9 +6,10 @@ import utilidades.EstadoPlan;
 import utilidades.GestionHuertosException;
 import utilidades.Rut;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class Pesaje {
+public class Pesaje implements Serializable {
     private int id;
     private double cantidadKg;
     private Calidad cal;

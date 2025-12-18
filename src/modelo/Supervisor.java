@@ -6,7 +6,9 @@ import utilidades.EstadoPlan;
 import utilidades.GestionHuertosException;
 import utilidades.Rut;
 
-public class Supervisor extends Persona {
+import java.io.Serializable;
+
+public class Supervisor extends Persona implements Serializable {
     private Cuadrilla cuadrilla;
     private String profesion;
     //
