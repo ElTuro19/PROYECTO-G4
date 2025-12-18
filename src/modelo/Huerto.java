@@ -1,61 +1,49 @@
 package modelo;
-/// utilidades
-import utilidades.Calidad;
-import utilidades.EstadoFenologico;
-import utilidades.EstadoPlan;
-import utilidades.GestionHuertosException;
-import utilidades.Rut;
 
+
+
+import java.io.Serializable;
+import java.util.Optional;
 import java.util.ArrayList;
 
-public class Huerto {
+public class Huerto implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+
     private String nombre;
     private float superficie;
     private String ubicacion;
     private Propietario propietario;
-    private ArrayList<Cuartel> cuarteles;
-    
-    // Constructor
-    public Huerto(String nombre, float superficie, String ubicacion, Propietario prop) {
-        this.nombre = nombre;
-        this.superficie = superficie;
-        this.ubicacion = ubicacion;
-        this.propietario = prop;
-        this.cuarteles = new ArrayList<>();
-    }
-    
-    //
-    public String getNombre() { return nombre; }
-    
-    public float getSuperficie() { return superficie; }
-    public void setSuperficie(float superficie) { this.superficie = superficie; }
-    
-    public String getUbicacion() { return ubicacion; }
-    public void setUbicacion(String ubicacion) { this.ubicacion = ubicacion; }
-    
-    public Propietario getPropietario() { return propietario; }
-    public void setPropietario(Propietario propietario) { this.propietario = propietario; }
-    
-    public boolean addCuartel(int id, float sup, Cultivo cult) {
-        for (Cuartel c : cuarteles) {
-            if (c.getId() == id) {
-                return false;
-            }
-        }
-        Cuartel nuevo = new Cuartel(id, sup, cult, this);
-        cult.addCuartel(nuevo);
-        return cuarteles.add(nuevo);
+    private ArrayList<Cuartel> cuarteles = new ArrayList<>();
+
+    public Huerto(String n, float s, String u, Propietario p) {
+        nombre = n;
+        superficie = s;
+        ubicacion = u;
+        propietario = p;
     }
 
-    public Cuartel getCuartel(int id) {
-        Cuartel cua = null;
-        for(Cuartel c : cuarteles){
-            if(c.getId() == id){
-                cua = c;
-                return cua;
-            }
-        }
-        return cua;
+    public String getNombre() { return nombre; }
+    public float getSuperficie() { return superficie; }
+    public String getUbicacion() { return ubicacion; }
+    public Propietario getPropietario() { return propietario; }
+
+    public boolean addCuartel(int id, float sup, Cultivo c) {
+        for (Cuartel x : cuarteles)
+            if (x.getId() == id) return false;
+        Cuartel cu = new Cuartel(id, sup, c, this);
+        cuarteles.add(cu);
+        c.addCuartel(cu);
+        return true;
     }
-    public ArrayList<Cuartel> getCuarteles() { return cuarteles; }
+
+    public Optional<Cuartel> getCuartel(int id) {
+        for (Cuartel c : cuarteles) {
+            if (c.getId() == id) return Optional.of(c);
+        }
+        return Optional.empty();
+    }
+
+    public ArrayList<Cuartel> getCuarteles() { return new ArrayList<>(cuarteles); }
 }

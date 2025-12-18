@@ -1,33 +1,29 @@
 package modelo;
-/// utilidades
-import utilidades.Calidad;
-import utilidades.EstadoFenologico;
-import utilidades.EstadoPlan;
-import utilidades.GestionHuertosException;
-import utilidades.Rut;
 
-public class Persona {
+
+import java.io.Serializable;
+public class Persona implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+
     protected String rut;
     protected String nombre;
     protected String email;
     protected String direccion;
 
-    // Constructor
     public Persona(String rut, String nombre, String email, String direccion) {
         this.rut = rut;
         this.nombre = nombre;
         this.email = email;
         this.direccion = direccion;
     }
-    
-    //
+
     public String getRut() { return rut; }
-    
     public String getNombre() { return nombre; }
-    
     public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
-    
     public String getDireccion() { return direccion; }
+
+    public void setEmail(String email) { this.email = email; }
     public void setDireccion(String direccion) { this.direccion = direccion; }
 }

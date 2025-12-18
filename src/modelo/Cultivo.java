@@ -1,58 +1,40 @@
 package modelo;
-/// utilidades
-import utilidades.Calidad;
-import utilidades.EstadoFenologico;
-import utilidades.EstadoPlan;
-import utilidades.GestionHuertosException;
-import utilidades.Rut;
 
+
+import java.io.Serializable;
 import java.util.ArrayList;
-public class Cultivo {
+
+public class Cultivo implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+
     private int id;
     private String especie;
     private String variedad;
     private float rendimiento;
+    private ArrayList<Cuartel> cuarteles = new ArrayList<>();
 
-    private ArrayList<Cuartel>cuarteles = new ArrayList<>();
-
-
-    public Cultivo(int id, String esp, String var, double rend) {
+    public Cultivo(int id, String e, String v, double r) {
         this.id = id;
-        this.especie = esp;
-        this.variedad = var;
-        this.rendimiento = (float) rend;
+        especie = e;
+        variedad = v;
+        rendimiento = (float) r;
     }
 
-    public int getId() {
-        return id;
+    public int getId() { return id; }
+    public String getEspecie() { return especie; }
+    public String getVariedad() { return variedad; }
+    public float getRendimiento() { return rendimiento; }
+
+    public boolean addCuartel(Cuartel c) {
+        for (Cuartel x : cuarteles)
+            if (x.getId() == c.getId()) return false;
+        cuarteles.add(c);
+        return true;
     }
 
-    public String getEspecie() {
-        return especie;
-    }
-
-    public String getVariedad() {
-        return variedad;
-    }
-
-    public float getRendimiento() {
-        return rendimiento;
-    }
-
-    public void setRendimiento(float rendimiento) {
-        this.rendimiento = rendimiento;
-    }
-
-    public boolean addCuartel(Cuartel cuartel){
-        for(Cuartel c:cuarteles){
-            if(c.getId()==cuartel.getId()){
-                return false;
-            }
-        }
-        return cuarteles.add(cuartel);
-    }
-
-    public Cuartel[] getCuarteles(){
+    public Cuartel[] getCuarteles() {
         return cuarteles.toArray(new Cuartel[0]);
     }
 }
