@@ -54,11 +54,6 @@ public class GestionHuertosUI {
                     }catch(GestionHuertosException ex){
                         System.out.println("ERROR: " + ex.getMessage());
                     }
-                    try{
-                        control.readDataFromTextFile("InputDataGestionHuertos.txt");
-                    }catch(GestionHuertosException ex){
-                        System.out.println("ERROR: " + ex.getMessage());
-                    }
                     break;
                 case 6:
                     try{
@@ -69,6 +64,7 @@ public class GestionHuertosUI {
                     break;
                 case 7:
                     System.out.println("SALIENDO DEL PROGRAMA...");
+                    break;
                 default :
                     System.out.println("Opción inválida. Intente nuevamente.");
                     break;

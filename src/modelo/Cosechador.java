@@ -19,7 +19,6 @@ public class Cosechador extends Persona implements Serializable {
     private LocalDate fechaNacimiento;
     //Guarda las asignaciones de cosechador en las distintas cuadrillas
     private final List<CosechadorAsignado> asignaciones = new ArrayList<>();
-    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     public Cosechador(String rut, String nombre, String email, String direccion, LocalDate fechaNacimiento) {
         super(rut, nombre, email, direccion);

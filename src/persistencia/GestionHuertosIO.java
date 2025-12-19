@@ -7,6 +7,7 @@ import utilidades.GestionHuertosException;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class GestionHuertosIO implements Serializable {
@@ -33,7 +34,8 @@ public class GestionHuertosIO implements Serializable {
         try (ObjectInputStream in = new ObjectInputStream(
                 new FileInputStream(archivo))) {
 
-            personasLeidas = (List<Persona>) in.readObject();
+            Persona[] arr = (Persona[]) in.readObject();
+            personasLeidas = new ArrayList<>(Arrays.asList(arr));;
             return personasLeidas.toArray(new Persona[0]);
 
         } catch (IOException | ClassNotFoundException e) {
@@ -49,7 +51,8 @@ public class GestionHuertosIO implements Serializable {
         try (ObjectInputStream in = new ObjectInputStream(
                 new FileInputStream("Cultivos.obj"))) {
 
-            cultivosLeidos = (List<Cultivo>) in.readObject();
+            Cultivo[] arr = (Cultivo[]) in.readObject();
+            cultivosLeidos = new ArrayList<>(Arrays.asList(arr));;
             return cultivosLeidos.toArray(new Cultivo[0]);
         }catch(IOException | ClassNotFoundException e){
             throw new GestionHuertosException("Error al leer el archivo Cultivos.obj");
@@ -64,7 +67,8 @@ public class GestionHuertosIO implements Serializable {
         try (ObjectInputStream in = new ObjectInputStream(
                 new FileInputStream("Planes.obj"))) {
 
-            planesLeidos = (List<PlanCosecha>) in.readObject();
+            PlanCosecha[] arr = (PlanCosecha[]) in.readObject();
+            planesLeidos = new ArrayList<>(Arrays.asList(arr));;
             return planesLeidos.toArray(new PlanCosecha[0]);
         }catch(IOException | ClassNotFoundException e){
             throw new GestionHuertosException("Error al leer el archivo Planes.obj");
@@ -72,33 +76,27 @@ public class GestionHuertosIO implements Serializable {
     }
 
     public void savePersonas(Persona[] personas) throws GestionHuertosException {
-        try (ObjectOutputStream out = new ObjectOutputStream(
-                new FileOutputStream("Personas.obj"))) {
-
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("Personas.obj"))) {
             out.writeObject(personas);
-        }catch(IOException e){
+        } catch (IOException e) {
             throw new GestionHuertosException("Error al escribir el archivo Personas.obj");
         }
     }
 
     public void saveCultivos(Cultivo[] cultivos) throws GestionHuertosException {
-        try (ObjectOutputStream out = new ObjectOutputStream(
-                new FileOutputStream("Cultivos.obj"))) {
-
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("Cultivos.obj"))) {
             out.writeObject(cultivos);
-        }catch(IOException e){
+        } catch (IOException e) {
             throw new GestionHuertosException("Error al escribir el archivo Cultivos.obj");
         }
     }
 
     public void savePlanesCosecha(PlanCosecha[] planes) throws GestionHuertosException {
-        try (ObjectOutputStream out = new ObjectOutputStream(
-                new FileOutputStream("Planes.obj"))) {
-
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("Planes.obj"))) {
             out.writeObject(planes);
         } catch (IOException e) {
             throw new GestionHuertosException("Error al escribir el archivo Planes.obj");
         }
     }
-
 }
+

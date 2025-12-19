@@ -27,7 +27,6 @@ public class ControladorProduccion{
     private ArrayList<Cultivo> cultivos = new ArrayList<>();
     private ArrayList<Supervisor> supervisores = new ArrayList<>();
     private ArrayList<EstadoFenologico> estados = new ArrayList<>();
-    private GestionHuertosIO IO = GestionHuertosIO.getInstance();
     private ArrayList<PlanCosecha> planesDeCosecha = new ArrayList<>();
     private ArrayList<Propietario> propietarios = new ArrayList<>();
     private ArrayList<Persona> personas = new ArrayList<>();
@@ -36,9 +35,12 @@ public class ControladorProduccion{
     private ArrayList<Pesaje> pesajes = new ArrayList<>();
     private ArrayList<PagoPesaje> Ppesajes = new ArrayList<>();
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private GestionHuertosIO IO = new GestionHuertosIO();
     private static ControladorProduccion instance = null;
 
-    private void ControlProduccion() {}
+    private ControladorProduccion() {
+        IO = new GestionHuertosIO();
+    }
 
     public static ControladorProduccion getInstance() {
         if (instance == null)
@@ -986,41 +988,68 @@ public class ControladorProduccion{
         }
     }
 
-    public void readSystemData() throws GestionHuertosException{
-        try{
-            Persona[] gente = IO.readPersonas();
-            Cultivo[] cultivitos = IO.readCultivos();
-            PlanCosecha[] plancitos = IO.readPlanes();
+    public void readSystemData() throws GestionHuertosException {
 
-            Arrays.stream(gente)
-                    .filter(p -> !personas.contains(p))
-                    .forEach(personas::add);
+        personas.clear();
+        propietarios.clear();
+        supervisores.clear();
+        cosechadores.clear();
+        cultivos.clear();
+        planesDeCosecha.clear();
 
-            Arrays.stream(cultivitos)
-                    .filter(c -> !cultivos.contains(c))
-                    .forEach(cultivos::add);
+        Persona[] gente = IO.readPersonas();
 
-            Arrays.stream(plancitos)
-                    .filter(p -> !planesDeCosecha.contains(p))
-                    .forEach(planesDeCosecha::add);
-        }catch(GestionHuertosException e){
-            throw new GestionHuertosException(e.getMessage());
-        }
+        Arrays.stream(gente)
+                .filter(p -> p.getClass() == Propietario.class)
+                .map(p -> (Propietario) p)
+                .forEach(propietarios::add);
+
+        Arrays.stream(gente)
+                .filter(p -> p.getClass() == Supervisor.class)
+                .map(p -> (Supervisor) p)
+                .forEach(supervisores::add);
+
+        Arrays.stream(gente)
+                .filter(p -> p.getClass() == Cosechador.class)
+                .map(p -> (Cosechador) p)
+                .forEach(cosechadores::add);
+
+        for (Propietario p : propietarios) {personas.add(p);}
+        for (Supervisor s : supervisores) {personas.add(s);}
+        for (Cosechador c : cosechadores) {personas.add(c);}
+
+        Cultivo[] cultivitos = IO.readCultivos();
+        Arrays.stream(cultivitos).forEach(cultivos::add);
+
+        PlanCosecha[] plancitos = IO.readPlanes();
+        Arrays.stream(plancitos).forEach(planesDeCosecha::add);
     }
 
     public void saveSystemData() throws GestionHuertosException {
 
-        Persona[] arreglo = personas.stream()
-                .toArray(Persona[]::new);
-        Cultivo[] arreglo2 = cultivos.stream()
-                .toArray(Cultivo[]::new);
-        PlanCosecha[] arreglo3 = planesDeCosecha.stream()
-                .toArray(PlanCosecha[]::new);
+        Persona[] personasAGuardar = new Persona[
+                propietarios.size() + supervisores.size() + cosechadores.size()
+                ];
 
-        IO.savePersonas(arreglo);
-        IO.saveCultivos(arreglo2);
-        IO.savePlanesCosecha(arreglo3);
+        int i = 0;
+
+        for (Propietario p : propietarios) {
+            personasAGuardar[i++] = p;
+        }
+        for (Supervisor s : supervisores) {
+            personasAGuardar[i++] = s;
+        }
+        for (Cosechador c : cosechadores) {
+            personasAGuardar[i++] = c;
+        }
+
+        IO.savePersonas(personasAGuardar);
+        IO.saveCultivos(cultivos.toArray(new Cultivo[0]));
+        IO.savePlanesCosecha(planesDeCosecha.toArray(new PlanCosecha[0]));
     }
+
+
+
 }
 
 
