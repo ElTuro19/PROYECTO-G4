@@ -1,28 +1,38 @@
 package modelo;
+/// utilidades
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-public class PagoPesaje {
-
+public class PagoPesaje implements Serializable {
     private int id;
     private Date fecha;
-    private List<Pesaje> pesajes;
+    private List<Pesaje> pesaje;
 
-    public PagoPesaje(int id, Date f, List<Pesaje> p) {
+    public PagoPesaje(int id, Date fecha, List<Pesaje> pesaje) {
         this.id = id;
-        fecha = f;
-        pesajes = p;
+        this.fecha = fecha;
+        this.pesaje = pesaje;
     }
 
-    public int getId() { return id; }
-    public Date getFecha() { return fecha; }
+    public int getId() {
+        return id;
+    }
+
+    public Date getFecha() {
+        return fecha;
+    }
 
     public double getMonto() {
-        return pesajes.stream().mapToDouble(Pesaje::getMonto).sum();
+        double monto = 0;
+        for (Pesaje p : pesaje) {
+            monto += p.getMonto();
+        }
+        return monto;
     }
 
     public Pesaje[] getPesajes() {
-        return pesajes.toArray(new Pesaje[0]);
+        return pesaje.toArray(new Pesaje[0]);
     }
 }

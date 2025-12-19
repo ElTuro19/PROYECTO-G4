@@ -1,18 +1,23 @@
 package modelo;
-
+/// utilidades
 
 import java.io.Serializable;
-public class Supervisor implements Serializable extends Persona {
 
-    private String profesion;
+public class Supervisor extends Persona implements Serializable {
     private Cuadrilla cuadrilla;
-
+    private String profesion;
+    //
     public Supervisor(String rut, String nombre, String email, String direccion, String profesion) {
         super(rut, nombre, email, direccion);
         this.profesion = profesion;
+        this.cuadrilla = null;
     }
-
     public String getProfesion() { return profesion; }
+    
+    public void setProfesion(String profesion){ this.profesion=profesion; }
+    
+    public void setCuadrilla(Cuadrilla cuad) { this.cuadrilla=cuad; }
+    
     public Cuadrilla getCuadrilla() { return cuadrilla; }
-    public void setCuadrilla(Cuadrilla c) { this.cuadrilla = c; }
+    
 }

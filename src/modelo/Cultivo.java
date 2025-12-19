@@ -1,40 +1,54 @@
 package modelo;
-
+/// utilidades
 
 import java.io.Serializable;
 import java.util.ArrayList;
-
 public class Cultivo implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-
-
     private int id;
     private String especie;
     private String variedad;
     private float rendimiento;
-    private ArrayList<Cuartel> cuarteles = new ArrayList<>();
 
-    public Cultivo(int id, String e, String v, double r) {
+    private ArrayList<Cuartel>cuarteles = new ArrayList<>();
+
+
+    public Cultivo(int id, String esp, String var, double rend) {
         this.id = id;
-        especie = e;
-        variedad = v;
-        rendimiento = (float) r;
+        this.especie = esp;
+        this.variedad = var;
+        this.rendimiento = (float) rend;
     }
 
-    public int getId() { return id; }
-    public String getEspecie() { return especie; }
-    public String getVariedad() { return variedad; }
-    public float getRendimiento() { return rendimiento; }
-
-    public boolean addCuartel(Cuartel c) {
-        for (Cuartel x : cuarteles)
-            if (x.getId() == c.getId()) return false;
-        cuarteles.add(c);
-        return true;
+    public int getId() {
+        return id;
     }
 
-    public Cuartel[] getCuarteles() {
+    public String getEspecie() {
+        return especie;
+    }
+
+    public String getVariedad() {
+        return variedad;
+    }
+
+    public float getRendimiento() {
+        return rendimiento;
+    }
+
+    public void setRendimiento(float rendimiento) {
+        this.rendimiento = rendimiento;
+    }
+
+    public boolean addCuartel(Cuartel cuartel){
+        for(Cuartel c:cuarteles){
+            if(c.getId()==cuartel.getId()){
+                return false;
+            }
+        }
+        return cuarteles.add(cuartel);
+    }
+
+    public Cuartel[] getCuarteles(){
         return cuarteles.toArray(new Cuartel[0]);
     }
 }

@@ -1,34 +1,69 @@
 package modelo;
-
+/// utilidades
 import utilidades.Calidad;
+
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class Pesaje {
-
+public class Pesaje implements Serializable {
     private int id;
     private double cantidadKg;
-    private Calidad calidad;
+    private Calidad cal;
     private LocalDateTime fechaHora;
     private double precioKg;
-    private CosechadorAsignado asignacion;
+    private CosechadorAsignado cosAsign;
     private PagoPesaje pago;
 
-    public Pesaje(int id, double cant, Calidad cal, LocalDateTime f, CosechadorAsignado a) {
+    public Pesaje(int id, double cant, Calidad cal, LocalDateTime fechaHora, CosechadorAsignado cosAsign) {
         this.id = id;
-        cantidadKg = cant;
-        calidad = cal;
-        fechaHora = f;
-        asignacion = a;
+        this.cantidadKg = cant;
+        this.cal = cal;
+        this.fechaHora = fechaHora;
+        this.cosAsign = cosAsign;
     }
 
-    public int getId() { return id; }
-    public double getCantidadKg() { return cantidadKg; }
-    public Calidad getCalidad() { return calidad; }
-    public LocalDateTime getFechaHora() { return fechaHora; }
-    public void setPrecioKg(double p) { precioKg = p; }
-    public double getMonto() { return cantidadKg * precioKg; }
-    public boolean isPagado() { return pago != null; }
-    public void setPago(PagoPesaje p) { pago = p; }
-    public PagoPesaje getPagoPesaje() { return pago; }
-    public CosechadorAsignado getCosechadorAsignado() { return asignacion; }
+    public int getId() {
+        return id;
+    }
+
+    public double getCantidadKg() {
+        return cantidadKg;
+    }
+
+    public Calidad getCalidad() {
+        return cal;
+    }
+
+    public LocalDateTime getFechaHora() {
+        return fechaHora;
+    }
+
+    public double getPrecioKg() {
+        if (cosAsign != null &&
+                cosAsign.getCuadrilla() != null &&
+                cosAsign.getCuadrilla().getPlanCosecha() != null) {
+            return cosAsign.getCuadrilla().getPlanCosecha().getPrecioBaseKilo();
+        }
+        return 0.0;
+    }
+
+    public double getMonto() {
+        return cantidadKg * getPrecioKg();
+    }
+
+    public CosechadorAsignado getCosechadorAsignado() {
+        return cosAsign;
+    }
+
+    public void setPago(PagoPesaje pago) {
+        this.pago = pago;
+    }
+
+    public boolean isPagado() {
+        return pago != null;
+    }
+
+    public PagoPesaje getPagoPesaje() {
+        return pago;
+    }
 }
