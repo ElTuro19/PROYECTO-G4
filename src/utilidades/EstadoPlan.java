@@ -1,6 +1,8 @@
 package utilidades;
 
-public enum EstadoPlan {
+import java.io.Serializable;
+
+public enum EstadoPlan implements Serializable {
     PLANIFICADO,
     EJECUTANDO,
     CERRADO,
