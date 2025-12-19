@@ -5,6 +5,7 @@ import utilidades.EstadoPlan;
 
 import javax.swing.*;
 import java.awt.event.*;
+import java.util.Arrays;
 
 public class GUIcambioEstadoPlan extends JDialog {
 
@@ -19,6 +20,8 @@ public class GUIcambioEstadoPlan extends JDialog {
 
     private final ControladorProduccion control = ControladorProduccion.getInstance();
 
+    private String[] planesOriginales;
+
     public GUIcambioEstadoPlan() {
 
         setContentPane(contentPane);
@@ -27,15 +30,14 @@ public class GUIcambioEstadoPlan extends JDialog {
         setSize(500, 400);
         setLocationRelativeTo(null);
 
-        // Estado inicial
         limpiarCampos();
 
-        // Cargar enum en ComboBox
-        nuevoEstado.setModel(
-                new DefaultComboBoxModel<>(EstadoPlan.values())
-        );
+        nuevoEstado.setModel(new DefaultComboBoxModel<>(EstadoPlan.values()));
         nuevoEstado.setSelectedIndex(-1);
         nuevoEstado.setEnabled(false);
+
+        control.readDataFromTextFile("InputDataGestionHuertos.txt");
+        planesOriginales = control.listPlanesCosecha();
 
         txtId.addActionListener(e -> cargarPlan());
 
@@ -56,9 +58,6 @@ public class GUIcambioEstadoPlan extends JDialog {
         );
     }
 
-    // ===============================
-    // CARGA DEL PLAN DESDE LISTADO
-    // ===============================
     private void cargarPlan() {
 
         int idBuscado;
@@ -66,48 +65,48 @@ public class GUIcambioEstadoPlan extends JDialog {
         try {
             idBuscado = Integer.parseInt(txtId.getText().trim());
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this,
+            JOptionPane.showMessageDialog(
+                    this,
                     "ID inválido",
                     "Error",
-                    JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.ERROR_MESSAGE
+            );
             limpiarCampos();
             return;
         }
 
-        String[] planes = control.listPlanesCosecha();
-
-        if (planes.length == 0) {
-            JOptionPane.showMessageDialog(this,
+        if (planesOriginales.length == 0) {
+            JOptionPane.showMessageDialog(
+                    this,
                     "No existen planes de cosecha",
                     "Información",
-                    JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.INFORMATION_MESSAGE
+            );
             limpiarCampos();
             return;
         }
 
-        String linea = null;
+        String[] planEncontrado = Arrays.stream(planesOriginales)
+                .map(l -> l.trim().replaceAll("\\s+", " ").split(" "))
+                .filter(p -> Integer.parseInt(p[0]) == idBuscado)
+                .findFirst()
+                .orElse(null);
 
-        for (String p : planes) {
-            int id = Integer.parseInt(p.substring(0, 15).trim());
-            if (id == idBuscado) {
-                linea = p;
-                break;
-            }
-        }
-
-        if (linea == null) {
-            JOptionPane.showMessageDialog(this,
+        if (planEncontrado == null) {
+            JOptionPane.showMessageDialog(
+                    this,
                     "No se encontró el plan",
                     "Error",
-                    JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.ERROR_MESSAGE
+            );
             limpiarCampos();
             return;
         }
 
-        // Extracción por columnas (según String.format)
-        txtNombre.setText(linea.substring(15, 30).trim());
-        txtMeta.setText(linea.substring(70, 85).trim());
-        txtEstadoActual.setText(linea.substring(100, 120).trim());
+        // Mapeo directo por columnas
+        txtNombre.setText(planEncontrado[1]);
+        txtMeta.setText(planEncontrado[3]);
+        txtEstadoActual.setText(planEncontrado[5]);
 
         nuevoEstado.setEnabled(true);
         buttonOK.setEnabled(true);
@@ -118,10 +117,12 @@ public class GUIcambioEstadoPlan extends JDialog {
         EstadoPlan estadoNuevo = (EstadoPlan) nuevoEstado.getSelectedItem();
 
         if (estadoNuevo == null) {
-            JOptionPane.showMessageDialog(this,
+            JOptionPane.showMessageDialog(
+                    this,
                     "Debe seleccionar un nuevo estado",
                     "Error",
-                    JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.ERROR_MESSAGE
+            );
             return;
         }
 
@@ -129,32 +130,39 @@ public class GUIcambioEstadoPlan extends JDialog {
         try {
             idPlan = Integer.parseInt(txtId.getText().trim());
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this,
+            JOptionPane.showMessageDialog(
+                    this,
                     "ID inválido",
                     "Error",
-                    JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.ERROR_MESSAGE
+            );
             return;
         }
 
         try {
             control.changeEstadoPlan(idPlan, estadoNuevo);
 
-            JOptionPane.showMessageDialog(this,
+            JOptionPane.showMessageDialog(
+                    this,
                     "Estado del plan actualizado correctamente",
                     "Éxito",
-                    JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.INFORMATION_MESSAGE
+            );
 
             dispose();
 
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this,
-                    "Error al cambiar el estado: " + e.getMessage(),
+            JOptionPane.showMessageDialog(
+                    this,
+                    e.getMessage(),
                     "Error",
-                    JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.ERROR_MESSAGE
+            );
         }
     }
 
     private void limpiarCampos() {
+
         txtNombre.setText("");
         txtMeta.setText("");
         txtEstadoActual.setText("");

@@ -27,6 +27,7 @@ public class ControladorProduccion{
     private ArrayList<Cultivo> cultivos = new ArrayList<>();
     private ArrayList<Supervisor> supervisores = new ArrayList<>();
     private ArrayList<EstadoFenologico> estados = new ArrayList<>();
+    private GestionHuertosIO IO = GestionHuertosIO.getInstance();
     private ArrayList<PlanCosecha> planesDeCosecha = new ArrayList<>();
     private ArrayList<Propietario> propietarios = new ArrayList<>();
     private ArrayList<Persona> personas = new ArrayList<>();
@@ -35,8 +36,6 @@ public class ControladorProduccion{
     private ArrayList<Pesaje> pesajes = new ArrayList<>();
     private ArrayList<PagoPesaje> Ppesajes = new ArrayList<>();
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    private static GestionHuertosIO IO;
-
     private static ControladorProduccion instance = null;
 
     private void ControlProduccion() {}
@@ -1009,7 +1008,8 @@ public class ControladorProduccion{
         }
     }
 
-    public void saveSystemData(){
+    public void saveSystemData() throws GestionHuertosException {
+
         Persona[] arreglo = personas.stream()
                 .toArray(Persona[]::new);
         Cultivo[] arreglo2 = cultivos.stream()
@@ -1017,13 +1017,9 @@ public class ControladorProduccion{
         PlanCosecha[] arreglo3 = planesDeCosecha.stream()
                 .toArray(PlanCosecha[]::new);
 
-        try{
-            IO.savePersonas(arreglo);
-            IO.saveCultivos(arreglo2);
-            IO.savePlanesCosecha(arreglo3);
-        }catch(GestionHuertosException e){
-            throw new GestionHuertosException(e.getMessage());
-        }
+        IO.savePersonas(arreglo);
+        IO.saveCultivos(arreglo2);
+        IO.savePlanesCosecha(arreglo3);
     }
 }
 

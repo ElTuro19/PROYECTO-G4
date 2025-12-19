@@ -6,90 +6,39 @@ import utilidades.Rut;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.*;
+import java.util.Arrays;
 
 public class GUIpagoDePesajesPendientes extends JDialog {
+
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
     private JTextField IDpago;
     private JTextField RUT;
     private JTable tabla;
+
     private ControladorProduccion control = ControladorProduccion.getInstance();
-    private String[] lPes = control.listPesajes();
-    private String[] listaRuts = new String[lPes.length];
-    private String[] listaPagos = new String[lPes.length];
-    private String[][] datos = new String[listaPagos.length][7];
 
-    public void UpdateList() {
-            control.readDataFromTextFile("InputDataGestionHuertos.txt");
-
-
-        for (int i = 0; i < listaPagos.length; i++) {
-        listaPagos[i] = lPes[i];
-    }
-
-    String[] nombreColumnas = {"ID", "Fecha", "Calidad", "Kilos", "Precio Kg", "Monto", "Pagado"};
-
-
-        for (int i = 0; i < listaRuts.length; i++) {
-        String[] linea = listaPagos[i].trim().replaceAll("\\s+", " ").split(" ");
-        datos[i][0] = linea[0];
-        datos[i][1] = linea[1];
-        listaRuts[i] = linea[2];
-        datos[i][2] = linea[3];
-        datos[i][3] = linea[4];
-        datos[i][4] = linea[5];
-        datos[i][5] = linea[6];
-        datos[i][6] = linea[7];
-
-    };
-        tabla.setModel(new DefaultTableModel(datos, nombreColumnas));
-    ///tabla.enable();
-    }
+    private String[] pagosOriginales;
 
     public GUIpagoDePesajesPendientes() {
+
         control.readDataFromTextFile("InputDataGestionHuertos.txt");
+
+        pagosOriginales = control.listPesajes();
+
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
 
+        cargarTablaCompleta();
 
-        for (int i = 0; i < listaPagos.length; i++) {
-            listaPagos[i] = lPes[i];
-        }
+        IDpago.addActionListener(e -> filtrar());
+        RUT.addActionListener(e -> filtrar());
 
-        String[] nombreColumnas = {"ID", "Fecha", "Calidad", "Kilos", "Precio Kg", "Monto", "Pagado"};
+        buttonOK.addActionListener(e -> onOK());
+        buttonCancel.addActionListener(e -> onCancel());
 
-
-        for (int i = 0; i < listaRuts.length; i++) {
-            String[] linea = listaPagos[i].trim().replaceAll("\\s+", " ").split(" ");
-            datos[i][0] = linea[0];
-            datos[i][1] = linea[1];
-            listaRuts[i] = linea[2];
-            datos[i][2] = linea[3];
-            datos[i][3] = linea[4];
-            datos[i][4] = linea[5];
-            datos[i][5] = linea[6];
-            datos[i][6] = linea[7];
-
-         };
-        tabla.setModel(new DefaultTableModel(datos, nombreColumnas));
-        ///tabla.enable();
-
-        buttonOK.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                onOK();
-            }
-        });
-
-        buttonCancel.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                onCancel();
-            }
-        });
-
-
-        // call onCancel() when cross is clicked
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
@@ -97,52 +46,87 @@ public class GUIpagoDePesajesPendientes extends JDialog {
             }
         });
 
-        // call onCancel() on ESCAPE
-        contentPane.registerKeyboardAction(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                onCancel();
-            }
-        }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+        contentPane.registerKeyboardAction(
+                e -> onCancel(),
+                KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+                JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT
+        );
     }
 
-    private void onOK() {
-        String idpago = IDpago.getText().trim();
+
+    private void cargarTablaCompleta() {
+        filtrarPagos("", "");
+    }
+
+
+    private void filtrar() {
+        String id = IDpago.getText().trim();
         String rut = RUT.getText().trim();
+        filtrarPagos(id, rut);
+    }
 
-        boolean rutExiste = false;
-        boolean idExiste = false;
+    private void filtrarPagos(String id, String rut) {
 
-        for (int i = 0; i < listaRuts.length; i++) {
-            if (listaRuts[i].equals(rut)) {
-                rutExiste = true;
-                break;
-            }
-        }
+        String[][] datos = Arrays.stream(pagosOriginales)
+                .map(l -> l.trim().replaceAll("\\s+", " ").split(" "))
+                .filter(p -> {
+                    boolean okId = id.isEmpty() || p[0].equals(id);
+                    boolean okRut = rut.isEmpty() || p[2].equals(rut);
+                    return okId && okRut;
+                })
+                .map(p -> new String[]{
+                        p[0], // ID
+                        p[1], // Fecha
+                        p[3], // Calidad
+                        p[4], // Kilos
+                        p[5], // Precio Kg
+                        p[6], // Monto
+                        p[7]  // Pagado
+                })
+                .toArray(String[][]::new);
 
-        if (!rutExiste) {
-            JOptionPane.showMessageDialog(this, "El RUT no existe", "AVISO", JOptionPane.WARNING_MESSAGE);
+        String[] columnas = {
+                "ID", "Fecha", "Calidad", "Kilos",
+                "Precio Kg", "Monto", "Pagado"
+        };
+
+        tabla.setModel(new DefaultTableModel(datos, columnas));
+    }
+
+
+    private void onOK() {
+
+        String idTexto = IDpago.getText().trim();
+        String rutTexto = RUT.getText().trim();
+
+        if (idTexto.isEmpty() || rutTexto.isEmpty()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Debe ingresar ID y RUT",
+                    "AVISO",
+                    JOptionPane.WARNING_MESSAGE
+            );
             return;
         }
-        for (int i = 0; i < datos.length; i++) {
-            if (idpago.equals(datos[i][0])) {
-                idExiste = true;
-                break;
-            }
-        }
 
-        if (!idExiste) {
-            JOptionPane.showMessageDialog(this, "El ID de pesaje no existe", "AVISO", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
         try {
-            control.addPagoPesaje(Integer.parseInt(idpago), Rut.of(rut));
+            int id = Integer.parseInt(idTexto);
+            Rut rut = Rut.of(rutTexto);
+
+            control.addPagoPesaje(id, rut);
+
             JOptionPane.showMessageDialog(
                     this,
                     "El pago fue efectuado correctamente",
                     "AVISO",
                     JOptionPane.INFORMATION_MESSAGE
             );
-            UpdateList();
+
+            // recargar datos
+            control.readDataFromTextFile("InputDataGestionHuertos.txt");
+            pagosOriginales = control.listPesajes();
+            filtrar();
+
         } catch (Exception e) {
             JOptionPane.showMessageDialog(
                     this,
@@ -153,19 +137,19 @@ public class GUIpagoDePesajesPendientes extends JDialog {
         }
     }
 
-
     private void onCancel() {
         dispose();
     }
 
-
     public static void main(String[] args) {
         ControladorProduccion control = ControladorProduccion.getInstance();
         control.readDataFromTextFile("InputDataGestionHuertos.txt");
+
         GUIpagoDePesajesPendientes dialog = new GUIpagoDePesajesPendientes();
         dialog.pack();
-        dialog.setVisible(true);
         dialog.setLocationRelativeTo(null);
+        dialog.setVisible(true);
+
         System.exit(0);
     }
 }

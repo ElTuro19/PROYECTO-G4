@@ -13,6 +13,14 @@ public class GestionHuertosIO implements Serializable {
     private List<Persona> personasLeidas = new ArrayList<>();
     private List<Cultivo> cultivosLeidos = new ArrayList<>();
     private List<PlanCosecha> planesLeidos = new ArrayList<>();
+    private static GestionHuertosIO instance= null;
+    private void GestionHuertosIO(){}
+    public static GestionHuertosIO getInstance(){
+        if(instance == null){
+            instance = new GestionHuertosIO();
+        }
+        return instance;
+    }
 
     public Persona[] readPersonas() throws GestionHuertosException {
         File archivo = new File("Personas.obj");

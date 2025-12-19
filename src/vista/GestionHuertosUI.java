@@ -3,6 +3,7 @@ package vista;
 import controlador.ControladorProduccion;
 /// utilidades
 import modelo.*;
+import persistencia.GestionHuertosIO;
 import utilidades.*;
 
 import java.awt.event.ActionListener;
