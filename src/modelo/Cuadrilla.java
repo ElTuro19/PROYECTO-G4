@@ -1,50 +1,93 @@
 package modelo;
 
-
+import utilidades.GestionHuertosException;
 
 import java.io.Serializable;
-import excepciones.GestionHuertosException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class Cuadrilla implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-
-
-    
-    private static final int MAX_COSECHADORES = 10;
-private int id;
+    private int id;
     private String nombre;
+    private int maximoCosechadores;
+
     private Supervisor supervisor;
     private PlanCosecha planCosecha;
-    private ArrayList<CosechadorAsignado> cosechadores = new ArrayList<>();
 
-    public Cuadrilla(int id, String nom, Supervisor sup, PlanCosecha plan) {
+    // En el enunciado suele pedirse CosechadorAsignado (con fechas/meta)
+    private final ArrayList<CosechadorAsignado> asignados;
+
+    public Cuadrilla(int id, String nom, Supervisor sup, PlanCosecha plan){
         this.id = id;
         this.nombre = nom;
-        supervisor = sup;
-        planCosecha = plan;
+        this.supervisor = sup;
+        this.planCosecha = plan;
+        this.asignados = new ArrayList<>();
+        this.maximoCosechadores = 9999; // ajusta si tu enunciado fija un máximo distinto
     }
 
     public int getId() { return id; }
+
     public String getNombre() { return nombre; }
+
+    public void setNombre(String nombre) { this.nombre = nombre; }
+
     public Supervisor getSupervisor() { return supervisor; }
+
     public PlanCosecha getPlanCosecha() { return planCosecha; }
 
-    public void addCosechador(LocalDate i, LocalDate f, double m, Cosechador c) throws GestionHuertosException {
-        for (CosechadorAsignado ca : cosechadores) {
-            if (ca.getCosechador().getRut().equals(c.getRut())) {
-                throw new GestionHuertosException("Ya existe un cosechador en la cuadrilla con el mismo rut del cosechador recibido como parámetro");
+    /**
+     * Agrega cosechador a la cuadrilla con fecha/meta.
+     * Valida:
+     * - capacidad máxima
+     * - cosechador repetido por rut
+     */
+    public boolean addCosechador(LocalDate fIni, LocalDate fFin, double meta, Cosechador cos)
+            throws GestionHuertosException {
+
+        if (cos == null) {
+            throw new GestionHuertosException("No existe un cosechador con el rut indicado");
+        }
+
+        if (asignados.size() >= maximoCosechadores) {
+            throw new GestionHuertosException("El número de cosechadores ya alcanzó el máximo permitido");
+        }
+
+        for (CosechadorAsignado a : asignados) {
+            if (a.getCosechador().getRut().equals(cos.getRut())) {
+                throw new GestionHuertosException("El cosechador ya tiene una asignación a una cuadrilla con el id indicado en el plan con el id señalado");
             }
         }
-        if (cosechadores.size() >= MAX_COSECHADORES) {
-            throw new GestionHuertosException("No es posible agregar el nuevo cosechador porque ya se alcanzó el máximo número de cosechadores en una cuadrilla");
-        }
-        cosechadores.add(new CosechadorAsignado(c, i, f, m));
+
+        asignados.add(new CosechadorAsignado(fIni, fFin, meta, this, cos));
+        return true;
     }
 
-    public CosechadorAsignado[] getCosechadores() {
-        return cosechadores.toArray(new CosechadorAsignado[0]);
+    /**
+     * Compatibilidad: devuelve cosechadores "planos" como en tu versión anterior.
+     */
+    public Cosechador[] getCosechadores(){
+        ArrayList<Cosechador> out = new ArrayList<>();
+        for (CosechadorAsignado a : asignados) {
+            out.add(a.getCosechador());
+        }
+        return out.toArray(new Cosechador[0]);
     }
+
+    public CosechadorAsignado[] getAsignados() {
+        return asignados.toArray(new CosechadorAsignado[0]);
+    }
+
+    public boolean tieneCosechador(Cosechador cos) {
+        if (cos == null) return false;
+        for (CosechadorAsignado a : asignados) {
+            if (a.getCosechador().getRut().equals(cos.getRut())) return true;
+        }
+        return false;
+    }
+
+    public int getMaximoCosechadores(){ return maximoCosechadores; }
+
+    public void setMaximoCosechadores(int max){ this.maximoCosechadores = max; }
 }
